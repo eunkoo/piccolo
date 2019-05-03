@@ -1,0 +1,40 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "VueJS, Node, Express, Sequelize and MySQL",
+  "scripts": {
+    "start": "node ./node_modules/nodemon/bin/nodemon.js ./web.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ORM",
+    "Sequelize",
+    "MySQL",
+    "Vue"
+  ],
+  "author": "dmsrnfl@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "express-fileupload": "^1.1.1-alpha.1",
+    "form-data": "^2.3.3",
+    "formidable": "^1.2.1",
+    "moment": "^2.24.0",
+    "morgan": "^1.9.1",
+    "mysql2": "^1.6.4",
+    "nodemon": "^1.18.9",
+    "numeral": "^2.0.6",
+    "pg": "^7.4.1",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.33.4",
+    "webpack": "^4.29.3"
+  },
+  "devDependencies": {
+    "extract-text-webpack-plugin": "^4.0.0-alpha.0",
+    "webpack-dev-middleware": "^3.5.2",
+    "webpack-hot-middleware": "^2.24.3"
+  }
+}

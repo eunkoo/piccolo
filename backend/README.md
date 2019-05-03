@@ -1,3 +1,4 @@
+How to run
 #create docker image using Dockerfile
 $ docker build -t backend .
 

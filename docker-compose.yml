@@ -1,0 +1,41 @@
+version: '2'
+
+networks:
+  db-conn:
+    driver: bridge
+
+services:
+  piccolo-mysql:
+    build: ./db
+    environment:
+      - MYSQL_DATABASE=edogawa01
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_PASSWORD=password
+      - MYSQL_USER=root
+    ports: 
+      - "3306:3306"
+    networks:
+      - db-conn
+    volumes:
+      - ./db/data:/var/lib/mysql
+  backend:
+    build: ./backend
+    depends_on:
+      - piccolo-mysql
+    environment:
+      - ENV_MODE=development
+    ports:
+      - "8001:8001"
+    networks:
+      - db-conn
+    entrypoint: "npm start"
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    environment:
+      - ENV_MODE=development 
+    ports:
+      - "8002:8002"
+    entrypoint: "npm run dev"
+

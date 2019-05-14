@@ -1,5 +1,5 @@
 # piccolo
-mysql sequalize node.js express vue vuetify
+mysql sequalize node.js express webpack-dev-server vue vuetify  
 
 
 how to run :

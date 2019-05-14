@@ -6,7 +6,7 @@ how to run :
 
 $ docker-compose up -d
 
-#docker-compose 내용 설명 
+# docker-compose 내용 설명 
 
 1. backend와 mysql의 연결
 docker ip는 container 생성시 내부적으로 할당 되기 때문에 127.0.0.1로 고정해서 사용할 수 없다. 
@@ -20,33 +20,33 @@ networks:
 
 2. mysql 의 설정
 
-  해당 container가 업로드된 이미지를 그대로 사용하는 것이면 image: $(image_name):tag 으로 작성하면 되지만
-  Dockerfile에 의해 build되는 이미지는 build: $(Dockerfile path) 로 작성하면 된다.
-  
+해당 container가 업로드된 이미지를 그대로 사용하는 것이면 image: $(image_name):tag 으로 작성하면 되지만
+Dockerfile에 의해 build되는 이미지는 build: $(Dockerfile path) 로 작성하면 된다.
+
   build: ./db
-  
-  docker-compose.yml 파일의해 생성된 container 이름은  $(프로젝트명)-$(Dockerfile에 지정한 이름)으로 만들어진다. 
-  특정 이름으로 만들고 싶다면 container_name 옵션을 이용한다
-  
+
+docker-compose.yml 파일의해 생성된 container 이름은  $(프로젝트명)-$(Dockerfile에 지정한 이름)으로 만들어진다. 
+특정 이름으로 만들고 싶다면 container_name 옵션을 이용한다
+
   container_name: piccolo-mysql
-  
-  database 명은 ./db/Dockerfile에서 이미 만들어진 schema 파일을 import하는데 거기서 사용한 이름을 그대로 적었다.
-  - MYSQL_DATABASE=edogawa01
-  
-  미리 생성한 db-conn 이라는 network bridge를 통해 통신한다.
-      networks:
-      - db-conn
-  
-  container 의 실행 여부와 상관없이 데이터가 저장되어야 하므로 db의 volume은 별도로 지정하는 것이 좋다.
-      volumes:
-      - ./db/data:/var/lib/mysql
+
+database 명은 ./db/Dockerfile에서 이미 만들어진 schema 파일을 import하는데 거기서 사용한 이름을 그대로 적었다.
+  environment:
+   - MYSQL_DATABASE=edogawa01
+
+미리 생성한 db-conn 이라는 network bridge를 통해 통신한다.
+  networks:
+  - db-conn
+
+container 의 실행 여부와 상관없이 데이터가 저장되어야 하므로 db의 volume은 별도로 지정하는 것이 좋다.
+  volumes:
+  - ./db/data:/var/lib/mysql
  
 3. backend의 설정
 
 
 
-
-# 00 교회 출결 관리 프로그램
+# 교회 출결 관리 프로그램
 
 화면
 - 로그인

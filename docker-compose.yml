@@ -45,8 +45,6 @@ services:
       - ENV_MODE=development 
     ports:
       - "8002:8002"
-    networks:
-      - db-conn
     volumes:
       - ./frontend/files:/app
       - /app/node_modules

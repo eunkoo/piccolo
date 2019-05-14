@@ -32,37 +32,44 @@ $ docker-compose up -d
     container_name: piccolo-mysql
 
   database 명은 ./db/Dockerfile에서 이미 만들어진 schema 파일을 import하는데 거기서 사용한 이름을 그대로 적었다.
+    
     environment:
-      MYSQL_DATABASE=edogawa01
+     - MYSQL_DATABASE=edogawa01
 
   미리 생성한 db-conn 이라는 network bridge를 통해 통신한다.
     networks:
       db-conn
 
   container 의 실행 여부와 상관없이 데이터가 저장되어야 하므로 db의 volume은 별도로 지정하는 것이 좋다.
+    
     volumes:
       ./db/data:/var/lib/mysql
 
   3. backend의 설정
   
   backend는 db container가 먼저 생성된 이후 연결해야 하므로 dependency가 생긴다 
+    
     depends_on:
        piccolo-mysql
        
   접근 가능한 포트를 선언한다. 이 포트를 이용하여 frontend와 통신한다
-  ports:
+  
+    ports:
       - "8001:8001"
   
   db와 연결를 위한 네트워크를 선언한다 
+    
     networks:
       - db-conn
       
   npm start로 nodemon을 실행시킨다 
+    
     entrypoint: "npm start"
   
   4. frontend의 설정
   
   다른 옵션은 backend와 비슷하고 webpack을 이용하여 실행 시킨다 
+    
     entrypoint: "npm run dev" 
 
 # 교회 출결 관리 프로그램

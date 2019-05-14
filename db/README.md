@@ -1,4 +1,4 @@
-# How to generate Docker images and run it
+# How to make database container and run it
 
  create database based on mysql:5.7 using Dockerfile
 

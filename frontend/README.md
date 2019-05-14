@@ -12,3 +12,7 @@ it runs this actual command :
 
      webpack-dev-server --host 0.0.0.0  --inline --progress --config build/webpack.dev.conf.js
 
+
+
+ref : https://github.com/ClickerMonkey/dayspan-vuetify
+

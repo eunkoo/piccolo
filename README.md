@@ -48,6 +48,7 @@ $ docker-compose up -d
   3. backend의 설정
   
   backend는 db container가 먼저 생성된 이후 연결해야 하므로 dependency가 생긴다 
+  !! depends_on 옵션이 container 내 시스템 ready 상태까지 보장해주진 않는다 
     
     depends_on:
        piccolo-mysql

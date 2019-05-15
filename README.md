@@ -11,8 +11,8 @@ $ docker-compose up -d
   1. backend와 mysql의 연결
   
   docker ip는 container 생성시 내부적으로 할당 되기 때문에 127.0.0.1로 고정해서 사용할 수 없다. 
-  --link $(container_name) 옵션을 사용해도 되지만 backend 와 db container를 연결하기 위해 bridge network를 이용하였다
-  backend 의 host name을 container name을 지정하면 contianer의 ip가 변경되어도 자동으로 연결된다. 
+  --link $(container_name) 옵션을 사용해도 되지만 backend 와 db container를 연결하기 위해 bridge network를 이용하였다.
+  backend 에서 host name을 container name을 지정하면 contianer의 ip가 변경되어도 자동으로 연결된다. 
 
     networks:
       db-conn:
@@ -22,7 +22,7 @@ $ docker-compose up -d
   2. mysql 의 설정
 
   해당 container가 업로드된 이미지를 그대로 사용하는 것이면 image: $(image_name):tag 으로 작성하면 되지만
-  Dockerfile에 의해 build되는 이미지는 build: $(Dockerfile path) 로 작성하면 된다.
+  Dockerfile에 의해 build되는 이미지는 build: $(Dockerfile path) 로 작성하면 된다. 이후 docker-compose up 실행시 빌드까지 된다.
 
     build: ./db
 

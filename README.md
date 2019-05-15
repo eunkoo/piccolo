@@ -2,6 +2,9 @@
 mysql sequalize node.js express webpack-dev-server vue vuetify  
 
 
+ref : https://github.com/dheeyi/goowil
+ref : https://github.com/ClickerMonkey/dayspan-vuetify
+
 how to run :
 
 $ docker-compose up -d
@@ -88,5 +91,3 @@ $ docker-compose up -d
 - 예배 관리
 - 출결 관리
 - 요약 화면
-
-ref : https://github.com/dheeyi/goowil

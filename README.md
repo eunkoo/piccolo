@@ -10,6 +10,8 @@ how to run :
 
 $ docker-compose up -d
 
+
+
 # docker-compose 내용 설명 
 
   1. backend와 mysql의 연결

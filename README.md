@@ -10,6 +10,7 @@ how to run :
 
 $ docker-compose up -d
 
+and go to 'localhost:8002'
 
 
 # docker-compose 내용 설명 

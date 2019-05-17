@@ -14,7 +14,7 @@ dayspan-vuetify was modified. so we remove original version and copy modified ve
      add ./files/node_modules/ /app/node_modules/
 
 
-you can access 'localhost:8002' after running these docker containers
+you can access 'localhost:8002' after running this docker containers
 
      expose 8002 80
 

@@ -1,4 +1,4 @@
-# what consist of Dockerfile
+# About Dockerfile
 
 not to copy whole 'node_modules' folder but copy package.json and install it.
 

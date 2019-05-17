@@ -1,3 +1,17 @@
+# what consist of Dockerfile
+
+not to copy whole 'node_modules' folder but copy package.json and install it.
+
+    copy ./files/package.json /app/
+    run npm install  --no-optional
+
+to access here from other containers, expose port number.
+
+
+    expose 8001 80
+
+
+
 # How to make  backend container and run it
 
  create docker image using Dockerfile

@@ -43,7 +43,8 @@ and go to 'localhost:8002'
     environment:
      - MYSQL_DATABASE=edogawa01
 
-  미리 생성한 db-conn 이라는 network bridge를 통해 통신한다.
+  backend와 db는 미리 생성한 db-conn 이라는 network bridge를 통해 통신한다.
+  
     networks:
       db-conn
 

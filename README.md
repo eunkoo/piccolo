@@ -19,7 +19,7 @@ and go to 'localhost:8002'
   
   docker ip는 container 생성시 내부적으로 할당 되기 때문에 127.0.0.1로 고정해서 사용할 수 없다. 
   --link $(container_name) 옵션을 사용해도 되지만 backend 와 db container를 연결하기 위해 bridge network를 이용하였다.
-  backend 에서 host name을 container name을 지정하면 contianer의 ip가 변경되어도 자동으로 연결된다. 
+  backend 에서 host name을 container name 지정하면 contianer의 ip가 변경되어도 자동으로 연결된다. 
 
     networks:
       db-conn:

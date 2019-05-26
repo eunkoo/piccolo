@@ -18,13 +18,16 @@ and go to 'localhost:8002'
   1. backend와 mysql의 연결
   
   docker ip는 container 생성시 내부적으로 할당 되기 때문에 127.0.0.1로 고정해서 사용할 수 없다. 
-  --link $(container_name) 옵션을 사용해도 되지만 backend 와 db container를 연결하기 위해 bridge network를 이용하였다.
-  backend 에서 연결할 db의 host name을  의 container name으로 지정하면 contianer의 ip가 변경되어도 자동으로 연결된다. 
+  --link $(container_name) 옵션을 사용해도 되지만 backend 와 db container를 연결하기 위해 bridge network를 이용하였다. 
 
     networks:
       db-conn:
         driver: bridge
-
+        
+        
+  1.1 backend에서 host name 지정 시 backend 에서 연결할 db의 host name을  의 container name으로 지정하면 contianer의 ip가 변경되어도 자동으로 연결된다. 
+   
+          "host": "piccolo-mysql", 
 
   2. mysql 의 설정
 

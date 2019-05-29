@@ -25,7 +25,7 @@ and go to 'localhost:8002'
         driver: bridge
         
         
-  1.1 backend에서 host name 지정 시 backend 에서 연결할 db의 host name을  의 container name으로 지정하면 contianer의 ip가 변경되어도 자동으로 연결된다. 
+  1.1 backend에서 host name 지정 시 backend 에서 연결할 db의 host name container name으로 지정하면 contianer의 ip가 변경되어도 자동으로 연결된다. 
    
           "host": "piccolo-mysql", 
 

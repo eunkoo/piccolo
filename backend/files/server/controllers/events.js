@@ -1,6 +1,5 @@
 const events = require('../models').events;
 const attendee = require('../models').attendee;
-const Sequelize = require('sequelize');
 // const env = process.env.NODE_ENV || 'development';
 // const config = require(`${__dirname}/../config/config.json`)[env];
 // sequelize = new Sequelize(config.database, config.username,config.password, {
@@ -43,12 +42,12 @@ module.exports = {
   },
 
   destroy(req, res) {
-    return events
+     events
       .findById(req.params.id)
       .then(events => {
         if (!events) {
           return res.status(400).send({
-            message: 'events Not Found',
+            message: '등록된 이벤트가 없습니다',
           });
         }
         return events
@@ -65,38 +64,47 @@ module.exports = {
       })
       .catch((error) => res.status(400).send(error));
   },
+  check_create(req,res){
+    return  events.findOne({
+      where: {
+        day: req.body.day,
+        belongs : req.body.belongs
+      }
+    }).then(events => res.status(201).send(events))
+    .catch((error) => res.status(400).send(error));
 
+  },
   create(req, res) {
     return events
-      .create({
-        title: req.body.title,
-        day:req.body.day,
-        time:req.body.time,
-        place:req.body.place,
-        director:req.body.director,
-        belongs:req.body.belongs,
-        notice:req.body.notice,
-        birthes:req.body.birthes,
-        newes:req.body.newes,
-        offering:req.body.offering,
-        totalmember:req.body.totalmember ,
-        totalmorning:req.body.totalmorning ,
-        totalnoon:req.body.totalnoon ,
-        calendar:req.body.calendar ,
-        createdAt: req.body.createdAt,
-        updatedAt: req.body.updatedAt,
-      })
-      .then(events => res.status(201).send(events))
-      .catch(error => res.status(400).send(error));
+   .create({
+     title: req.body.title,
+     day:req.body.day,
+     time:req.body.time,
+     place:req.body.place,
+     director:req.body.director,
+     belongs:req.body.belongs,
+     notice:req.body.notice,
+     birthes:req.body.birthes,
+     newes:req.body.newes,
+     offering:req.body.offering,
+     totalmember:req.body.totalmember ,
+     totalmorning:req.body.totalmorning ,
+     totalnoon:req.body.totalnoon ,
+     calendar:req.body.calendar ,
+     createdAt: req.body.createdAt,
+     updatedAt: req.body.updatedAt,
+   })
+   .then(events => res.status(201).send(events))
+   .catch(error => res.status(400).send(error));
   },
 
   update(req, res) {
-    return events
+     events
       .findById(req.params.id)
       .then(events => {
         if (!events) {
           return res.status(404).send({
-            message: 'events Not Found',
+            message: '등록된 이벤트가 없습니다',
           });
         }
         return events

@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     apellidos: DataTypes.STRING(50),
     edad: DataTypes.INTEGER,
     email: DataTypes.STRING(100),
-    password: DataTypes.STRING(100)
+    password: DataTypes.STRING(100),
+    grade: DataTypes.INTEGER,
   }, {});
 
   return user;

@@ -73,7 +73,7 @@ module.exports = {
 },
 
   destroy(req, res) {
-    return members
+     members
       .findById(req.params.id)
       .then(members => {
         if (!members) {
@@ -122,28 +122,36 @@ module.exports = {
           .catch((error) => res.status(400).send(error));
       })
       .catch((error) => res.status(400).send(error));
-    
   },
-
+  check_create(req,res){
+    return  members.findOne({
+      where: {
+        name: req.body.name,
+        belong : req.body.belong
+      }
+    })
+    .then(members => res.status(201).send(members))
+    .catch(error => res.status(400).send(error));
+  },
   create(req, res) {
     return members
-      .create({
-        // id: req.body.id,
-        name: req.body.name,
-        address: req.body.address,
-        phone : req.body.phone,
-        gender: req.body.gender,
-        birth: req.body.birth,
-        connected: req.body.connected,
-        belong: req.body.belong,
-        grade: req.body.grade,
-        tag : req.body.tag,
-        baptism : req.body.baptism,
-        createdAt: req.body.createdAt,
-        updatedAt: req.body.updatedAt,
-      })
-      .then(members => res.status(201).send(members))
-      .catch(error => res.status(400).send(error));
+    .create({
+      // id: req.body.id,
+      name: req.body.name,
+      address: req.body.address,
+      phone : req.body.phone,
+      gender: req.body.gender,
+      birth: req.body.birth,
+      connected: req.body.connected,
+      belong: req.body.belong,
+      grade: req.body.grade,
+      tag : req.body.tag,
+      baptism : req.body.baptism,
+      createdAt: req.body.createdAt,
+      updatedAt: req.body.updatedAt,
+    })
+    .then(members => res.status(201).send(members))
+    .catch(error => res.status(400).send(error));
   },
 
   update(req, res) {

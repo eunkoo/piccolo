@@ -1,10 +1,24 @@
-# How to make  docker container and run it
+# About Dockerfile
 
-create docker image using Dockerfile 
+not to copy whole 'node_modules' folder but copy package.json and install it.
 
-$ docker build -t backend .
+    copy ./files/package.json /app/
+    run npm install  --no-optional
 
-exec docker conainer with port 8080
+to access here from other containers, expose port number.
 
-$ docker run -d -p 8080:8001 backend 
+
+    expose 8001 80
+
+
+
+# How to make  backend container and run it
+
+ create docker image using Dockerfile
+     
+     docker build -t piccolo_backend .
+
+ exec docker conainer with port 8080
+
+    docker run -it -p 8001:8001 --network db-conn piccolo_backend npm start
 

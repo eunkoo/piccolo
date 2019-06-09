@@ -1,25 +1,25 @@
 {
     "development": {
-        "username": "edogawa01",
-        "password": "rhkdtjdryghl2019",
+        "username": "root",
+        "password": "password",
         "database": "edogawa01",
-        "host": "nodejs-004.cafe24.com",
+        "host": "piccolo-mysql", 
         "port": 3306,
         "dialect": "mysql"
       },
       "test": {
-        "username": "edogawa01",
-        "password": "rhkdtjdryghl2019",
+        "username": "root",
+        "password": "password",
         "database": "edogawa01",
-        "host": "nodejs-004.cafe24.com",
+        "host": "127.0.0.1",
         "port": 3306,
         "dialect": "mysql"
       },
       "production": {
-        "username": "edogawa01",
-        "password": "rhkdtjdryghl2019",
+        "username": "root",
+        "password": "password",
         "database": "edogawa01",
-        "host": "nodejs-004.cafe24.com",
+        "host": "127.0.0.1",
         "port": 3306,
         "dialect": "mysql"
       }

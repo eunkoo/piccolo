@@ -107,11 +107,12 @@ DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `users` (
   `iduser` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) DEFAULT NULL,
-  `apellidos` varchar(50) DEFAULT NULL,
-  `edad` int(11) DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL ,
+  `apellidos` varchar(50) DEFAULT NULL ,
+  `edad` int(11) DEFAULT NULL ,
   `email` varchar(100) DEFAULT NULL,
   `password` varchar(100) DEFAULT NULL,
+  `grade` int(11) DEFAULT NULL ,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   PRIMARY KEY (`iduser`)

@@ -30,12 +30,12 @@
             <v-flex xs12 md4
            v-for=" sh in sheetData1">
           <v-card>
-            <v-img
+            <!-- <v-img
               :src="require('../../assets/img/who.jpg')"
               max-height="225"
               contain
               :class="sh.color"
-            ></v-img>
+            ></v-img> -->
             <v-card-title  class="title white lighten-4">{{sh.text}}</v-card-title>
           </v-card>
           </v-flex>
@@ -49,12 +49,12 @@
             <v-flex xs12 md4
            v-for=" sh in sheetData2">
           <v-card>
-            <v-img
+            <!-- <v-img
               :src="require('../../assets/img/who.jpg')"
               max-height="225"
               contain
               :class="sh.color"
-            ></v-img>
+            ></v-img> -->
             <v-card-title  class="title white lighten-4">{{sh.text}}</v-card-title>
           </v-card>
           </v-flex>

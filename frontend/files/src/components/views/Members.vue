@@ -552,10 +552,15 @@ export default {
         this.editedItem.grade = selectObj.id
      },
    getImgUrl(pic) {
-        // console.log(pic)
         if(pic === undefined) return pic
-        return pic !== null ? require('../../assets/img/'+pic) : undefined
-        // return this.tempimg
+        if(pic !== null){
+          try{
+            return require('../../assets/img/'+pic);
+          }catch(e){
+            return undefined
+          }
+        }
+       
     },
     async getmembers () {
       this.loading = true;

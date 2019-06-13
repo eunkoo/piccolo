@@ -499,7 +499,7 @@ export default {
             if(item.grade !== null && this.grade_text(item.grade)!== undefined)
               ret += this.grade_text(item.grade).toLowerCase().includes(search) 
             if(item.baptism !== null &&  this.baptism_text(item.baptism)!==undefined){
-              ret = this.baptism_text(item.baptism).toLowerCase().includes( search ) 
+              ret += this.baptism_text(item.baptism).toLowerCase().includes( search ) 
             }
             return ret
           })

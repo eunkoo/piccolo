@@ -314,8 +314,12 @@ export default {
       console.log(localStorage.getItem('loggedIn') )
       console.log(localStorage.getItem('grade') )
       // console.log(this.userGrade )
-      this.$router.replace('/api/home')
-      this.$router.go('/api/home')
+      // this.$router.replace('/api/home')
+      // this.$router.go('/api/home')
+      
+      window.history.replaceState(null,'','/api/home')
+      window.history.go('/api/home')
+
     },
     loginFailed (response) {
       console.log("login failed")

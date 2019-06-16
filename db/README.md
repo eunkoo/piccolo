@@ -32,3 +32,7 @@ default mysql port is 3306
 
     mysql -u root -p
     > password
+
+
+!! Finally You have to import .sql file where is in files folder. !!
+

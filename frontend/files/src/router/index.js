@@ -10,6 +10,8 @@ import Events from '@/components/views/Events'
 import EventDayspan from '@/components/views/EventDayspan'
 import Attendee from '@/components/views/Attendee'
 import Organization from '@/components/views/Organization'
+import StatisticsPage from '@/components/views/ZStatistics'
+
 
 import Vuetify from 'vuetify'
 import VueSweetalert2 from 'vue-sweetalert2'
@@ -62,7 +64,11 @@ export default new Router({
       name: 'Home',
       component: Home
     },
-   
+    {
+      path: '/api/zstatistics',
+      name: 'Statistics',
+      component: StatisticsPage,
+    },
     {
       path: '/logout',
       name: 'Logout',

@@ -2,7 +2,9 @@
   <v-container fluid text-xs-center>
     <v-layout row wrap>
       <v-flex>
-        Home 
+        <h2>안녕하세요 </h2>
+        <div class="title">{{userName}}님 환영 합니다</div>
+        
       </v-flex>
     </v-layout>
   </v-container>
@@ -15,6 +17,18 @@ import apiService from '@/Services/ApiService'
 export default {
   name: 'Home',
   components: {},
+   computed: {
+    userName: {
+      get: () => {
+        return localStorage.getItem('apellidos')
+      }
+    },
+    userGrade: {
+      get: () => {
+        return localStorage.getItem('grade')
+      }
+    }
+  },
   data () {
     return {       
       en:en,

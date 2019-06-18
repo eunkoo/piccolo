@@ -7,8 +7,6 @@
         app
         v-model="drawer"
       >
-
-      
         <v-list dense v-if="loggedIn && (userGrade==1)">
           <v-list-tile
             v-for="(item, i) in menu_guest"
@@ -89,6 +87,7 @@
                   :rules="emailRules"
                   required
                   type="text"
+                  
                   placeholder="example@gmail.com"
                   @keyup.enter="login"
                 ></v-text-field>
@@ -223,15 +222,15 @@ export default {
       loginTitle: '로그인',
       path: '/',
       menu_guest: [
-        {path: '/api/home', label: '그래프', icon: 'show_chart'},
-        {path: '/api/zstatistics', label: '통계', icon: 'info' },
+        {path: '/api/home', label: '홈', icon: 'home'},
+        {path: '/api/zstatistics', label: '통계', icon: 'show_chart' },
         {path: '/api/members', label: '구성원', icon: 'people'},
         {path: '/api/attendee', label: '주일 보고', icon: 'description'},
         {path: '/logout', label: '로그아웃', icon: 'lock'}
       ],
       menu_director: [
-        {path: '/api/home', label: '그래프', icon: 'show_chart'},
-        {path: '/api/zstatistics', label: '통계', icon: 'info' },
+        {path: '/api/home', label: '홈', icon: 'home'},
+        {path: '/api/zstatistics', label: '통계', icon: 'show_chart' },
         {path: '/api/members', label: '구성원', icon: 'people'},
         {path: '/api/organization', label: '교육 부서', icon: 'business'},
         {path: '/api/events', label: '부서 일정', icon: 'event'},
@@ -240,8 +239,8 @@ export default {
         {path: '/logout', label: '로그아웃', icon: 'lock'}
       ],
       menu_master: [
-        {path: '/api/home', label: '그래프', icon: 'show_chart'},
-        {path: '/api/zstatistics', label: '통계', icon: 'info' },
+        {path: '/api/home', label: '홈', icon: 'home'},
+        {path: '/api/zstatistics', label: '통계', icon: 'show_chart' },
         {path: '/api/members', label: '구성원', icon: 'people'},
         {path: '/api/organization', label: '교육 부서', icon: 'business'},
         {path: '/api/events', label: '부서 일정', icon: 'event'},
@@ -288,6 +287,11 @@ export default {
     userGrade: {
       get: () => {
         return localStorage.getItem('grade')
+      },
+      userName:{
+        get:()=>{
+          return localStorage.getItem('apellidos')
+        }
       }
     }
   },
@@ -312,6 +316,7 @@ export default {
       console.log("login success")
       console.log(response)
       localStorage.user = JSON.stringify(response.data)
+      localStorage.apellidos = JSON.stringify(response.data.apellidos)
       if(response.data.grade == undefined)
         localStorage.grade = JSON.stringify(1)
       else
@@ -322,8 +327,8 @@ export default {
       // this.$router.replace('/api/home')
       // this.$router.go('/api/home')
       
-      window.history.replaceState(null,'','/api/home')
-      window.history.go('/api/home')
+      window.history.replaceState(null,'','/#/api/home')
+      window.history.go('/#/api/home')
 
     },
     loginFailed (response) {

@@ -7,6 +7,8 @@
         app
         v-model="drawer"
       >
+
+      
         <v-list dense v-if="loggedIn && (userGrade==1)">
           <v-list-tile
             v-for="(item, i) in menu_guest"
@@ -54,7 +56,7 @@
           class="hidden-sm-and-down"
         ></v-text-field> -->
         <v-spacer></v-spacer>
-        <v-menu v-if="!loggedIn" open-on-hover top offset-y>
+        <v-menu v-if="loggedIn" open-on-hover top offset-y>
           <v-btn icon large slot="activator">
             <v-avatar size="32px" tile>
               <img
@@ -222,12 +224,14 @@ export default {
       path: '/',
       menu_guest: [
         {path: '/api/home', label: '그래프', icon: 'show_chart'},
+        {path: '/api/zstatistics', label: '통계', icon: 'info' },
         {path: '/api/members', label: '구성원', icon: 'people'},
         {path: '/api/attendee', label: '주일 보고', icon: 'description'},
         {path: '/logout', label: '로그아웃', icon: 'lock'}
       ],
       menu_director: [
         {path: '/api/home', label: '그래프', icon: 'show_chart'},
+        {path: '/api/zstatistics', label: '통계', icon: 'info' },
         {path: '/api/members', label: '구성원', icon: 'people'},
         {path: '/api/organization', label: '교육 부서', icon: 'business'},
         {path: '/api/events', label: '부서 일정', icon: 'event'},
@@ -237,6 +241,7 @@ export default {
       ],
       menu_master: [
         {path: '/api/home', label: '그래프', icon: 'show_chart'},
+        {path: '/api/zstatistics', label: '통계', icon: 'info' },
         {path: '/api/members', label: '구성원', icon: 'people'},
         {path: '/api/organization', label: '교육 부서', icon: 'business'},
         {path: '/api/events', label: '부서 일정', icon: 'event'},

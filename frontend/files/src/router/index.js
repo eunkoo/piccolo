@@ -18,7 +18,6 @@ import VueSweetalert2 from 'vue-sweetalert2'
 import 'vuetify/dist/vuetify.min.css'
 import { Line } from 'vue-chartjs'
 
-import DaySpanVuetify from 'dayspan-vuetify'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import 'dayspan-vuetify/dist/lib/dayspan-vuetify.min.css'
 
@@ -49,11 +48,7 @@ Vue.use(Line)
 Vue.use(VueImg);
 Vue.use(VueMaterial)
 Vue.use(vuescroll)
-Vue.use(DaySpanVuetify, {
-  methods: {
-    getDefaultEventColor: () => '#1976d2'
-  }
-});
+
 
 Vue.use(Router)
 

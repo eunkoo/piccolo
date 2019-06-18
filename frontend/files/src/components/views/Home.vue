@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import {en, ko} from 'vuejs-datepicker/dist/locale'
 import apiService from '@/Services/ApiService'
 
 export default {
@@ -30,9 +29,7 @@ export default {
     }
   },
   data () {
-    return {       
-      en:en,
-      ko:ko,
+    return {    
       belong_items: [
         { text: '유치부', id: 0 },
         { text: '유초등부', id: 1 },

@@ -56,7 +56,7 @@
           class="hidden-sm-and-down"
         ></v-text-field> -->
         <v-spacer></v-spacer>
-        <v-menu v-if="loggedIn" open-on-hover top offset-y>
+        <v-menu v-if="!loggedIn" open-on-hover top offset-y>
           <v-btn icon large slot="activator">
             <v-avatar size="32px" tile>
               <img

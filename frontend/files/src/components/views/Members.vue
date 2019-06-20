@@ -6,7 +6,6 @@
     <v-layout xs12 sm6 md4>
       <v-flex :key="2" xs12 sm6 md6>
         <v-dialog v-model="dialog" max-width="800px">
-          <input onkeyup="enterkey" type="text" value>
           <v-btn fab color="primary" dark slot="activator" class="mb-2" v-if="userGrade==0">
             <v-icon dark>add</v-icon>
           </v-btn>
@@ -143,7 +142,7 @@
           </v-card>
         </v-dialog>
       </v-flex>
-      <v-flex :key="1" xs12 sm6 md6 v-if="userGrade==0">
+      <v-flex :key="1" xs2 sm2 md2 v-if="userGrade==0">
         <download-excel
           class="btn btn-default"
           :data="members"
@@ -151,32 +150,27 @@
           type="csv"
           name="선택된 명단.xls"
         >
-          <v-btn fab>엑셀</v-btn>
+          <v-btn fab >엑셀</v-btn>
         </download-excel>
       </v-flex>
     </v-layout>
     <v-layout>
-      <v-flex xs6 sm6 md4>
-        <v-select
-          label="부서"
-          ref="current_select"
-          :items="belong_items"
-          v-model="belong_items[current_belong]"
-          single-line
-          item-text="text"
-          item-value="id"
-          return-object
-          persistent-hint
-          @change="changeCurrentBelong"
-        >
-          <v-list-tile slot="prepend-item" ripple @click="belongAll">
-            <v-list-tile-title>전체</v-list-tile-title>
-          </v-list-tile>
-          <v-divider slot="prepend-item" class="mt-2"/>
-        </v-select>
-      </v-flex>&nbsp;&nbsp;
       <v-flex>
-        <v-text-field label="이름, 연락처 또는 조이름으로 찾기" v-model="search" @input="search_text"></v-text-field>
+        <v-chip
+          v-for="v in added_word"
+          :key="v.id"
+          v-model="v.active"
+          close
+          color="black"
+          @input="onChipClose(v)"
+          outline
+        >{{v.search}}</v-chip>
+        <v-text-field
+          label="검색 후 엔터를 치세요"
+          v-model="search"
+          @input="search_text"
+          @keyup.enter="add_word"
+        ></v-text-field>
       </v-flex>
     </v-layout>
     <v-data-table
@@ -243,6 +237,8 @@ export default {
       search: "",
       members: [],
       members_org: [],
+      added_word: [],
+      pre_categorized_items: [],
       dialog: false,
       selected_image: null,
       cPhoto: null,
@@ -331,6 +327,7 @@ export default {
         if (baptism === 2) return "학습";
         if (baptism === 3) return "유아";
       },
+      selectedBelong: ["유치부", "유초등부", "중고등부", "청년부"],
       date_menu: false,
       // tempimg: require('../../assets/img/25.jpeg'),//'/home/edo/piccolo/res/img/18.jpg',
 
@@ -464,57 +461,92 @@ export default {
     }
   },
   methods: {
-    //   getCurBelong(){
-    //       console.log(this.editedItem.belong)
-    //       if(this.editedItem.belong===1)    return '유치부'
-    //       else if(this.editedItem.belong===2)    return '유초등부'
-    //       else if(this.editedItem.belong===4)    return '중고등부'
-    //       else if(this.editedItem.belong===8)    return '청년부'
-    //       else if(this.editedItem.belong===16)    return '면려회'
-    //   },
+    onChipClose(chip) {
+      console.log("onChipClose" + chip.search);
+      const index = this.added_word.indexOf(chip);
+      this.added_word.splice(index, 1);
+      this.pre_categorized_items = this.members_org;
+      this.members = [];
+
+      if(this.added_word.length > 0 ){
+        for (var i = 0; i < this.added_word.length; i++) {
+          console.log(this.added_word[i]);
+          this.members = this.filtered_member_data(this.added_word[i].search)
+          this.pre_categorized_items = this.members;
+        }
+      }
+      else
+        this.members = this.members_org
+    },
+    add_word() {
+      if (this.search == "") return;
+      console.log("add word");
+      this.pre_categorized_items = this.members;
+      // this.added_word.push(Object()( id= this.added_word.length+1, active=true, search= this.search.trim().toLowerCase()))
+      this.added_word.push(
+        Object.assign(
+          {},
+          {
+            id: this.added_word.length + 1,
+            active: true,
+            search: this.search.trim().toLowerCase(),
+            data: this.members
+          }
+        )
+      );
+      this.search = "";
+    },
     async search_text() {
       let search = this.search.trim().toLowerCase();
-      console.log(search);
+      // console.log(search);
       //await this.getmembers();
-      this.members = this.members_org;
-      let items = this.members_org; //this.getmembers();
+      this.members =
+        this.pre_categorized_items.length == 0
+          ? this.members_org
+          : this.pre_categorized_items;
+
       // let item_array = Array.from(items);
       // console.log(items)
       if (search) {
-        items = items.filter(item => {
-          var ret = [];
-          if (item.name !== null)
-            ret = item.name.toLowerCase().includes(search);
-          if (item.phone !== null) ret += item.phone.includes(search);
-          if (item.connected !== null)
-            ret += item.connected.toLowerCase().includes(search);
-          if (item.grade !== null && this.grade_text(item.grade) !== undefined)
-            ret += this.grade_text(item.grade)
-              .toLowerCase()
-              .includes(search);
-          if (
-            item.baptism !== null &&
-            this.baptism_text(item.baptism) !== undefined
-          ) {
-            ret += this.baptism_text(item.baptism)
-              .toLowerCase()
-              .includes(search);
-          }
-          return ret;
-        });
         // console.log(items)
-        this.members = items;
+        this.members = this.filtered_member_data(search);
       }
-
-      // const total = items.length;
-
-      // setTimeout(() => {
-      //     this.loading = false;
-      //     resolve({
-      //         items,
-      //         total
-      //     });
-      // }, 300);
+    },
+    filtered_member_data(search) {
+      console.log("filtered_member_data " + search);
+      let items =
+        this.pre_categorized_items.length == 0
+          ? this.members_org
+          : this.pre_categorized_items;
+      items = items.filter(item => {
+        var ret = [];
+        if (item.name !== null) ret = item.name.toLowerCase().includes(search);
+        if (item.phone !== null) ret += item.phone.includes(search);
+        if (item.connected !== null)
+          ret += item.connected.toLowerCase().includes(search);
+        if (item.grade !== null && this.grade_text(item.grade) !== undefined)
+          ret += this.grade_text(item.grade)
+            .toLowerCase()
+            .includes(search);
+        if (
+          item.baptism !== null &&
+          this.baptism_text(item.baptism) !== undefined
+        ) {
+          ret += this.baptism_text(item.baptism)
+            .toLowerCase()
+            .includes(search);
+        }
+        if (
+          item.belong !== null &&
+          this.belong_text(item.belong) !== undefined
+        ) {
+          ret += this.belong_text(item.belong)
+            .toLowerCase()
+            .includes(search);
+        }
+        return ret;
+      });
+      return items;
     },
     changeBaptism(selectObj) {
       //  console.log(selectObj.id)
@@ -526,15 +558,15 @@ export default {
       this.editedItem.belong = selectObj.id;
     },
     async changeCurrentBelong(selectObj) {
-      // console.log( this.$refs.current_select)
+      console.log(selectObj);
+      // this.selectedBelong.push(selectObj.id)
+      // // this.$refs.current_select.item_text = '전체'
 
-      // this.$refs.current_select.item_text = '전체'
+      // this.current_belong = selectObj.id;
+      // var response = await apiService.fetchMember(this.current_belong);
 
-      this.current_belong = selectObj.id;
-      var response = await apiService.fetchMember(this.current_belong);
-
-      this.members = response.data;
-      this.members_org = response.data;
+      // this.members = response.data;
+      // this.members_org = response.data;
     },
     belongAll() {
       console.log(this.$refs.current_select);

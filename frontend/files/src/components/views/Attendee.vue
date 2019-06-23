@@ -64,7 +64,7 @@
       </v-flex>
       <v-flex xs4>
         <v-layout justify-center>
-          <v-flex xs12 sm6 md4>
+          <v-flex xs4 sm4 md4>
             <v-menu
               ref="date_menu"
               :close-on-content-click="false"

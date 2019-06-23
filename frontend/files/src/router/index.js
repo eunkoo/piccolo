@@ -1,4 +1,4 @@
-import 'babel-polyfill' 
+
 import 'es6-promise/auto'
 import Vue from 'vue'
 import Router from 'vue-router'
@@ -19,7 +19,6 @@ import 'vuetify/dist/vuetify.min.css'
 import { Line } from 'vue-chartjs'
 
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
-import 'dayspan-vuetify/dist/lib/dayspan-vuetify.min.css'
 
 import VueImg from 'v-img';
 
@@ -28,6 +27,8 @@ import 'vue-material/dist/vue-material.min.css'
 import vuescroll from 'vue-scroll'
 
 // import PrintLayout from '@/PrintLayout'
+require('babel-polyfill')
+require('es6-promise').polyfill()
 
 Vue.config.productionTip = false
 
@@ -55,7 +56,7 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/api/home',
+      path: '/',
       name: 'Home',
       component: Home
     },

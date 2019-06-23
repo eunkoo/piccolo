@@ -82,13 +82,12 @@
                         label="생년월일"
                         readonly
                       ></v-text-field>
-                      <v-date-picker locale="ko-KR" v-model="editedItem.birth" no-title scrollable>
-                        <v-btn flat color="primary" @click="date_menu = false">취소</v-btn>
-                        <v-btn
-                          flat
-                          color="primary"
-                          @click="$refs.date_menu.save(editedItem.birth)"
-                        >확인</v-btn>
+                      <v-date-picker 
+                        locale="ko-KR" 
+                        v-model="editedItem.birth" 
+                        no-title 
+                        scrollable
+                        @input="$refs.date_menu.save(editedItem.birth)">
                       </v-date-picker>
                     </v-menu>
                   </v-flex>

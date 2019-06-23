@@ -78,9 +78,11 @@
               min-width="290px"
             >
               <v-text-field text-xs-center flat slot="activator" v-model="cdateFormat" readonly></v-text-field>
-              <v-date-picker locale="ko-KR" v-model="cdateFormat" no-title scrollable>
-                <v-btn flat color="primary" @click="date_menu = false">취소</v-btn>
-                <v-btn flat color="primary" @click="chooseDate(cdateFormat)">확인</v-btn>
+              <v-date-picker 
+                  locale="ko-KR" 
+                  v-model="cdateFormat" 
+                  no-title scrollable 
+                  @input="chooseDate(cdateFormat)">
               </v-date-picker>
             </v-menu>
           </v-flex>

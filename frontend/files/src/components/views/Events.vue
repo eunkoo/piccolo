@@ -52,9 +52,12 @@
                       prepend-icon="event"
                       readonly
                     ></v-text-field>
-                    <v-date-picker locale="ko-KR" v-model="editedItem.day" no-title scrollable>
-                      <v-btn flat color="primary" @click="date_menu = false">취소</v-btn>
-                      <v-btn flat color="primary" @click="$refs.date_menu.save(editedItem.day)">확인</v-btn>
+                    <v-date-picker 
+                      locale="ko-KR" 
+                      v-model="editedItem.day" 
+                      no-title 
+                      scrollable 
+                      @input="$refs.date_menu.save(editedItem.day)">
                     </v-date-picker>
                   </v-menu>
                 </v-flex>

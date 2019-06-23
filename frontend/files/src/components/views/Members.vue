@@ -1,19 +1,36 @@
 <template>
   <div class="members">
     <div class="text-xs-center">
-      <v-progress-circular v-if="loading" indeterminate color="primary"></v-progress-circular>
+      <v-progress-linear
+          v-if="loading" 
+          background-color="blue-grey"
+          height="3"
+          color="lime"
+          indeterminate
+        ></v-progress-linear>
     </div>
-    <v-layout xs12 sm6 md4>
+    <!-- <v-layout xs12 sm6 md4>
       <v-flex :key="2" xs12 sm6 md6>
-        <v-dialog v-model="dialog" max-width="800px">
-          <v-btn fab color="primary" dark slot="activator" class="mb-2" v-if="userGrade==0">
-            <v-icon dark>add</v-icon>
-          </v-btn>
-          <v-card>
-            <v-card-title>
-              <span class="headline grey lighten-2" primary-title>{{ formTitle }}</span>
-            </v-card-title>
-            <v-alert :value="alert" color="error" icon="error_circle" outline>{{alertMsg}}</v-alert>
+
+      <v-dialog v-model="dialog" max-width="800px">
+          <input onkeyup="enterkey" type="text"  value="" />
+        <v-btn fab color="primary" dark slot="activator" class="mb-2" v-if="userGrade==0">
+          <v-icon dark>add</v-icon>
+        </v-btn>
+        <v-card>
+          <v-card-title>
+            <span class="headline grey lighten-2" primary-title>{{ formTitle }}</span>
+          </v-card-title>
+
+          <v-alert
+            :value="alert"
+            color="error"
+            icon="error_circle"
+            outline
+          >
+            {{alertMsg}}
+          </v-alert>
+
 
             <v-card-text>
               <v-container grid-list-md>
@@ -28,42 +45,55 @@
                     <input type="file" @change="onFileChange">
                   </v-flex>
 
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field label="이름" v-model="editedItem.name"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field label="주소" v-model="editedItem.address"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field label="휴대폰" v-model="editedItem.phone"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-select
-                      label="성별"
-                      :items="gender_items"
-                      v-model="gender_items[editedItem.gender]"
-                      single-line
-                      item-text="text"
-                      item-value="id"
-                      return-object
-                      persistent-hint
-                      @change="changeGender"
-                    ></v-select>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-select
-                      label="등록상태"
-                      :items="grade_items"
-                      v-model="grade_items[editedItem.grade]"
-                      single-line
-                      item-text="text"
-                      item-value="id"
-                      return-object
-                      persistent-hint
-                      @change="changeGrade"
-                    ></v-select>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
+
+                <v-flex xs12 sm6 md4>
+                  <v-text-field label="이름" v-model="editedItem.name"></v-text-field>
+                </v-flex>
+
+                <v-flex xs6>
+                  {{ editedItem.gender }}
+                  {{ gender_items[editedItem.gender] }}
+                  <v-radio-group v-model="gender_items[editedItem.gender]" row>
+                    <v-radio label="남자" :value="gender_items[0]"></v-radio>
+                    <v-radio label="여자" :value="gender_items[1]"></v-radio>
+                  </v-radio-group>
+                </v-flex>
+
+
+                <v-flex xs12 sm6 md4>
+                  <v-text-field label="주소" v-model="editedItem.address"></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field label="휴대폰" v-model="editedItem.phone"></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md4>
+               <v-select
+                  label="성별"
+                  :items="gender_items"
+                  v-model="gender_items[editedItem.gender]"
+                  single-line
+                  item-text="text"
+                  item-value="id"
+                  return-object
+                  persistent-hint
+                  @change="changeGender" 
+                ></v-select>
+                </v-flex>
+                <v-flex xs12 sm6 md4>
+               <v-select
+                  label="등록상태"
+                  :items="grade_items"
+                  v-model="grade_items[editedItem.grade]"
+                  single-line
+                  item-text="text"
+                  item-value="id"
+                  return-object
+                  persistent-hint
+                  @change="changeGrade" 
+                ></v-select>
+                </v-flex>
+                 <v-flex xs12 sm6 md4>
+
                     <v-menu
                       ref="date_menu"
                       :close-on-content-click="false"
@@ -92,68 +122,62 @@
                       </v-date-picker>
                     </v-menu>
                   </v-flex>
-                  <!-- <v-flex xs12 sm6 md4>
-                  <v-date-picker label="Birth" v-model="editedItem.birth"></v-date-picker>
-                  </v-flex>-->
-                  <!-- <v-flex xs12 sm6 md4>
-                    :v-model="belong_items[editedItem.belong]"
-                  <v-text-field label="Photo" v-model="editedItem.photo"></v-text-field>
-                  </v-flex>-->
-                  <v-flex xs12 sm6 md4>
-                    <v-select
-                      label="부서"
-                      :items="belong_items"
-                      v-model="belong_items[editedItem.belong]"
-                      single-line
-                      item-text="text"
-                      item-value="id"
-                      return-object
-                      persistent-hint
-                      @change="changeBelong"
-                    ></v-select>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-text-field label="조" v-model="editedItem.connected"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm6 md4>
-                    <v-select
-                      label="세례여부"
-                      :items="baptism_items"
-                      v-model="baptism_items[editedItem.baptism]"
-                      single-line
-                      item-text="text"
-                      item-value="id"
-                      return-object
-                      persistent-hint
-                      @change="changeBaptism"
-                    ></v-select>
-                  </v-flex>
-                  <v-flex xs6 sm6 md4>
-                    <v-text-field label="기타" v-model="editedItem.tag"></v-text-field>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" flat @click.native="save">저장</v-btn>
-              <v-btn color="blue darken-1" flat @click.native="close">취소</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+                <v-flex xs12 sm6 md4>
+                   <v-select
+                    label="부서"
+                    :items="belong_items"
+                    v-model="belong_items[editedItem.belong]"
+                    single-line
+                    item-text="text"
+                    item-value="id"
+                    return-object
+                    persistent-hint
+                    @change="changeBelong" 
+                  ></v-select>
+                </v-flex>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field label="조" v-model="editedItem.connected"></v-text-field>
+                </v-flex>
+                <v-flex xs12 sm6 md4>
+                   <v-select
+                    label="세례여부"
+                    :items="baptism_items"
+                    v-model="baptism_items[editedItem.baptism]"
+                    single-line
+                    item-text="text"
+                    item-value="id"
+                    return-object
+                    persistent-hint
+                    @change="changeBaptism" 
+                  ></v-select>
+                </v-flex>
+
+                <v-flex xs12>
+                  <v-textarea
+                    box
+                    name="input-7-4"
+                    v-model="editedItem.tag"
+                    :rows="3"
+                    label="기타"
+                    value="The Woodman set to work at once, and so sharp was his axe that the tree was soon chopped nearly through."
+                  ></v-textarea>
+                </v-flex>
+              </v-layout>
+            </v-container>
+          </v-card-text>
+
+
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" flat @click.native="save">저장</v-btn>
+            <v-btn color="blue darken-1" flat @click.native="close">취소</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
       </v-flex>
-      <v-flex :key="1" xs2 sm2 md2 v-if="userGrade==0">
-        <download-excel
-          class="btn btn-default"
-          :data="members"
-          :fields="member_fields"
-          type="csv"
-          name="선택된 명단.xls"
-        >
-          <v-btn fab >엑셀</v-btn>
-        </download-excel>
-      </v-flex>
-    </v-layout>
+    </v-layout> -->
     <v-layout>
       <v-flex>
         <v-chip
@@ -173,48 +197,310 @@
         ></v-text-field>
       </v-flex>
     </v-layout>
-    <v-data-table
-      :headers="filteredHeaders"
-      :pagination.sync="pagination"
-      :rows-per-page-items="pagination.rowsPerPageItems"
-      :total-items="pagination.totalItems"
-      :items="members"
-    >
-      <template slot="items" slot-scope="props">
-        <td>
-          <!-- <v-img  width="50px" height="50px"  :lazy-src="this.tempimg"></v-img> -->
-          <img
-            img
-            width="60px"
-            height="80px"
-            :lazy-src="getImgUrl(props.item.photo)"
-            :src="getImgUrl(props.item.photo)"
-          >
-        </td>
-        <!-- <td><img v-bind:src="this.tempimg" style="width:20px; height:auto;"></td> -->
-        <!-- <tr class="text-xs-left">{{ props.item.name }}</tr> -->
 
-        <!-- <td class="text-xs-left">{{ props.item.id}}</td> -->
-        <td class="text-xs-left" style="min-width:80px">{{ props.item.name }}</td>
-        <!-- <td class="text-xs-left">{{ props.item.address }}</td> -->
-        <td class="text-xs-left" v-if="userGrade==0">{{ props.item.phone }}</td>
-        <td class="text-xs-left" style="min-width:100px">{{ belong_text( props.item.belong) }}</td>
-        <td class="text-xs-left" style="min-width:100px">{{grade_text( props.item.grade)}}</td>
-        <td class="text-xs-left" style="min-width:90px">{{ props.item.connected }}</td>
 
-        <td class="justify-center layout px-0" v-if="userGrade==0">
-          <v-btn icon class="mx-0" @click="editItem(props.item)">
-            <v-icon color="teal">edit</v-icon>
-          </v-btn>
-          <v-btn icon class="mx-0" @click="deleteMembers(props.item)">
-            <v-icon color="pink">delete</v-icon>
-          </v-btn>
-        </td>
-      </template>
-      <template slot="no-data">
-        <v-btn color="primary" @click="getmembers">Reset</v-btn>
-      </template>
-    </v-data-table>
+    <!-- 검색/필터 패널 -->
+    <v-layout row wrap>
+      <v-flex xs12 >
+        <v-select 
+          color="blue"
+          hide-details
+          dense
+          v-model="selectedBelongs" 
+          :items="[0,1,2,3]"
+          attach 
+          chips
+          multiple
+          label="부서"                    
+          persistent-hint > 
+          <template slot="item" slot-scope="props">
+            {{ descBelong[props.item] }}
+          </template>                
+          <template slot="selection" slot-scope="props">
+            {{ descBelong[props.item] }},
+          </template>
+        </v-select>
+      </v-flex>
+    </v-layout>
+
+    <v-layout>
+      <v-flex xs6 sm6 md4>
+            <v-select
+            label="부서"
+            ref="current_select"
+            :items="belong_items"
+            v-model="belong_items[current_belong]"
+            single-line
+            item-text="text"
+            item-value="id"
+            return-object
+            persistent-hint
+            @change="changeCurrentBelong" 
+            >
+            <v-list-tile
+                slot="prepend-item"
+                ripple
+                @click="belongAll" >
+                <v-list-tile-title>전체</v-list-tile-title>
+            </v-list-tile>
+            <v-divider
+                slot="prepend-item"
+                class="mt-2"
+            />
+            </v-select>
+        </v-flex>
+        &nbsp;&nbsp;
+        <v-flex>
+       <v-text-field label="이름, 연락처 또는 조이름으로 찾기" v-model="search" @input="search_text"></v-text-field>
+        </v-flex>
+     </v-layout>
+
+   
+    <v-layout row wrap>
+      <v-flex xs12>
+        <v-btn @click="createMember"> <v-icon class="pr-3"> person_add </v-icon> 회원 추가 </v-btn>
+      </v-flex>
+      <v-flex xs12>
+        <!-- 회원정보 데이터 테이블 -->
+        <v-data-table 
+          :loading="membersLoading"
+          :pagination.sync="pagination"
+          :rows-per-page-items="pagination.rowsPerPageItems"
+          :total-items="pagination.totalItems"
+          :headers="memberHeader"
+          :items="members">
+          <v-progress-linear v-slot:progress color="blue" indeterminate></v-progress-linear>
+          <template slot="items" slot-scope="props">
+            <!-- <tr :class="[`belong_${props.item.belong}` ]"> -->
+            <tr>
+              <!-- <td :width="80" class="zguide"> {{ props.item.photo }} </td> -->
+              <td :width="80" class="zguide"> 
+                <v-img :src="props.item.photo" v-if="props.item.photo"> </v-img>
+              </td>
+              <td> <strong class="headline">{{ props.item.name }} </strong></td>
+              <td> {{ props.item.phone }} </td>
+              <!-- <td> {{ props.item.photo }} </td> -->
+              <td> 
+                <v-chip dark :color="belongChipStyle[props.item.belong]" text-color="white"> 
+                  {{ descBelong[props.item.belong] }} 
+                </v-chip>
+              </td>
+              <td> {{ descGrade[props.item.grade] }} </td>
+              <td> {{ props.item.connected }} </td>
+              <td>
+                <v-btn small flat icon color="primary" @click="editMember(props.item)">
+                  <v-icon> edit </v-icon>
+                </v-btn>
+                <v-btn small flat icon color="deep-orange" @click="openRemoveDialog(props.item)">
+                  <v-icon> delete </v-icon>
+                </v-btn>
+              
+              </td>
+            </tr>
+          </template>
+        </v-data-table>
+      </v-flex>
+    </v-layout>
+
+
+
+    <!-- 회원삭제 대화상자 -->
+    <v-dialog v-model="removeDialog" persistent max-width="500px">
+      <v-card>
+        <v-card-title class="headline pt-3">선택한 회원을 삭제하시겠습니까? </v-card-title>
+        <v-card-text>
+          <v-layout row wrap>
+            <v-flex xs3 class="zguide">
+              <v-img  max-height="125" contain :src="selectedMember.photo"></v-img>
+            </v-flex>
+            <v-flex xs9 class="px-3">
+              <p> 삭제한 회원정보는 되돌릴 수 없으니 <strong class="red--text">주의</strong>하세요. </p>
+              <p> 이름 : {{ selectedMember.name }} </p>
+              <p> 부서 : {{ descBelong[selectedMember.belong] }} </p>
+            </v-flex>
+          </v-layout>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>          
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" flat outline @click="removeDialog = false"> 취소 </v-btn>
+          <v-btn color="red darken-1" flat outline @click="removeMember(selectedMember)" > 삭제 </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    
+    
+    
+    <!-- 회원정보 추가/수정 대화상자 -->
+    <v-dialog v-model="editDialog" persistent max-width="700px">
+      <v-card >
+        <v-layout>
+          <v-flex xs4 class="zguide py-4 px-3 orange lighten-3">
+            <v-img :src="imageUrl" min-height="200" max-height="440" v-if="imageUrl"></v-img>
+            <v-text-field label="사진 선택" readonly hide-details prepend-icon="attach_file"
+              @click='pickImageFile' v-model='imageName'></v-text-field>
+            
+            <v-spacer></v-spacer>
+            <input type="file" style="display: none" ref="image" accept="image/*"
+                name="photo"
+                id="photo"
+               @change="onImageFilePicked">
+          </v-flex>
+
+
+          <v-flex xs8>
+            <v-card-title primary-title>
+              <span class="headline"> 회원정보 수정 </span>
+            </v-card-title>
+            <v-card-text>
+              <v-layout row wrap>
+                <!-- 이름 -->
+                <v-flex xs6 pa-1 ma-0>
+                  <v-text-field color="blue" hide-details label="이름" v-model="selectedMember.name"> </v-text-field>
+                </v-flex>
+                <!-- 성별 (남:0 여:1) -->
+                <v-flex xs2 pa-1 ma-0>
+                  <v-select 
+                    color="blue"
+                    hide-details 
+                    dense 
+                    v-model="selectedMember.gender"
+                    :items="[0,1]"
+                    attach 
+                    label="성별" 
+                    persistent-hint>
+                    <template slot="item" slot-scope="props">
+                      {{ descGender[props.item] }}                      
+                    </template>
+                    <template slot="selection" slot-scope="props">
+                      {{ descGender[props.item] }}
+                    </template>
+                  </v-select>
+                </v-flex>
+                <!-- 부서 (유치부:0, 유초등부:1, 중고등부:2, 청년부:3) -->
+                <v-flex xs4 pa-1 ma-0>
+                  <v-select 
+                    color="blue"
+                    hide-details
+                    dense
+                    v-model="selectedMember.belong" 
+                    :items="[0,1,2,3]"
+                    attach 
+                    label="부서"                    
+                    persistent-hint > 
+                    <template slot="item" slot-scope="props">
+                      {{ descBelong[props.item] }}
+                    </template>                
+                    <template slot="selection" slot-scope="props">
+                      {{ descBelong[props.item] }}
+                    </template>
+                  </v-select>
+                </v-flex>
+
+                <!-- 조 -->
+                <v-flex xs12 pa-1>
+                  <v-text-field color="blue" hide-details label="조" v-model="selectedMember.connected"></v-text-field>
+                </v-flex>
+
+                <!-- 주소 -->
+                <v-flex xs12 pa-1>
+                  <v-text-field color="blue" hide-details label="주소" v-model="selectedMember.address"></v-text-field>
+                </v-flex>
+                <!-- 연락처 -->
+                <v-flex xs6 pa-1>                  
+                  <v-text-field color="blue" hide-details label="연락처" v-model="selectedMember.phone"></v-text-field>
+                </v-flex>
+                <!-- 등록상태 (등록:0, 새신자:1, 장기결석:2, 기타:3) -->
+                <v-flex xs6 pa-1>
+                  <v-select 
+                    color="blue"
+                    hide-details
+                    dense
+                    v-model="selectedMember.grade" 
+                    :items="[0,1,2,3]"
+                    attach 
+                    label="등록상태"                    
+                    persistent-hint > 
+                    <template slot="item" slot-scope="props">
+                      {{ descGrade[props.item] }}
+                    </template>                
+                    <template slot="selection" slot-scope="props">
+                      {{ descGrade[props.item] }}
+                    </template>
+                  </v-select>
+                </v-flex>
+
+                <!-- 생년월일 -->
+                <v-flex xs6 pa-1 ma-0>
+                  <v-menu
+                    color="blue"
+                    ref="menuBirthday"
+                    v-model="menuBirthday"
+                    :close-on-content-click="false"
+                    :nudge-right="40"
+                    :return-value.sync="selectedMember.birth"
+                    lazy
+                    offset-y
+                    full-width
+                    min-width="200px"
+                  >
+                    <v-text-field
+                      hide-details
+                      slot="activator"
+                      v-model="selectedMember.birth"
+                      label="생년월일"
+                      prepend-icon="event"
+                      readonly 
+                      hint="select birthday"
+                      persistent-hint
+                    ></v-text-field>
+                    <v-date-picker 
+                      v-model="selectedMember.birth" 
+                      :show-current="true"
+                      @input="$refs.menuBirthday.save(selectedMember.birth)"></v-date-picker>
+                  </v-menu>
+                </v-flex>
+                <v-flex xs6 pa-1>
+                  <!-- 세례 (세례:0, 입교:1, 학습:2, 유아:3) -->
+                  <v-select 
+                    color="blue"
+                    hide-details
+                    dense
+                    v-model="selectedMember.baptism" 
+                    :items="[0,1,2,3]"
+                    attach 
+                    label="세례여부"                    
+                    persistent-hint > 
+                    <template slot="item" slot-scope="props">
+                      {{ descBoptism[props.item] }}
+                    </template>                
+                    <template slot="selection" slot-scope="props">
+                      {{ descBoptism[props.item] }}
+                    </template>
+                  </v-select>
+
+                </v-flex>
+
+                <v-flex xs12 pa-1> 
+                  <v-textarea color="blue" hide-details label="기타" rows="2" hint="Hint text"></v-textarea>
+                </v-flex>
+              </v-layout>
+            </v-card-text>
+            <v-divider light></v-divider>
+            <v-card-actions class="pa-3">
+              <v-spacer></v-spacer>
+              <v-btn color="green darken-1" outline flat @click="save"> <v-icon class="pr-2"> save </v-icon> 저장 </v-btn>
+              <v-btn color="black darken-1" outline flat @click="close"> 취소 </v-btn>
+            </v-card-actions>
+
+
+          </v-flex>
+        </v-layout>
+      </v-card>
+
+
+    </v-dialog >
   </div>
 </template>
 
@@ -223,6 +509,7 @@
 import apiService from "@/Services/ApiService";
 import axios from "axios";
 import downloadExcel from "vue-json-excel";
+import Api from '@/Services/Api'
 
 export default {
   name: "members",
@@ -243,52 +530,7 @@ export default {
       selected_image: null,
       cPhoto: null,
       current_belong: -1,
-      member_fields: {
-        이름: "name",
-        소속: {
-          field: "belong",
-          callback: value => {
-            console.log("execel field belong : " + value);
-            if (value === 0) return "유치부";
-            if (value === 1) return "유초등부";
-            if (value === 2) return "중고등부";
-            if (value === 3) return "청년부";
-          }
-        },
-        조: "connected",
-        주소: "address",
-        전화: "phone",
-        생년월일: "birth",
-        성별: {
-          field: "gender",
-          callback: value => {
-            if (value === 0) return "남";
-            else return "여";
-          }
-        },
-        등록여부: {
-          field: "grade",
-          callback: value => {
-            console.log("execel field grade : " + value);
-
-            if (value === 0) return "등록";
-            if (value === 1) return "새신자";
-            if (value === 2) return "장기결석";
-            if (value === 3) return "보류";
-          }
-        },
-        세례여부: {
-          field: "baptism",
-          callback: value => {
-            console.log("execel field baptism : " + value);
-
-            if (value === 0) return "세례";
-            if (value === 1) return "입교";
-            if (value === 2) return "학습";
-            if (value === 3) return "유아";
-          }
-        }
-      },
+     
       gender_items: [{ text: "남", id: 0 }, { text: "여", id: 1 }],
       belong_items: [
         { text: "유치부", id: 0 },
@@ -355,6 +597,45 @@ export default {
         baptism: -1
         //info: 'adf'//'이름 :'+this.name+" 주소 : "+this.address+" 전화번호 : "+this.phone
       },
+
+      // ------- zz test --------------
+      editDialog: false,
+      removeDialog: false,
+      membersLoading: false,
+      menuBirthday: false,
+      isEditMode: false,
+      memberData: [],
+      memberHeader: [
+        { text: '사진', value: 'photo' },
+        { text: '이름', value: 'name' }, 
+        { text: '연락처', value: 'phone' },
+        { text: '소속', value: 'belong' },
+        { text: '등록', value: 'grade' }, 
+        { text: '조', value: 'group' },
+        { text: '수정/삭제', value: '' },
+      ],
+      belongChipStyle: [ 'lime darken-2', 'orange lighten-2', 'deep-orange lighten-2', 'light-blue lighten-2' ],
+      descBelong: ['유치부', '유초등부', '중고등부', '청년부'],
+      descGrade: ['등록', '새신자', '장기결석', '보류'],
+      descGender: ['남', '여'],
+      descBoptism: ['세례', '입교', '학습', '유아'],
+      selectedMember: { name: '', gender: 0 },      
+      
+      selectedBelongs: [0,1,2,3],
+
+
+      itemsBelong: [ 
+        { no: 0, text: '유치부' },
+        { no: 1, text: '유초등부' },
+        { no: 2, text: '중고등부' },
+        { no: 3, text: '청년부' },
+      ],
+
+      imageName: '',
+      imageUrl: '', 
+      imageFile: null,
+
+
       headers: [
         {
           text: "사진",
@@ -461,6 +742,68 @@ export default {
     }
   },
   methods: {
+   
+    pickImageFile() {
+      this.$refs.image.click();
+    },
+    onImageFilePicked(e){
+      console.log(`image file picked `);
+      console.log(e.target.files);
+
+      const files = e.target.files;
+      if (files[0] !== undefined) {
+        this.imageName = files[0].name;
+        if (this.imageName.lastIndexOf('.') <= 0) {
+          return;
+        }
+        const fr = new FileReader();
+        fr.readAsDataURL(files[0]);
+        fr.addEventListener('load', () => {
+          console.log('load complete');
+          this.imageUrl = fr.result;
+          this.imageFile = files[0];          
+
+          console.log(`imageFile : ${this.imageFile.name}`);
+          console.log(this.imageFile);
+
+        });
+      } else {
+        this.imageName = '';
+        this.imageFile = '';
+        this.imageUrl = '';
+      }
+    },
+
+    createMember(){
+      console.log(`create new member`);
+      this.isEditMode = false;
+      this.selectedMember = { id: -1};
+      this.imageUrl = null;
+      this.editDialog = true;
+    },
+    editMember(_member){
+      console.log(`try edit member. name:${_member.name} id:${_member.id}`);
+      this.isEditMode = true;
+      this.selectedMember = _member;
+      this.imageUrl = this.selectedMember.photo;
+      this.editDialog = true;
+    },
+    removeMember(_member){
+      apiService.deleteMembers(_member.id)
+        .then(res => {
+          const index = this.members.indexOf(_member)
+          console.log(`삭제할 회원 아이템의 인덱스는 :${index}`);
+          this.members.splice(index, 1)
+          this.removeDialog = false;
+        });
+    },
+
+    openRemoveDialog(_member){
+      console.log(`try remove member. name:${_member.name}`);
+      this.selectedMember = _member;
+      this.removeDialog = true;
+    },
+
     onChipClose(chip) {
       console.log("onChipClose" + chip.search);
       const index = this.added_word.indexOf(chip);
@@ -512,6 +855,8 @@ export default {
         this.members = this.filtered_member_data(search);
       }
     },
+
+
     filtered_member_data(search) {
       console.log("filtered_member_data " + search);
       let items =
@@ -548,6 +893,7 @@ export default {
       });
       return items;
     },
+
     changeBaptism(selectObj) {
       //  console.log(selectObj.id)
       this.editedItem.baptism = selectObj.id;
@@ -590,13 +936,21 @@ export default {
         }
       }
     },
-    async getmembers() {
-      this.loading = true;
-      const response = await apiService.fetchMembers();
-      this.members = response.data;
-      this.members_org = response.data;
-      this.loading = false;
+
+    async getmembers () {
+      // this.loading = true;
+      this.membersLoading = true;
+      const response = await apiService.fetchMembers()
+      console.log(response);
+
+      this.memberData = response.data;
+
+      this.members = response.data
+      this.members_org = response.data
+      this.membersLoading = false;
+      // this.loading = false;
     },
+
     onFileChange(e) {
       var files = e.target.files || e.dataTransfer.files;
       if (!files.length) return;
@@ -610,88 +964,113 @@ export default {
         this.cPhoto = e.target.result;
       };
     },
-    saveImage(items) {
-      console.log("saveImage");
-      if (this.selected_image !== null) {
-        let formData = new FormData();
-        formData.append("file", this.selected_image, this.selected_image.name);
-        // formData.append('tempFilePath','/home/edo/piccolo/res/img/')
-        formData.append("headers", ["Content-Type", "multipart/form-data"]);
-        // console.log(nid)
-        apiService.uploadPhoto(formData, items.id);
-      }
-      this.selected_image = null;
-      this.cPhoto = null;
-    },
+
 
     removeImage: function(e) {
       this.image = "";
     },
     checkMem() {},
-    async save() {
+    
+
+    saveImage(memberId) {
+      console.log(`--- save image . id:${memberId}`);
+      if(this.imageFile !== null  ){
+        console.log(`---> saveImage. item_id:${memberId} name:${this.imageFile.name}`);
+        let formData = new FormData();
+        formData.append('file',this.imageFile , this.imageName)
+        formData.append("headers", ['Content-Type', 'multipart/form-data']);
+        return apiService.uploadPhoto(formData, memberId);
+      }
+      this.imageFile = null;
+      this.imageName = '';
+      this.cPhoto = null;
+    },
+    // 회원정보 저장 
+    async save () {
+
       try {
         this.loading = true;
-        console.log("editIndex : " + this.editedIndex);
-        apiService.checkMembers(this.editedItem).then(result => {
-          if (result.data != "") {
-            //already added name
-            this.alert = true;
-            console.log("이미 등록됨");
-            this.alertMsg = "이미 등록된 이름입니다";
-            setTimeout(() => {
-              this.alert = !this.alert;
-            }, 3000);
-          } else {
-            if (this.editedIndex === -1) {
-              apiService.addMembers(this.editedItem).then(result => {
-                this.editedItem = Object.assign({}, result.data);
-                this.members.push(this.editedItem);
-                this.saveImage(this.editedItem);
-              });
+
+        console.log(`회원정보 저장을 시도합니다.`);
+        console.log(this.selectedMember.id);
+        console.log(this.selectedMember.name);
+
+        apiService.checkMembers(this.selectedMember)
+          .then((result) => {
+            if(result.data != "") { //already added name
+              this.alert = true
+              console.log("already exist member. ")
+              this.alertMsg = "이미 등록된 이름입니다"
+              setTimeout(() => {
+                  this.alert = !this.alert
+              }, 3000)
             } else {
-              apiService.updateMembers(this.editedItem).then(result => {
-                this.saveImage(this.editedItem);
-              });
-              Object.assign(this.members[this.editedIndex], this.editedItem);
+              // 새로운 회원 추가
+              if (this.selectedMember.id === -1) {
+                console.log(`--- add member ---`);
+
+                apiService.addMembers(this.selectedMember)
+                  .then(res => {
+                    console.log(res);
+                    console.log(`새로생성된 회원의 아이디는 : ${res.data.id}`);
+
+
+                    this.selectedMember.id = res.data.id;
+                    this.saveImage(res.data.id)
+                      .then(resImage => {
+                        console.log(`이미지 저장 응답`);
+                        console.log(resImage);
+
+                        this.selectedMember.id = res.data.id;
+                        this.selectedMember.photo = resImage.data.photo_url;
+                        this.members.push(this.selectedMember);
+                        // this.members[this.selectedMember.id] = this.selectedMember;
+                        // Object.assign(this.members[this.selectedMember.id], this.selectedMember);
+                      });
+                  })
+                  .catch(error => {
+                    console.log(error);
+                  })
+                  .finally(() => {
+                    this.close();
+                  });
+              } else {
+
+                console.log(`---- update member id:${this.selectedMember.id}`);
+                axios.all([ apiService.updateMembers(this.selectedMember), this.saveImage(this.selectedMember.id)])
+                  .then(axios.spread((resUpdate, resImage) => {
+                    console.log(resUpdate);
+                    console.log(resImage);
+
+                    // 파일명 (경로)가 동일할 경우 갱신되지 않는다.)
+                    console.log(resImage.data.photo_url);
+                    this.selectedMember.photo =  resImage.data.photo_url;
+
+                  }))
+                  .catch((error) => {
+                    console.log(error);
+                  })
+                  .finally(() => {
+                    this.close();
+                  });
+              }             
             }
-            this.close();
-          }
-        });
+          });
+        
       } catch (err) {
         return console.log(err.message);
       } finally {
       }
+
     },
 
-    async deleteMembers(members) {
-      const $this = this;
-      $this
-        .$swal({
-          title: "삭제 하시겠습니까",
-          text: "삭제되면 다시 되돌릴 수 없습니다",
-          type: "warning",
-          showCancelButton: true,
-          cancelButtonText: "아니요",
-          confirmButtonText: "네 삭제 합니다"
-        })
-        .then(result => {
-          if (result.value) {
-            apiService.deleteMembers(members.id);
-            const index = this.members.indexOf(members);
-            this.members.splice(index, 1);
-          }
-        });
-    },
 
-    editItem(item) {
-      this.editedIndex = this.members.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
-      // console.log(this.editedItem.belong)
-    },
+    close () {
 
-    close() {
-      this.dialog = false;
+      this.editDialog = false;
+      console.log('close dialog')
+
+      this.dialog = false
       this.loading = false;
       setTimeout(() => {
         this.selected_image = null;
@@ -714,4 +1093,10 @@ th {
   -ms-user-select: none;
   user-select: none;
 }
+
+.zguide {
+  border: 1px dashed dodgerblue;
+}
+
+
 </style>

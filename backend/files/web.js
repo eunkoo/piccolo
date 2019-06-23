@@ -23,7 +23,12 @@ app.use(fileUpload({
     tempFileDir : '/tmp/'
 }));
 
+
+app.use('/uploads', express.static('uploads'));
+
 require('./server/router')(app);
+
+
 
 app.get('*', (req, res) => res.status(200).send({
   message: 'API Schedules Work ... !!!',

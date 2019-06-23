@@ -1,27 +1,18 @@
 <template>
   <div class="events">
-     <div class="text-xs-center">
-      <v-progress-circular
-       v-if="loading"
-      indeterminate
-      color="primary"
-    ></v-progress-circular>
-      </div>
+    <div class="text-xs-center">
+      <v-progress-circular v-if="loading" indeterminate color="primary"></v-progress-circular>
+    </div>
     <div class="formodal">
       <v-dialog v-model="dialog" max-width="800px">
-         <v-btn fab color="primary" dark slot="activator" class="mb-2">
+        <v-btn fab color="primary" dark slot="activator" class="mb-2">
           <v-icon dark>add</v-icon>
         </v-btn>
         <v-card>
           <v-card-title>
             <span class="headline">{{ formTitle }}</span>
           </v-card-title>
-           <v-alert
-                :value="alert"
-                color="error"
-                icon="error_circle"
-                outline
-                >{{alertMsg}}</v-alert>
+          <v-alert :value="alert" color="error" icon="error_circle" outline>{{alertMsg}}</v-alert>
           <v-card-text>
             <v-container grid-list-md>
               <v-layout wrap>
@@ -29,20 +20,20 @@
                   <v-text-field label="예배명" v-model="editedItem.title"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
-                    <v-select
-                        label="부서"
-                        :items="belong_items"
-                        v-model="belong_items[editedItem.belongs]"
-                        single-line
-                        item-text="text"
-                        item-value="id"
-                        return-object
-                        persistent-hint
-                        @change="changeBelong" 
-                    ></v-select>
-                    </v-flex>
+                  <v-select
+                    label="부서"
+                    :items="belong_items"
+                    v-model="belong_items[editedItem.belongs]"
+                    single-line
+                    item-text="text"
+                    item-value="id"
+                    return-object
+                    persistent-hint
+                    @change="changeBelong"
+                  ></v-select>
+                </v-flex>
                 <v-flex xs12 sm6 md4>
-                    <v-menu
+                  <v-menu
                     ref="date_menu"
                     :close-on-content-click="false"
                     v-model="date_menu"
@@ -53,21 +44,21 @@
                     offset-y
                     full-width
                     min-width="290px"
-                    >
+                  >
                     <v-text-field
-                        slot="activator"
-                        v-model="editedItem.day"
-                        label="일시"
-                        prepend-icon="event"
-                        readonly
+                      slot="activator"
+                      v-model="editedItem.day"
+                      label="일시"
+                      prepend-icon="event"
+                      readonly
                     ></v-text-field>
-                    <v-date-picker locale='ko-KR' v-model="editedItem.day" no-title scrollable>
-                        <v-btn flat color="primary" @click="date_menu = false">취소</v-btn>
-                        <v-btn flat color="primary" @click="$refs.date_menu.save(editedItem.day)">확인</v-btn>
+                    <v-date-picker locale="ko-KR" v-model="editedItem.day" no-title scrollable>
+                      <v-btn flat color="primary" @click="date_menu = false">취소</v-btn>
+                      <v-btn flat color="primary" @click="$refs.date_menu.save(editedItem.day)">확인</v-btn>
                     </v-date-picker>
-                    </v-menu>
+                  </v-menu>
                 </v-flex>
-                 <v-flex xs12 sm6 md4>
+                <v-flex xs12 sm6 md4>
                   <v-text-field label="장소" v-model="editedItem.place"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
@@ -88,7 +79,7 @@
     <v-app id="dayspan" v-cloak>
         <ds-calendar-app :calendar="this.calendar"></ds-calendar-app>
     </v-app>
-    </template> -->
+    </template>-->
     <v-data-table
       :headers="headers"
       :items="events"
@@ -98,7 +89,7 @@
     >
       <template slot="items" slot-scope="props">
         <!-- <td class="text-xs-left">{{ props.item.id }}</td> -->
-        <td class="text-xs-left"  style="min-width:100px">{{ belong_text(props.item.belongs) }}</td>
+        <td class="text-xs-left" style="min-width:100px">{{ belong_text(props.item.belongs) }}</td>
         <td class="text-xs-left">{{ props.item.title }}</td>
         <td class="text-xs-left">{{ props.item.day }}</td>
         <td class="text-xs-left" style="min-width:120px">{{ props.item.place }}</td>
@@ -120,27 +111,27 @@
 </template>
 
 <script>
-import apiService from '@/Services/ApiService'
-import Datepicker from 'vuejs-datepicker';
+import apiService from "@/Services/ApiService";
+import Datepicker from "vuejs-datepicker";
 
 export default {
-  name: 'events',
-  components:{
+  name: "events",
+  components: {
     Datepicker
   },
-  data () {
+  data() {
     return {
       alert: false,
-      alertMsg:"",
-      loading:false,
+      alertMsg: "",
+      loading: false,
       events: [],
       dialog: false,
-      cdate:new Date(),
+      cdate: new Date(),
       belong_items: [
-        { text: '유치부', id: 0 },
-        { text: '유초등부', id: 1 },
-        { text: '중고등부', id: 2 },
-        { text: '청년부', id: 3 },
+        { text: "유치부", id: 0 },
+        { text: "유초등부", id: 1 },
+        { text: "중고등부", id: 2 },
+        { text: "청년부", id: 3 }
         // { text: '면려회', id: '4' }
       ],
       pagination: {
@@ -151,161 +142,164 @@ export default {
       },
       cbelong: -1,
       editedIndex: -1,
-      date_menu:false,
+      date_menu: false,
       editedItem: {
-        id: '',
-        title: '',
-        place: '',
+        id: "",
+        title: "",
+        place: "",
         day: this.cdate,
-        belongs : this.cbelong,
-        totalmember : 10
+        belongs: this.cbelong,
+        totalmember: 10
       },
       headers: [
         {
-          text: '소속',
-          align: 'left',
+          text: "소속",
+          align: "left",
           sortable: true,
-          value: 'place'
+          value: "place"
         },
         {
-          text: '예배명',
-          align: 'left',
+          text: "예배명",
+          align: "left",
           sortable: true,
-          value: 'title'
+          value: "title"
         },
         {
-          text: '일시',
-          align: 'left',
+          text: "일시",
+          align: "left",
           sortable: true,
-          value: 'day'
+          value: "day"
         },
-         {
-          text: '장소',
-          align: 'left',
+        {
+          text: "장소",
+          align: "left",
           sortable: false,
-          value: 'place'
+          value: "place"
         },
         {
-          text: ' 재적 총원',
-          align: 'left',
+          text: " 재적 총원",
+          align: "left",
           sortable: true,
-          value: 'totalmember'
+          value: "totalmember"
         },
-        { text: '편집', value: 'title', sortable: false }
+        { text: "편집", value: "title", sortable: false }
       ]
-    }
+    };
   },
-  mounted () {
-    this.getevents()
+  mounted() {
+    this.getevents();
   },
   computed: {
-    formTitle () {
-      return this.editedIndex === -1 ? '새 예배' : '정보 수정'
+    formTitle() {
+      return this.editedIndex === -1 ? "새 예배" : "정보 수정";
     }
   },
   watch: {
-    dialog (val) {
-      val || this.close()
+    dialog(val) {
+      val || this.close();
     }
   },
   methods: {
-      belong_text:function(belong){
-          if(belong===0) return  '유치부'
-          if(belong===1) return  '유초등부'
-          if(belong===2) return  '중고등부'
-          if(belong===3) return  '청년부'
-      },
-    async getevents () {
+    belong_text: function(belong) {
+      if (belong === 0) return "유치부";
+      if (belong === 1) return "유초등부";
+      if (belong === 2) return "중고등부";
+      if (belong === 3) return "청년부";
+    },
+    async getevents() {
       this.loading = true;
-      const response = await apiService.fetchEvents()
-      this.events = response.data
+      const response = await apiService.fetchEvents();
+      this.events = response.data;
       this.loading = false;
     },
     async changeBelong(selectObj) {
-        console.log('chagne belong '+selectObj.id)
-        this.editedItem.belongs = selectObj.id
-        this.getTotalMember()
-     },
-     onSelected(selected){
-        this.cdate = selected
+      console.log("chagne belong " + selectObj.id);
+      this.editedItem.belongs = selectObj.id;
+      this.getTotalMember();
     },
-    async getTotalMember(){
-       const response = await apiService.fetchNames(this.editedItem.belongs)
-       var names = response.data.filter(mem =>{
-           return (mem.grade == 0 )
-        })
-       this.editedItem.totalmember = names.length;
-       console.log(this.editedItem.totalmember )
+    onSelected(selected) {
+      this.cdate = selected;
+    },
+    async getTotalMember() {
+      const response = await apiService.fetchNames(this.editedItem.belongs);
+      var names = response.data.filter(mem => {
+        return mem.grade == 0;
+      });
+      this.editedItem.totalmember = names.length;
+      console.log(this.editedItem.totalmember);
     },
 
-    async save () {
+    async save() {
       try {
-         apiService.checkEvents(this.editedItem)
-        .then((result) => {
-          if(result.data != "") {//error
-             this.alert = true
-              this.alertMsg = "이미 등록된 이벤트 입니다"
+        if (this.editedIndex === -1) {
+          apiService.checkEvents(this.editedItem).then(result => {
+            if (result.data != "") {
+              //error
+              this.alert = true;
+              this.alertMsg = "이미 등록된 이벤트 입니다";
               setTimeout(() => {
-                  this.alert = !this.alert
-              }, 3000)
-          }else{
-             if (this.editedIndex === -1) {
-                apiService.addEvents(this.editedItem)
-                .then((result) => {
-                    this.editedItem = Object.assign({}, result.data)
-                    this.events.push(this.editedItem)
-                })
-             }else{
-              apiService.updateEvents(this.editedItem)
-              Object.assign(this.events[this.editedIndex], this.editedItem)
+                this.alert = !this.alert;
+              }, 3000);
+            } else {
+              apiService.addEvents(this.editedItem).then(result => {
+                this.editedItem = Object.assign({}, result.data);
+                this.events.push(this.editedItem);
+              });
             }
-            this.close()
-          }
-        })
+          });
+        } else {
+          apiService.updateEvents(this.editedItem);
+          Object.assign(this.events[this.editedIndex], this.editedItem);
+        }
+        this.close();
       } catch (err) {
-        return console.log(err.message)
+        return console.log(err.message);
       } finally {
-        
       }
     },
 
-    async deleteEvents (events) {
-      const $this = this
-      $this.$swal({
-        title: '삭제 하시겠습니까',
-        text: "삭제되면 다시 되돌릴 수 없습니다",
-        type: 'warning',
-        showCancelButton: true,
-        cancelButtonText: '아니요',
-        confirmButtonText: '네 삭제 합니다'
-      }).then((result) => {
-        if (result.value) {
-          apiService.deleteEvents(events.id)
-          const index = this.events.indexOf(events)
-          this.events.splice(index, 1)
-        }
-      })
+    async deleteEvents(events) {
+      const $this = this;
+      $this
+        .$swal({
+          title: "삭제 하시겠습니까",
+          text: "삭제되면 다시 되돌릴 수 없습니다",
+          type: "warning",
+          showCancelButton: true,
+          cancelButtonText: "아니요",
+          confirmButtonText: "네 삭제 합니다"
+        })
+        .then(result => {
+          if (result.value) {
+            apiService.deleteEvents(events.id);
+            const index = this.events.indexOf(events);
+            this.events.splice(index, 1);
+          }
+        });
     },
 
-    editItem (item) {
-      this.editedIndex = this.events.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-      this.dialog = true
+    editItem(item) {
+      this.editedIndex = this.events.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialog = true;
     },
 
-    close () {
-      this.dialog = false
+    close() {
+      this.dialog = false;
       setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      }, 300)
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      }, 300);
     }
   }
-}
+};
 </script>
 
 <style>
-body, html, #app, #dayspan {
+body,
+html,
+#app,
+#dayspan {
   font-family: Roboto, sans-serif;
   width: 100%;
   height: 100%;

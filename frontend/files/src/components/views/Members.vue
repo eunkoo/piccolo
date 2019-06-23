@@ -150,7 +150,7 @@
           type="csv"
           name="선택된 명단.xls"
         >
-          <v-btn fab >엑셀</v-btn>
+          <v-btn fab>엑셀</v-btn>
         </download-excel>
       </v-flex>
     </v-layout>
@@ -179,38 +179,57 @@
       :rows-per-page-items="pagination.rowsPerPageItems"
       :total-items="pagination.totalItems"
       :items="members"
+      expand
     >
       <template slot="items" slot-scope="props">
-        <td>
-          <!-- <v-img  width="50px" height="50px"  :lazy-src="this.tempimg"></v-img> -->
-          <img
-            img
-            width="60px"
-            height="80px"
-            :lazy-src="getImgUrl(props.item.photo)"
-            :src="getImgUrl(props.item.photo)"
-          >
-        </td>
-        <!-- <td><img v-bind:src="this.tempimg" style="width:20px; height:auto;"></td> -->
-        <!-- <tr class="text-xs-left">{{ props.item.name }}</tr> -->
+        <tr @click="props.expanded = !props.expanded">
+          <td class="datatable-cell-wrapper">
+            <!-- <v-img  width="50px" height="50px"  :lazy-src="this.tempimg"></v-img> -->
+            <img
+              img
+              width="60px"
+              height="80px"
+              :lazy-src="getImgUrl(props.item.photo)"
+              :src="getImgUrl(props.item.photo)"
+            >
+          </td>
+          <!-- <td><img v-bind:src="this.tempimg" style="width:20px; height:auto;"></td> -->
+          <!-- <tr class="text-xs-left">{{ props.item.name }}</tr> -->
 
-        <!-- <td class="text-xs-left">{{ props.item.id}}</td> -->
-        <td class="text-xs-left" style="min-width:80px">{{ props.item.name }}</td>
-        <!-- <td class="text-xs-left">{{ props.item.address }}</td> -->
-        <td class="text-xs-left" v-if="userGrade==0">{{ props.item.phone }}</td>
-        <td class="text-xs-left" style="min-width:100px">{{ belong_text( props.item.belong) }}</td>
-        <td class="text-xs-left" style="min-width:100px">{{grade_text( props.item.grade)}}</td>
-        <td class="text-xs-left" style="min-width:90px">{{ props.item.connected }}</td>
+          <!-- <td class="text-xs-left">{{ props.item.id}}</td> -->
+          <td class="datatable-cell-wrapper" style="min-width:80px">{{ props.item.name }}</td>
+          <!-- <td class="text-xs-left">{{ props.item.address }}</td> -->
+          <td class="datatable-cell-wrapper" v-if="userGrade==0">{{ props.item.phone }}</td>
+          <td
+            class="datatable-cell-wrapper"
+            style="min-width:100px"
+          >{{ belong_text( props.item.belong) }}</td>
+          <td
+            class="datatable-cell-wrapper"
+            style="min-width:100px"
+          >{{grade_text( props.item.grade)}}</td>
+          <td class="datatable-cell-wrapper" style="min-width:90px">{{ props.item.connected }}</td>
 
-        <td class="justify-center layout px-0" v-if="userGrade==0">
-          <v-btn icon class="mx-0" @click="editItem(props.item)">
-            <v-icon color="teal">edit</v-icon>
-          </v-btn>
-          <v-btn icon class="mx-0" @click="deleteMembers(props.item)">
-            <v-icon color="pink">delete</v-icon>
-          </v-btn>
-        </td>
+          <td class="datatable-cell-wrapper justify-center layout px-0" v-if="userGrade==0">
+            <v-btn icon class="mx-0" @click="editItem(props.item)">
+              <v-icon color="teal">edit</v-icon>
+            </v-btn>
+            <v-btn icon class="mx-0" @click="deleteMembers(props.item)">
+              <v-icon color="pink">delete</v-icon>
+            </v-btn>
+          </td>
+        </tr>
       </template>
+
+      <template slot="expand" slot-scope="props">
+        <v-card flat @click="props.expanded = !props.expanded">
+          <v-card-text><div>성별 : {{ gender_text(props.item.gender ) }} </div></v-card-text>
+          <v-card-text> 생년월일 : {{ props.item.birth }}</v-card-text>
+          <v-card-text> 세례여부 : {{baptism_text( props.item.baptism ) }}</v-card-text>
+          <v-card-text> 비고 : {{ props.item.tag  }}</v-card-text>
+        </v-card>
+      </template>
+
       <template slot="no-data">
         <v-btn color="primary" @click="getmembers">Reset</v-btn>
       </template>
@@ -290,6 +309,10 @@ export default {
         }
       },
       gender_items: [{ text: "남", id: 0 }, { text: "여", id: 1 }],
+      gender_text: function(grade) {
+        if (grade === 0) return "남";
+        if (grade === 1) return "여";
+      },
       belong_items: [
         { text: "유치부", id: 0 },
         { text: "유초등부", id: 1 },
@@ -468,15 +491,13 @@ export default {
       this.pre_categorized_items = this.members_org;
       this.members = [];
 
-      if(this.added_word.length > 0 ){
+      if (this.added_word.length > 0) {
         for (var i = 0; i < this.added_word.length; i++) {
           console.log(this.added_word[i]);
-          this.members = this.filtered_member_data(this.added_word[i].search)
+          this.members = this.filtered_member_data(this.added_word[i].search);
           this.pre_categorized_items = this.members;
         }
-      }
-      else
-        this.members = this.members_org
+      } else this.members = this.members_org;
     },
     add_word() {
       if (this.search == "") return;
@@ -632,31 +653,32 @@ export default {
       try {
         this.loading = true;
         console.log("editIndex : " + this.editedIndex);
-        apiService.checkMembers(this.editedItem).then(result => {
-          if (result.data != "") {
-            //already added name
-            this.alert = true;
-            console.log("이미 등록됨");
-            this.alertMsg = "이미 등록된 이름입니다";
-            setTimeout(() => {
-              this.alert = !this.alert;
-            }, 3000);
-          } else {
-            if (this.editedIndex === -1) {
+
+        if (this.editedIndex === -1) {
+          apiService.checkMembers(this.editedItem).then(result => {
+            if (result.data != "") {
+              //already added name
+              this.alert = true;
+              console.log("이미 등록됨");
+              this.alertMsg = "이미 등록된 이름입니다";
+              setTimeout(() => {
+                this.alert = !this.alert;
+              }, 3000);
+            } else {
               apiService.addMembers(this.editedItem).then(result => {
                 this.editedItem = Object.assign({}, result.data);
                 this.members.push(this.editedItem);
                 this.saveImage(this.editedItem);
               });
-            } else {
-              apiService.updateMembers(this.editedItem).then(result => {
-                this.saveImage(this.editedItem);
-              });
-              Object.assign(this.members[this.editedIndex], this.editedItem);
             }
-            this.close();
-          }
-        });
+          });
+        } else {
+          apiService.updateMembers(this.editedItem).then(result => {
+            this.saveImage(this.editedItem);
+          });
+          Object.assign(this.members[this.editedIndex], this.editedItem);
+        }
+        this.close();
       } catch (err) {
         return console.log(err.message);
       } finally {
@@ -713,5 +735,19 @@ th {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+.datatable-cell-wrapper {
+  width: inherit;
+  position: relative;
+  z-index: 4;
+  padding: 10px 24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.datatable__expand-content .card__text {
+  z-index: 3;
+  position: relative;
+  height: 24px;
 }
 </style>

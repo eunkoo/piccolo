@@ -6,18 +6,18 @@
       </v-sheet>
     </v-flex>
 
-    <v-flex sm4 xs12 class="text-sm-left text-xs-center">
-      <v-btn @click="$refs.calendar.prev()">
-        <v-icon dark left>keyboard_arrow_left</v-icon>Prev
+    <v-flex sm4 xs4 class="text-sm-left text-xs-center">
+      <v-btn fab small @click="$refs.calendar.prev()">
+        <v-icon  large dark >chevron_left</v-icon>
       </v-btn>
     </v-flex>
-    <v-flex sm4 xs12 class="text-xs-center">
+    <v-flex sm4 xs4 class="text-xs-center">
       <v-select v-model="type" :items="typeOptions" label="Type"></v-select>
     </v-flex>
-    <v-flex sm4 xs12 class="text-sm-right text-xs-center">
-      <v-btn @click="$refs.calendar.next()">
-        Next
-        <v-icon right dark>keyboard_arrow_right</v-icon>
+    <v-flex sm4 xs4 class="text-sm-right text-xs-center">
+      <v-btn fab small @click="$refs.calendar.next()">
+        
+        <v-icon large dark>chevron_right</v-icon>
       </v-btn>
     </v-flex>
   </v-layout>

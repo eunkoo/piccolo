@@ -222,14 +222,14 @@ export default {
       loginTitle: '로그인',
       path: '/',
       menu_guest: [
-        {path: '/api/home', label: '홈', icon: 'home'},
+        {path: '/', label: '홈', icon: 'home'},
         {path: '/api/zstatistics', label: '통계', icon: 'show_chart' },
         {path: '/api/members', label: '구성원', icon: 'people'},
         {path: '/api/attendee', label: '주일 보고', icon: 'description'},
         {path: '/logout', label: '로그아웃', icon: 'lock'}
       ],
       menu_director: [
-        {path: '/api/home', label: '홈', icon: 'home'},
+        {path: '/', label: '홈', icon: 'home'},
         {path: '/api/zstatistics', label: '통계', icon: 'show_chart' },
         {path: '/api/members', label: '구성원', icon: 'people'},
         {path: '/api/organization', label: '교육 부서', icon: 'business'},
@@ -239,7 +239,7 @@ export default {
         {path: '/logout', label: '로그아웃', icon: 'lock'}
       ],
       menu_master: [
-        {path: '/api/home', label: '홈', icon: 'home'},
+        {path: '/', label: '홈', icon: 'home'},
         {path: '/api/zstatistics', label: '통계', icon: 'show_chart' },
         {path: '/api/members', label: '구성원', icon: 'people'},
         {path: '/api/organization', label: '교육 부서', icon: 'business'},
@@ -265,12 +265,12 @@ export default {
         v => !!v || '이름을 넣어주세요',
         v => (v && v.length <= 10) || 'Name must be less than 10 characters'
       ],
-      email: '',
+      email: 'dmsrnfl@gmail.com',
       emailRules: [
         v => !!v || '이메일을 넣어주세요',
         v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || '이메일 형식이 아닙니다'
       ],
-      password: '',
+      password: '84apfhd',
       passwordRules: [
         v => !!v || '비밀번호를 넣어주세요',
         v => v.length <= 10 || '비밀번호는 10자 이내로 넣어주세요'
@@ -323,12 +323,9 @@ export default {
         localStorage.grade = JSON.stringify(response.data.grade)
       console.log(localStorage.getItem('loggedIn') )
       console.log(localStorage.getItem('grade') )
-      // console.log(this.userGrade )
-      // this.$router.replace('/api/home')
-      // this.$router.go('/api/home')
       
-      window.history.replaceState(null,'','/#/api/home')
-      window.history.go('/#/api/home')
+      window.history.replaceState(null,'','/')
+      window.history.go('/')
 
     },
     loginFailed (response) {

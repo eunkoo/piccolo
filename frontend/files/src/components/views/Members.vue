@@ -9,173 +9,17 @@
           indeterminate
         ></v-progress-linear>
     </div>
-    <!-- <v-layout xs12 sm6 md4>
-      <v-flex :key="2" xs12 sm6 md6>
-
-      <v-dialog v-model="dialog" max-width="800px">
-          <input onkeyup="enterkey" type="text"  value="" />
-        <v-btn fab color="primary" dark slot="activator" class="mb-2" v-if="userGrade==0">
-          <v-icon dark>add</v-icon>
-        </v-btn>
-        <v-card>
-          <v-card-title>
-            <span class="headline grey lighten-2" primary-title>{{ formTitle }}</span>
-          </v-card-title>
-
-          <v-alert
-            :value="alert"
-            color="error"
-            icon="error_circle"
-            outline
-          >
-            {{alertMsg}}
-          </v-alert>
-
-
-            <v-card-text>
-              <v-container grid-list-md>
-                <v-layout wrap>
-                  <v-flex xs12 sm6 md4>
-                    <div v-if="cPhoto">
-                      <img img width="60px" height="80px" :src="cPhoto">
-                    </div>
-                    <div v-else>
-                      <img img width="60px" height="80px" :src="getImgUrl(editedItem.photo)">
-                    </div>
-                    <input type="file" @change="onFileChange">
-                  </v-flex>
-
-
-                <v-flex xs12 sm6 md4>
-                  <v-text-field label="이름" v-model="editedItem.name"></v-text-field>
-                </v-flex>
-
-                <v-flex xs6>
-                  {{ editedItem.gender }}
-                  {{ gender_items[editedItem.gender] }}
-                  <v-radio-group v-model="gender_items[editedItem.gender]" row>
-                    <v-radio label="남자" :value="gender_items[0]"></v-radio>
-                    <v-radio label="여자" :value="gender_items[1]"></v-radio>
-                  </v-radio-group>
-                </v-flex>
-
-
-                <v-flex xs12 sm6 md4>
-                  <v-text-field label="주소" v-model="editedItem.address"></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field label="휴대폰" v-model="editedItem.phone"></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
-               <v-select
-                  label="성별"
-                  :items="gender_items"
-                  v-model="gender_items[editedItem.gender]"
-                  single-line
-                  item-text="text"
-                  item-value="id"
-                  return-object
-                  persistent-hint
-                  @change="changeGender" 
-                ></v-select>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
-               <v-select
-                  label="등록상태"
-                  :items="grade_items"
-                  v-model="grade_items[editedItem.grade]"
-                  single-line
-                  item-text="text"
-                  item-value="id"
-                  return-object
-                  persistent-hint
-                  @change="changeGrade" 
-                ></v-select>
-                </v-flex>
-                 <v-flex xs12 sm6 md4>
-
-                    <v-menu
-                      ref="date_menu"
-                      :close-on-content-click="false"
-                      v-model="date_menu"
-                      :nudge-right="40"
-                      :return-value.sync="editedItem.birth"
-                      lazy
-                      transition="scale-transition"
-                      offset-y
-                      full-width
-                      min-width="290px"
-                    >
-                      <v-text-field
-                        slot="activator"
-                        v-model="editedItem.birth"
-                        label="생년월일"
-                        readonly
-                      ></v-text-field>
-                      <v-date-picker locale="ko-KR" v-model="editedItem.birth" no-title scrollable>
-                        <v-btn flat color="primary" @click="date_menu = false">취소</v-btn>
-                        <v-btn
-                          flat
-                          color="primary"
-                          @click="$refs.date_menu.save(editedItem.birth)"
-                        >확인</v-btn>
-                      </v-date-picker>
-                    </v-menu>
-                  </v-flex>
-                <v-flex xs12 sm6 md4>
-                   <v-select
-                    label="부서"
-                    :items="belong_items"
-                    v-model="belong_items[editedItem.belong]"
-                    single-line
-                    item-text="text"
-                    item-value="id"
-                    return-object
-                    persistent-hint
-                    @change="changeBelong" 
-                  ></v-select>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
-                  <v-text-field label="조" v-model="editedItem.connected"></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
-                   <v-select
-                    label="세례여부"
-                    :items="baptism_items"
-                    v-model="baptism_items[editedItem.baptism]"
-                    single-line
-                    item-text="text"
-                    item-value="id"
-                    return-object
-                    persistent-hint
-                    @change="changeBaptism" 
-                  ></v-select>
-                </v-flex>
-
-                <v-flex xs12>
-                  <v-textarea
-                    box
-                    name="input-7-4"
-                    v-model="editedItem.tag"
-                    :rows="3"
-                    label="기타"
-                    value="The Woodman set to work at once, and so sharp was his axe that the tree was soon chopped nearly through."
-                  ></v-textarea>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card-text>
-
-
-
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click.native="save">저장</v-btn>
-            <v-btn color="blue darken-1" flat @click.native="close">취소</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
+   
+      <v-flex :key="1" xs2 sm2 md2 v-if="userGrade==0">
+        <download-excel
+          class="btn btn-default"
+          :data="members"
+          :fields="member_fields"
+          type="csv"
+          name="선택된 명단.xls"
+        >
+          <v-btn fab>엑셀</v-btn>
+        </download-excel>
       </v-flex>
     </v-layout> -->
     <v-layout>
@@ -501,6 +345,7 @@
 
 
     </v-dialog >
+
   </div>
 </template>
 
@@ -532,6 +377,10 @@ export default {
       current_belong: -1,
      
       gender_items: [{ text: "남", id: 0 }, { text: "여", id: 1 }],
+      gender_text: function(grade) {
+        if (grade === 0) return "남";
+        if (grade === 1) return "여";
+      },
       belong_items: [
         { text: "유치부", id: 0 },
         { text: "유초등부", id: 1 },
@@ -811,15 +660,13 @@ export default {
       this.pre_categorized_items = this.members_org;
       this.members = [];
 
-      if(this.added_word.length > 0 ){
+      if (this.added_word.length > 0) {
         for (var i = 0; i < this.added_word.length; i++) {
           console.log(this.added_word[i]);
-          this.members = this.filtered_member_data(this.added_word[i].search)
+          this.members = this.filtered_member_data(this.added_word[i].search);
           this.pre_categorized_items = this.members;
         }
-      }
-      else
-        this.members = this.members_org
+      } else this.members = this.members_org;
     },
     add_word() {
       if (this.search == "") return;
@@ -1057,6 +904,7 @@ export default {
             }
           });
         
+
       } catch (err) {
         return console.log(err.message);
       } finally {
@@ -1099,4 +947,18 @@ th {
 }
 
 
+.datatable-cell-wrapper {
+  width: inherit;
+  position: relative;
+  z-index: 4;
+  padding: 10px 24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.datatable__expand-content .card__text {
+  z-index: 3;
+  position: relative;
+  height: 24px;
+}
 </style>

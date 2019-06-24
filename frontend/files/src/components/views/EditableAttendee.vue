@@ -167,7 +167,7 @@ export default {
         },
 
         {
-          text: "비고",
+          text: "사유",
           align: "left",
           sortable: false,
           value: "comment"

@@ -9,8 +9,8 @@ export default {
     delete localStorage.user
     // this.$router.replace('/')
     // this.$router.go('/')
-    window.history.replaceState(null,'','/#')
-    window.history.go('/#')
+    window.history.replaceState(null,'','/')
+    window.history.go('/')
   }
 }
 </script>

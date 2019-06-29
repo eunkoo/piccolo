@@ -27,7 +27,7 @@
         <v-btn  fab class="primary" @click="createMember"> <v-icon > person_add </v-icon> </v-btn>
       </v-flex>
       <v-flex xs12>
-        
+
     <v-layout>
       <v-flex>
         <v-chip
@@ -117,7 +117,7 @@
           <v-progress-linear v-slot:progress color="blue" indeterminate></v-progress-linear>
           <template slot="items" slot-scope="props">
             <!-- <tr :class="[`belong_${props.item.belong}` ]"> -->
-            <tr>
+            <tr  @click="props.expanded = !props.expanded">
               <!-- <td :width="80" class="zguide"> {{ props.item.photo }} </td> -->
               <td :width="80" class="zguide"> 
                 <v-img :src="props.item.photo" v-if="props.item.photo"> </v-img>
@@ -139,10 +139,19 @@
                 <v-btn small flat icon color="deep-orange" @click="openRemoveDialog(props.item)">
                   <v-icon> delete </v-icon>
                 </v-btn>
-              
               </td>
             </tr>
           </template>
+
+          <template slot="expand" slot-scope="props">
+            <v-card flat @click="props.expanded = !props.expanded">
+              <v-card-text><div>상태 : {{ grade_text(props.item.grade ) }} </div></v-card-text>
+              <v-card-text> 생년월일 : {{ props.item.birth }}</v-card-text>
+              <v-card-text> 세례여부 : {{baptism_text( props.item.baptism ) }}</v-card-text>
+              <v-card-text> 비고 : {{ props.item.tag  }}</v-card-text>
+            </v-card>
+          </template>
+
         </v-data-table>
       </v-flex>
     </v-layout>
@@ -185,7 +194,7 @@
             <v-img :src="imageUrl" min-height="200" max-height="440" v-if="imageUrl"></v-img>
             <v-text-field label="사진 선택" readonly hide-details prepend-icon="attach_file"
               @click='pickImageFile' v-model='imageName'></v-text-field>
-            
+             
             <v-spacer></v-spacer>
             <input type="file" style="display: none" ref="image" accept="image/*"
                 name="photo"
@@ -641,6 +650,7 @@ export default {
     pickImageFile() {
       this.$refs.image.click();
     },
+
     onImageFilePicked(e){
       console.log(`image file picked `);
       console.log(e.target.files);
@@ -682,6 +692,7 @@ export default {
       this.selectedMember = _member;
       this.imageUrl = this.selectedMember.photo;
       this.editDialog = true;
+      this.clearImages()
     },
     removeMember(_member){
       apiService.deleteMembers(_member.id)
@@ -872,13 +883,18 @@ export default {
         let formData = new FormData();
         formData.append('file',this.imageFile , this.imageName)
         formData.append("headers", ['Content-Type', 'multipart/form-data']);
+
         return apiService.uploadPhoto(formData, memberId);
       }
+      this.clearImages()
+    },
+    // 회원정보 저장 
+
+    clearImages(){
       this.imageFile = null;
       this.imageName = '';
       this.cPhoto = null;
     },
-    // 회원정보 저장 
     async save () {
 
       try {
@@ -936,8 +952,8 @@ export default {
                     console.log(resImage);
 
                     // 파일명 (경로)가 동일할 경우 갱신되지 않는다.)
-                    console.log(resImage.data.photo_url);
-                    this.selectedMember.photo =  resImage.data.photo_url;
+                      console.log(resImage.data.photo_url);
+                      this.selectedMember.photo =  resImage.data.photo_url;
 
                   }))
                   .catch((error) => {

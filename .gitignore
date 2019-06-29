@@ -1,15 +1,15 @@
 .DS_Store
-frontend/node_modules/
-frontend/dist/
-frontend/npm-debug.log*
-frontend/yarn-debug.log*
-frontend/yarn-error.log*
+frontend/files/node_modules/
+frontend/files/dist/
+frontend/files/npm-debug.log*
+frontend/files/yarn-debug.log*
+frontend/files/yarn-error.log*
 frontend/files/src/assets/img/
 
 db/data/
 
-backend/node_modules/
-
+backend/files/node_modules/
+backend/files/uploads/
 # Editor directories and files
 .idea
 .vscode

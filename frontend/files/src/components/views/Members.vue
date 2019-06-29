@@ -9,7 +9,7 @@
           indeterminate
         ></v-progress-linear>
     </div>
-   
+
       <v-flex :key="1" xs2 sm2 md2 v-if="userGrade==0">
         <download-excel
           class="btn btn-default"
@@ -21,7 +21,13 @@
           <v-btn fab>엑셀</v-btn>
         </download-excel>
       </v-flex>
-    </v-layout> -->
+   
+    <v-layout row wrap>
+      <v-flex xs12>
+        <v-btn  fab class="primary" @click="createMember"> <v-icon > person_add </v-icon> </v-btn>
+      </v-flex>
+      <v-flex xs12>
+        
     <v-layout>
       <v-flex>
         <v-chip
@@ -44,7 +50,7 @@
 
 
     <!-- 검색/필터 패널 -->
-    <v-layout row wrap>
+    <!-- <v-layout row wrap>
       <v-flex xs12 >
         <v-select 
           color="blue"
@@ -65,9 +71,9 @@
           </template>
         </v-select>
       </v-flex>
-    </v-layout>
+    </v-layout> -->
 
-    <v-layout>
+    <!-- <v-layout>
       <v-flex xs6 sm6 md4>
             <v-select
             label="부서"
@@ -97,14 +103,9 @@
         <v-flex>
        <v-text-field label="이름, 연락처 또는 조이름으로 찾기" v-model="search" @input="search_text"></v-text-field>
         </v-flex>
-     </v-layout>
+     </v-layout> -->
 
-   
-    <v-layout row wrap>
-      <v-flex xs12>
-        <v-btn @click="createMember"> <v-icon class="pr-3"> person_add </v-icon> 회원 추가 </v-btn>
-      </v-flex>
-      <v-flex xs12>
+
         <!-- 회원정보 데이터 테이블 -->
         <v-data-table 
           :loading="membersLoading"
@@ -375,6 +376,51 @@ export default {
       selected_image: null,
       cPhoto: null,
       current_belong: -1,
+
+      member_fields: {
+        이름: "name",
+        소속: {
+          field: "belong",
+          callback: value => {
+            console.log("execel field belong : " + value);
+            if (value === 0) return "유치부";
+            if (value === 1) return "유초등부";
+            if (value === 2) return "중고등부";
+            if (value === 3) return "청년부";
+          }
+        },
+        조: "connected",
+        주소: "address",
+        전화: "phone",
+        생년월일: "birth",
+        성별: {
+          field: "gender",
+          callback: value => {
+            if (value === 0) return "남";
+            else return "여";
+          }
+        },
+        등록여부: {
+          field: "grade",
+          callback: value => {
+            console.log("execel field grade : " + value);
+            if (value === 0) return "등록";
+            if (value === 1) return "새신자";
+            if (value === 2) return "장기결석";
+            if (value === 3) return "보류";
+          }
+        },
+        세례여부: {
+          field: "baptism",
+          callback: value => {
+            console.log("execel field baptism : " + value);
+            if (value === 0) return "세례";
+            if (value === 1) return "입교";
+            if (value === 2) return "학습";
+            if (value === 3) return "유아";
+          }
+        }
+      },
      
       gender_items: [{ text: "남", id: 0 }, { text: "여", id: 1 }],
       gender_text: function(grade) {

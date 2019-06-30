@@ -94,6 +94,10 @@ export default new Router({
         path: '/api/organization',
         name: 'organization',
         component: Organization
-    }
+    },
+    {
+      path: '*',
+      redirect: '/',
+    },
   ]
 })

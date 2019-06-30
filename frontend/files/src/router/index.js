@@ -1,5 +1,6 @@
 
-import 'es6-promise/auto'
+
+
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/views/Home'
@@ -27,8 +28,7 @@ import 'vue-material/dist/vue-material.min.css'
 import vuescroll from 'vue-scroll'
 
 // import PrintLayout from '@/PrintLayout'
-require('babel-polyfill')
-require('es6-promise').polyfill()
+
 
 Vue.config.productionTip = false
 
@@ -54,6 +54,7 @@ Vue.use(vuescroll)
 Vue.use(Router)
 
 export default new Router({
+  mode:'history',
   routes: [
     {
       path: '/',
@@ -88,7 +89,13 @@ export default new Router({
     {
         path: '/api/attendee',
         name: 'attendee',
-        component: Attendee
+        component: Attendee,
+    },
+    {
+      path: '/data/attendee/:day/:belongs',
+      name: 'DataAttendee',
+      component: Attendee,
+      props: true,
     },
     {
         path: '/api/organization',
@@ -98,6 +105,6 @@ export default new Router({
     {
       path: '*',
       redirect: '/',
-    },
+    }
   ]
 })

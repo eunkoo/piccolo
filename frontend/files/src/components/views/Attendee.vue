@@ -79,6 +79,7 @@
             >
               <v-text-field text-xs-center flat slot="activator" v-model="cdateFormat" readonly></v-text-field>
               <v-date-picker 
+                  class="mydatepicker"
                   locale="ko-KR" 
                   v-model="cdateFormat" 
                   no-title scrollable 
@@ -275,9 +276,24 @@ export default {
     };
   },
   mounted() {
-    this.getevents(0);
-    this.cdate = this.prevDay(new Date(), 7);
-    this.cdateFormat = this.formatDate(this.cdate);
+    if( this.$route.params.day == null){
+      this.getevents(0);
+      this.cdate = this.prevDay(new Date(), 7);
+      this.cdateFormat = this.formatDate(this.cdate);
+    }else{
+      console.log(this.$route.params.belongs);
+      console.log(this.belong_items[this.$route.params.belongs].text)
+      this.defaultSelected = {
+            text: this.belong_items[this.$route.params.belongs].text,
+            id: parseInt(this.$route.params.belongs)
+      }
+      this.cbelong = this.$route.params.belongs
+      this.getevents(this.cbelong);
+      this.cdate = new Date(this.$route.params.day)
+      this.cdateFormat = this.formatDate(this.cdate);
+    }
+
+   
     console.log(this.cdate);
     console.log(this.cdateFormat);
   },
@@ -755,5 +771,8 @@ export default {
 .guide_layout {
   overflow-x: scroll;
   max-width: 100%;
+}
+.mydatepicker{
+  height: 330px;
 }
 </style>

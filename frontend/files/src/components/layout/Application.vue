@@ -265,12 +265,12 @@ export default {
         v => !!v || '이름을 넣어주세요',
         v => (v && v.length <= 10) || 'Name must be less than 10 characters'
       ],
-      email: 'dmsrnfl@gmail.com',
+      email: '',
       emailRules: [
         v => !!v || '이메일을 넣어주세요',
         v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || '이메일 형식이 아닙니다'
       ],
-      password: '84apfhd',
+      password: '',
       passwordRules: [
         v => !!v || '비밀번호를 넣어주세요',
         v => v.length <= 10 || '비밀번호는 10자 이내로 넣어주세요'

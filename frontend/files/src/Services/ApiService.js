@@ -81,6 +81,21 @@ export default {
   },
   updateAttendees(params) {
     return Api().put('/attendee/bulks', params)
-  }
+  },
+
+  // statistics 
+  // 출석 통계 
+  reqStatisticsAttendance(params) {
+    return Api().post('/statistics/attendance', params);
+  },
+  // 암송 통계
+  reqStatisticsParagraph(params) {
+    return Api().post('/statistics/paragraph', params);
+  },
+  // 성경 통계
+  reqStatisticsBible(params) {
+    return Api().post('/statistics/bible', params);
+  },
+  
 
 }

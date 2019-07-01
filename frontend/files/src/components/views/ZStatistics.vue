@@ -1,8 +1,10 @@
 <template>
-  <v-container fluid text-xs-center pa-0>
+  <v-container fluid text-xs-left pa-0>
     <v-layout row wrap>
       <h2>statistics page</h2>
     </v-layout>
+
+
     <v-layout fill-height justify-center>
       <v-flex xs3>
         <v-menu
@@ -90,6 +92,88 @@
           :chartTitle="dd.title"
         ></line-chart>
       </v-flex>
+      
+    </v-layout>
+
+
+    <v-layout row wrap>
+      <v-flex xs12> 
+        <v-btn small color="info" class="ma-0" @click="getStatisticsAttendance">
+          출석 통계
+        </v-btn>
+        <v-btn small color="info" class="ma-0" @click="getStatisticsParagraph">
+          암송 통계
+        </v-btn>
+        <v-btn small color="info" class="ma-0" @click="getStatisticsBible"> 
+          성경 통계
+        </v-btn>
+      </v-flex>
+          <!-- 부서 (유치부:0, 유초등부:1, 중고등부:2, 청년부:3) -->
+                <v-flex xs4 pa-1 ma-0>
+                  <v-select 
+                    color="blue"
+                    hide-details
+                    dense
+                    v-model="belong" 
+                    :items="[0,1,2,3,4]"
+                    attach 
+                    label="부서"                    
+                    persistent-hint > 
+                    <template slot="item" slot-scope="props">
+                      {{ descBelong[props.item] }}
+                    </template>                
+                    <template slot="selection" slot-scope="props">
+                      {{ descBelong[props.item] }}
+                    </template>
+                  </v-select>
+                </v-flex>
+
+    </v-layout>
+
+    <v-layout row wrap class="ma-2 elevation-5" text-xs-center>
+      <v-flex xs4 class="pa-1">
+        <span class="subheading blue--text"> 출석 통계 </span>
+        <template v-for="(item, index) in statisticsAttendance">
+          <v-layout row wrap :key="index" class="z-row">
+            <v-flex xs3>
+              {{ index == 0 ? "없음" : `${index}회` }}
+            </v-flex>
+            <v-flex xs9 text-xs-left>
+              {{ item.join(', ') }}
+            </v-flex>
+          </v-layout>
+        </template>
+      </v-flex>
+
+      <!-- 암송 통계  -->
+      <v-flex xs4 class="pa-1">
+        <span class="subheading blue--text"> 암송 통계 </span>
+        <template v-for="(item, index) in statisticsParagraph">
+          <v-layout row wrap :key="index" class="z-row">
+            <v-flex xs3>
+              {{ index == 0 ? "없음" : `${index}회` }}
+            </v-flex>
+            <v-flex xs9 text-xs-left>
+              {{ item.join(', ') }}
+            </v-flex>
+          </v-layout>
+        </template>
+      </v-flex>
+
+      <!-- 성경 통계  -->
+      <v-flex xs4 class="pa-1">
+        <span class="subheading blue--text"> 성경 통계 </span>
+        <template v-for="(item, index) in statisticsBible" >
+          <v-layout row wrap :key="index" class="z-row">
+            <v-flex xs3>
+              {{ index == 0 ? "읽지 않음" : `${index}장 읽음` }}
+            </v-flex>
+            <v-flex xs9 text-xs-left>
+              {{ item.join(', ') }}
+            </v-flex>
+          </v-layout>
+        </template>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -163,13 +247,104 @@ export default {
         "rgba(255, 159, 64, 0.1)"
       ],
       menuBeginDate: false,
-      menuEndDate: false
+      menuEndDate: false, 
+
+
+
+      statisticsAttendance: {},
+      statisticsParagraph: {}, 
+      statisticsBible: {},
+
+      descBelong: ['유치부', '유초등부', '중고등부', '청년부', '면려회'],
+      belong: 2,
+      dsBelong: { name: "유치부", ds: null, title: "유치부 출결" },
+
     };
   },
   mounted() {
     this.fillChartData();
+    this.getStatisticsAttendance();
+    this.getStatisticsParagraph();
+    this.getStatisticsBible();
   },
   methods: {
+
+    getStatisticsAttendance() {
+      console.log('request statistics-attendance');
+      console.log(`  start_date:${this.start_date}  end_date:${this.end_date}`);
+      apiService.reqStatisticsAttendance({
+        date_from: this.start_date, 
+        date_to: this.end_date, 
+        belong: 2,
+      })
+      .then((res) => {
+        console.log(res);
+        this.statisticsAttendance = {};
+
+        res.data.forEach(row => {
+          if (this.statisticsAttendance[row.att] ){
+            this.statisticsAttendance[row.att].push(row.name);
+          } else {
+            this.statisticsAttendance[row.att] = [row.name];
+          }
+        });
+        console.log(this.statisticsAttendance);
+      })
+      .catch((err) => {
+        console.log(err);
+      })   
+    },
+
+    getStatisticsParagraph() {
+      console.log('request statistics-paragraph');
+      apiService.reqStatisticsParagraph({
+        date_from: this.start_date, 
+        date_to: this.end_date, 
+        belong: 2,
+      })
+      .then((res) => {
+        console.log(res);
+        this.statisticsParagraph = {};
+
+        res.data.forEach(row => {
+          if (this.statisticsParagraph[row.att] ) {
+            this.statisticsParagraph[row.att].push(row.name);
+          } else {
+            this.statisticsParagraph[row.att] = [row.name];
+          }
+        });
+        console.log(this.statisticsParagraph);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    }, 
+
+    getStatisticsBible() {
+      console.log('request statistics-bible');
+      apiService.reqStatisticsBible({
+        date_from: this.start_date, 
+        date_to: this.end_date, 
+        belong: 2,
+      })
+      .then((res) => {
+        console.log(res);
+        this.statisticsBible = {};
+
+        res.data.forEach(row => {
+          if (this.statisticsBible[row.att]) {
+            this.statisticsBible[row.att].push(row.name);
+          } else {
+            this.statisticsBible[row.att] = [row.name];
+          }
+        });
+        console.log(this.statisticsBible);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    },
+
     initDate() {
       //    return new Date(new Date().setFullYear(new Date().getFullYear() - 1))
       var s = new Date(new Date().setDate(1));
@@ -309,5 +484,11 @@ export default {
   border: 1px dashed gainsboro;
   background-color: beige;
 }
+
+
+.z-row {
+  border: 1px dashed gainsboro;
+}
+
 </style>
 

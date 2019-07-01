@@ -15,10 +15,12 @@ const members = require('./members')
 const events = require('./events')
 const attendee = require('./attendee')
 const user = require('./user')
+const zstatistics = require('./zstatistics')
 
 module.exports = {
     members,
     events,
     attendee,
-    user
+    user, 
+    zstatistics,
 }

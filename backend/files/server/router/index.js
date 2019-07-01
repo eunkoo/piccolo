@@ -3,7 +3,7 @@ const membersController = require('../controllers').members;
 const eventsController = require('../controllers').events;
 const attendeeController = require('../controllers').attendee;
 const userController = require('../controllers').user;
-
+const zstatisticsController = require('../controllers').zstatistics;
 
 module.exports = (app) => {
 
@@ -43,5 +43,11 @@ module.exports = (app) => {
   app.post('/api/attendee/bulk', attendeeController.bulkCreate);
   app.put('/api/attendee/:id', attendeeController.update);
   app.put('/api/attendee/bulks', attendeeController.bulkUpdate);
+
+  // statistics 
+  app.post('/api/statistics/attendance', zstatisticsController.attendance);
+  app.post('/api/statistics/paragraph', zstatisticsController.paragraph);
+  app.post('/api/statistics/bible', zstatisticsController.bible);
+
 
 };

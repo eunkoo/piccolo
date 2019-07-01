@@ -74,7 +74,7 @@
                     <v-text-field
                       slot="input"
                       v-model="props.item.comment"
-                      label="사유"
+                      label="비고"
                       single-line
                       counter
                     ></v-text-field>
@@ -167,7 +167,7 @@ export default {
         },
 
         {
-          text: "사유",
+          text: "비고",
           align: "left",
           sortable: false,
           value: "comment"

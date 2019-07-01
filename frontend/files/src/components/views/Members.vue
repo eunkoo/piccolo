@@ -310,6 +310,9 @@
                       persistent-hint
                     ></v-text-field>
                     <v-date-picker 
+                      class='mydatepicker'
+                      locale='ko-kr'
+                      no-title
                       v-model="selectedMember.birth" 
                       :show-current="true"
                       @input="$refs.menuBirthday.save(selectedMember.birth)"></v-date-picker>
@@ -842,7 +845,7 @@ export default {
     },
 
     async getmembers () {
-      // this.loading = true;
+      this.loading = true;
       this.membersLoading = true;
       const response = await apiService.fetchMembers()
       console.log(response);
@@ -852,7 +855,7 @@ export default {
       this.members = response.data
       this.members_org = response.data
       this.membersLoading = false;
-      // this.loading = false;
+      this.loading = false;
     },
 
     onFileChange(e) {
@@ -1022,5 +1025,8 @@ th {
   z-index: 3;
   position: relative;
   height: 24px;
+}
+.mydatepicker{
+  height: 330px;
 }
 </style>

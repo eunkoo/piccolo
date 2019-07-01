@@ -29,6 +29,9 @@
             persistent-hint
           ></v-text-field>
           <v-date-picker
+            locale='ko-kr'
+            no-title
+            class='mydatepicker'
             v-model="start_date"
             :show-current="true"
             @input="$refs.menuBeginDate.save(start_date)"
@@ -58,6 +61,9 @@
             persistent-hint
           ></v-text-field>
           <v-date-picker
+            locale='ko-kr'
+            no-title
+            class='mydatepicker'
             v-model="end_date"
             :show-current="true"
             @input="$refs.menuEndDate.save(end_date)"
@@ -217,7 +223,6 @@ export default {
         belongs: 0
       },
       msg: "출결 보고 자료",
-
       loaded: false,
 
       category: ["유치부", "유초등부", "중고등부", "청년부", "면려회"],
@@ -478,17 +483,16 @@ export default {
   }
 };
 </script>
-
 <style scoped>
 .chart-area {
   border: 1px dashed gainsboro;
   background-color: beige;
 }
-
-
 .z-row {
   border: 1px dashed gainsboro;
 }
-
+.mydatepicker{
+  height: 330px;
+}
 </style>
 

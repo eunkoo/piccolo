@@ -52,13 +52,13 @@
                       prepend-icon="event"
                       readonly
                     ></v-text-field>
-                    <v-date-picker 
-                      locale="ko-KR" 
-                      v-model="editedItem.day" 
-                      no-title 
-                      scrollable 
-                      @input="$refs.date_menu.save(editedItem.day)">
-                    </v-date-picker>
+                    <v-date-picker
+                      class="mydatepicker"
+                      locale="ko-KR"
+                      v-model="editedItem.day"
+                      no-title
+                      @input="$refs.date_menu.save(editedItem.day)"
+                    ></v-date-picker>
                   </v-menu>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
@@ -78,25 +78,36 @@
         </v-card>
       </v-dialog>
     </div>
-    <!-- <template>
-    <v-app id="dayspan" v-cloak>
-        <ds-calendar-app :calendar="this.calendar"></ds-calendar-app>
-    </v-app>
-    </template>-->
+
+    <v-card-title>
+      <h2>예배 정보</h2>
+      <v-spacer></v-spacer>
+      <v-text-field
+        v-model="search"
+        append-icon="search"
+        label="예배명 또는 날짜"
+        single-line
+        hide-details
+      ></v-text-field>
+    </v-card-title>
+
     <v-data-table
       :headers="headers"
       :items="events"
       :pagination.sync="pagination"
-      :rows-per-page-items="pagination.rowsPerPageItems"
-      :total-items="pagination.totalItems"
+      :search="search"
     >
+    
       <template slot="items" slot-scope="props">
+        
         <!-- <td class="text-xs-left">{{ props.item.id }}</td> -->
         <td class="text-xs-left" style="min-width:100px">{{ belong_text(props.item.belongs) }}</td>
         <td class="text-xs-left">{{ props.item.title }}</td>
         <td class="text-xs-left">{{ props.item.day }}</td>
         <td class="text-xs-left" style="min-width:120px">{{ props.item.place }}</td>
         <td class="text-xs-left">{{ props.item.totalmember }}</td>
+        <td  class="text-xs-left" @click="go(props.item)">
+          <v-btn small flat fab color="blue"><v-icon> call_made</v-icon></v-btn> </td>
         <td class="justify-center layout px-0">
           <v-btn icon class="mx-0" @click="editItem(props.item)">
             <v-icon color="teal">edit</v-icon>
@@ -105,9 +116,7 @@
             <v-icon color="pink">delete</v-icon>
           </v-btn>
         </td>
-      </template>
-      <template slot="no-data">
-        <v-btn color="primary" @click="getevents">Reset</v-btn>
+        
       </template>
     </v-data-table>
   </div>
@@ -125,6 +134,7 @@ export default {
   data() {
     return {
       alert: false,
+      search: '',
       alertMsg: "",
       loading: false,
       events: [],
@@ -180,11 +190,12 @@ export default {
           value: "place"
         },
         {
-          text: " 재적 총원",
+          text: "총원",
           align: "left",
           sortable: true,
           value: "totalmember"
         },
+         { text: "바로가기", value: "title", sortable: false },
         { text: "편집", value: "title", sortable: false }
       ]
     };
@@ -231,7 +242,12 @@ export default {
       this.editedItem.totalmember = names.length;
       console.log(this.editedItem.totalmember);
     },
-
+    go(items){
+      // window.history.replaceState([{day:'items.day'},{"belongs":"items.belongs"}],'','#/api/attendee')
+      // window.history.go('#/api/attendee')
+      this.$router.replace('/data/attendee/'+items.day+'/'+items.belongs)
+      this.$router.go({name:"DataAttendee",params:[{day:items.day},{belongs:items.belongs}]})
+    },
     async save() {
       try {
         if (this.editedIndex === -1) {
@@ -315,5 +331,8 @@ th {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+.mydatepicker {
+  height: 330px;
 }
 </style>

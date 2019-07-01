@@ -4,7 +4,8 @@
       <v-flex>
         <h2>안녕하세요 </h2>
         <div class="title">{{userName}}님 환영 합니다</div>
-        
+        <div class="title">메뉴가 보이지 않으면 logout 해주세요</div>
+        <router-link to="/logout">Logout</router-link>
       </v-flex>
     </v-layout>
   </v-container>

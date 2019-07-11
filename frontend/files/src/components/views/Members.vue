@@ -837,7 +837,7 @@ export default {
       if (pic === undefined) return pic;
       if (pic !== null) {
         try {
-          return require("../../assets/img/" + pic);
+          return require("" + pic);
         } catch (e) {
           return undefined;
         }
@@ -1027,6 +1027,6 @@ th {
   height: 24px;
 }
 .mydatepicker{
-  height: 330px;
+  height: 300px;
 }
 </style>

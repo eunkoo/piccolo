@@ -333,6 +333,6 @@ th {
   user-select: none;
 }
 .mydatepicker {
-  height: 330px;
+  height: 300px;
 }
 </style>

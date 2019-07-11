@@ -773,6 +773,6 @@ export default {
   max-width: 100%;
 }
 .mydatepicker{
-  height: 330px;
+  height: 300px;
 }
 </style>

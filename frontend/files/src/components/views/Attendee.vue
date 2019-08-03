@@ -154,10 +154,10 @@
          <event-notice  v-if='printing' @changeNotice='changeNotice'  ref='notice' v-bind:datas="editedItem"></event-notice>
     </v-layout>-->
 
-    <v-flex xs12 :key=9>
+    <!-- <v-flex xs12 :key=9>
       <event-dayspan v-if="!printing " :start_day="cdateFormat" :end_day="edateFormat" :cal_type="'week'">
       </event-dayspan>
-    </v-flex>
+    </v-flex> -->
 
     <v-flex :key="8" xs2>
       <v-btn fab @click="print" v-if="userGrade==0">보기</v-btn>
@@ -792,6 +792,6 @@ export default {
   max-width: 100%;
 }
 .mydatepicker{
-  height: 300px;
+  height: 330px;
 }
 </style>

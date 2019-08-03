@@ -1,11 +1,8 @@
 <template>
   <v-container fluid text-xs-left pa-0>
-    <v-layout row wrap>
-      <h2>출결 그래프</h2>
-    </v-layout>
 
-    <v-layout fill-height justify-center>
-      <v-flex xs3>
+    <v-layout row wrap>
+            <v-flex xs3>
         <v-menu
           ref="menuBeginDate"
           v-model="menuBeginDate"
@@ -69,7 +66,13 @@
           ></v-date-picker>
         </v-menu>
       </v-flex>
+    </v-layout>
 
+    <v-layout row wrap>
+      <h2>출결 그래프</h2>
+    </v-layout>
+
+    <v-layout fill-height justify-left>
       <v-flex xs6>
         <v-select
           v-model="selectedCategory"
@@ -127,9 +130,16 @@
         </v-select>
       </v-flex>
     </v-layout>
-
+    <v-layout row wrap>
+      <v-flex xs12>
+        <v-btn small @click="fetchStatisticData">load data</v-btn>
+      </v-flex>
+    </v-layout>
+    
     <v-layout row wrap class="ma-2 elevation-5" text-xs-center>
-      <v-flex xs4 class="pa-1">
+
+      <!-- 오전 출석  -->
+      <v-flex xs3 class="pa-1">
         <span class="subheading blue--text">오전 출석 통계</span>
         <template v-for="(item, index) in statisticsMornigns">
           <v-layout row wrap :key="index" class="z-row">
@@ -139,7 +149,8 @@
         </template>
       </v-flex>
 
-      <v-flex xs4 class="pa-1">
+      <!-- 오후 출석  -->
+      <v-flex xs3 class="pa-1">
         <span class="subheading blue--text">오후 출석 통계</span>
         <template v-for="(item, index) in statisticsNoons">
           <v-layout row wrap :key="index" class="z-row">
@@ -150,7 +161,7 @@
       </v-flex>
 
       <!-- 암송 통계  -->
-      <v-flex xs4 class="pa-1">
+      <v-flex xs3 class="pa-1">
         <span class="subheading blue--text">암송 통계</span>
         <template v-for="(item, index) in statisticsParagraph">
           <v-layout row wrap :key="index" class="z-row">
@@ -161,7 +172,7 @@
       </v-flex>
 
       <!-- 성경 통계  -->
-      <v-flex xs4 class="pa-1">
+      <v-flex xs3 class="pa-1">
         <span class="subheading blue--text">성경 통계</span>
         <template v-for="(item, index) in statisticsBible">
           <v-layout row wrap :key="index" class="z-row">
@@ -225,7 +236,7 @@ export default {
         { name: "청년부", ds: null, title: "청년부 출결" },
         { name: "면려회", ds: null, title: "면려회 출결" }
       ],
-      selectedCategory: ["중고등부", "청년부"],
+      selectedCategory: ["중고등부", "유치부"],
 
       borderColors: [
         "rgba(255, 99, 132, 1)",
@@ -374,6 +385,17 @@ export default {
       return new Date(s);
       //    console.log( this.start_date)
     },
+    async fetchStatisticData(){
+        const alldate = this.getDaysBetweenDates(
+        new Date(this.start_date),
+        new Date(this.end_date),
+        "Sun"
+      );
+      this.no_date = alldate.length+1;
+      this.getStatisticsAttendance();
+      this.getStatisticsParagraph();
+      this.getStatisticsBible();
+    },
     async changeBelong(selectObj) {
       console.log(selectObj.id);
       this.getStatisticsAttendance();
@@ -413,7 +435,7 @@ export default {
         new Date(vm.end_date),
         "Sun"
       );
-      this.no_date = alldate.length;
+      this.no_date = alldate.length+1;
       vm.zzchartdata = [];
       for (let index = 0; index < vm.category.length; index += 1) {
         // console.log(`통계 데이터 요청. ${vm.category[index].text} index:${index}`);
@@ -510,7 +532,7 @@ export default {
   border: 1px dashed gainsboro;
 }
 .mydatepicker {
-  height: 300px;
+  height: 330px;
 }
 </style>
 

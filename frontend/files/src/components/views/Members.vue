@@ -1042,6 +1042,6 @@ th {
   height: 24px;
 }
 .mydatepicker{
-  height: 300px;
+  height: 330px;
 }
 </style>

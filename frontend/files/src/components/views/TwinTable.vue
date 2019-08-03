@@ -226,7 +226,7 @@ export default {
         }
 
         this.editedItem = item//Object.assign({}, item)
-        this.changeNoon()
+        // this.changeNoon()
         this.changed = true;
         // this.save();
     },
@@ -256,35 +256,35 @@ export default {
         }
         
         this.editedItem = item// Object.assign({}, item)
-        this.changeMorning()
+        // this.changeMorning()
         this.changed = true;
         // this.save();
     },
     async save () {
-      try {
-        if (this.changed) 
-        {
-        //   await apiService.addAttendee(this.editedItem)
-        //   this.events.push(this.editedItem)
-        // } else {
-            console.log("TwinTable save")
-            // await apiService.updateAttendee(this.editedItem)
-            var saved = []
-            this.attendee1.forEach(e => {
-              saved.push(e)
-            });
-            this.attendee2.forEach(e => {
-              saved.push(e)
-            });
-            await apiService.addAttendees( saved )
-        //   Object.assign(this.events[this.editedIndex], this.editedItem)
-        }
-      } catch (err) {
-        // return console.log(err.message)
-      } finally {
-        this.changed = false;
-        this.close()
-      }
+      // try {
+      //   if (this.changed) 
+      //   {
+      //   //   await apiService.addAttendee(this.editedItem)
+      //   //   this.events.push(this.editedItem)
+      //   // } else {
+      //       console.log("TwinTable save")
+      //       // await apiService.updateAttendee(this.editedItem)
+      //       var saved = []
+      //       this.attendee1.forEach(e => {
+      //         saved.push(e)
+      //       });
+      //       this.attendee2.forEach(e => {
+      //         saved.push(e)
+      //       });
+      //       await apiService.addAttendees( saved )
+      //   //   Object.assign(this.events[this.editedIndex], this.editedItem)
+      //   }
+      // } catch (err) {
+      //   // return console.log(err.message)
+      // } finally {
+      //   this.changed = false;
+      //   this.close()
+      // }
     },
     closeEdit(){
       this.changed = true;

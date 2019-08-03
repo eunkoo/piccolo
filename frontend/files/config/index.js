@@ -13,7 +13,10 @@ module.exports = {
     proxyTable: {},
 
     // Various Dev Server settings
-    host:'127.0.0.1',
+    //host:'192.168.56.101',
+    // host: '172.20.10.2',//'192.168.56.101' ,//'localhost', // can be overwritten by process.env.HOST
+    // port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
+     host:'shiningstar.cafe24app.com',
     port:8002,
     autoOpenBrowser: false,
     errorOverlay: true,

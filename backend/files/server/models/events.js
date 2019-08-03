@@ -20,6 +20,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DATEONLY,
       allowNull: true
     },
+    eday: {
+      type: DataTypes.DATEONLY,
+      allowNull: true
+    },
     time: {
       type: DataTypes.INTEGER(11),
       allowNull: true

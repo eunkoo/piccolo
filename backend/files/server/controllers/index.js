@@ -16,6 +16,7 @@ const events = require('./events')
 const attendee = require('./attendee')
 const user = require('./user')
 const zstatistics = require('./zstatistics')
+const schedule = require('./schedule')
 
 module.exports = {
     members,
@@ -23,4 +24,5 @@ module.exports = {
     attendee,
     user, 
     zstatistics,
+    schedule
 }

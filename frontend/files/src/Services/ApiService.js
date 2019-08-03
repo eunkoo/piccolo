@@ -97,5 +97,19 @@ export default {
     return Api().post('/statistics/bible', params);
   },
   
+  fetchSchedule(eid) {
+    return Api().get('/schedule/'+eid)
+  },
+  deleteSchedule(id) {
+    return Api().delete('/schedule/' + id)
+  },
+  addSchedule(params) {
+    return Api().post('/schedule', params)
+  },
+  updateSchedule(params) {
+    return Api().put('/schedule/' + params.id,params)
+  },
+ 
+
 
 }

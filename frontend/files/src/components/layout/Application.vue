@@ -233,7 +233,7 @@ export default {
         {path: '/api/zstatistics', label: '통계', icon: 'show_chart' },
         {path: '/api/members', label: '구성원', icon: 'people'},
         // {path: '/api/organization', label: '교육 부서', icon: 'business'},
-        {path: '/api/events', label: '부서 일정', icon: 'event'},
+        // {path: '/api/events', label: '부서 일정', icon: 'event'},
         {path: '/api/worship', label: ' 예배 정보', icon: 'info'},
         {path: '/api/attendee', label: '주일 보고', icon: 'description'},
         {path: '/logout', label: '로그아웃', icon: 'lock'}
@@ -243,7 +243,7 @@ export default {
         {path: '/api/zstatistics', label: '통계', icon: 'show_chart' },
         {path: '/api/members', label: '구성원', icon: 'people'},
         // {path: '/api/organization', label: '교육 부서', icon: 'business'},
-        {path: '/api/events', label: '부서 일정', icon: 'event'},
+        // {path: '/api/events', label: '부서 일정', icon: 'event'},
         {path: '/api/worship', label: ' 예배 정보', icon: 'info'},
         {path: '/api/attendee', label: '주일 보고', icon: 'description'},
         {path: '/logout', label: '로그아웃', icon: 'lock'}

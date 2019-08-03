@@ -4,6 +4,7 @@ const eventsController = require('../controllers').events;
 const attendeeController = require('../controllers').attendee;
 const userController = require('../controllers').user;
 const zstatisticsController = require('../controllers').zstatistics;
+const scheduleController = require('../controllers').schedule;
 
 module.exports = (app) => {
 
@@ -49,5 +50,9 @@ module.exports = (app) => {
   app.post('/api/statistics/paragraph', zstatisticsController.paragraph);
   app.post('/api/statistics/bible', zstatisticsController.bible);
 
-
+  app.get('/api/schedule', scheduleController.list);
+  app.get('/api/schedule/:eid', scheduleController.listForEvent);
+  app.delete('/api/schedule/:id', scheduleController.destroy);
+  app.post('/api/schedule/', scheduleController.create);
+  app.put('/api/schedule/:id', scheduleController.update);
 };

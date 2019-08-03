@@ -81,18 +81,18 @@ export default new Router({
         name: 'worship',
         component: Events
     },
-        {
-        path: '/api/events',
-        name: 'events',
-        component: EventDayspan
-    },
+    //     {
+    //     path: '/api/events',
+    //     name: 'events',
+    //     component: EventDayspan
+    // },
     {
         path: '/api/attendee',
         name: 'attendee',
         component: Attendee,
     },
     {
-      path: '/data/attendee/:day/:belongs',
+      path: '/data/attendee/:day/:eday/:belongs',
       name: 'DataAttendee',
       component: Attendee,
       props: true,

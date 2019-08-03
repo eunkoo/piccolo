@@ -68,6 +68,7 @@ module.exports = {
     return  events.findOne({
       where: {
         day: req.body.day,
+        title:req.body.title,
         belongs : req.body.belongs
       }
     }).then(events => res.status(201).send(events))
@@ -79,6 +80,7 @@ module.exports = {
    .create({
      title: req.body.title,
      day:req.body.day,
+     eday:req.body.eday,
      time:req.body.time,
      place:req.body.place,
      director:req.body.director,
@@ -111,6 +113,7 @@ module.exports = {
           .update({
             title: req.body.title || events.name,
             day:req.body.day || events.day,
+            eday:req.body.eday || events.eday,
             time:req.body.time || events.time,
             place:req.body.place || events.place,
             director:req.body.director || events.director,

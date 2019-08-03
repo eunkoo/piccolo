@@ -488,6 +488,21 @@ export default {
       },
       //   bdate: ("1990-01-01").substr(0, 10),
       editedIndex: -1,
+      defaultItem:{
+        id: -1,
+        name: "",
+        address: "",
+        phone: "",
+        gender: 0,
+        birth: null,
+        photo: null,
+        offrate: 0,
+        belong: -1,
+        tag: "",
+        connected: "",
+        grade: -1,
+        baptism: -1
+      },
       editedItem: {
         id: -1,
         name: "",

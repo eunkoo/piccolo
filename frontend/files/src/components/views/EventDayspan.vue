@@ -1,25 +1,45 @@
 <template>
   <v-layout wrap>
     <v-flex xs12 class="mb-3">
-      <v-sheet height="500">
-        <v-calendar ref="calendar" v-model="start" :type="type" :end="end" color="primary"></v-calendar>
-      </v-sheet>
-    </v-flex>
-
-    <v-flex sm4 xs4 class="text-sm-left text-xs-center">
+<!-- 
+     <td sm4 xs4 class="text-sm-left text-xs-center">
       <v-btn fab small @click="$refs.calendar.prev()">
         <v-icon  large dark >chevron_left</v-icon>
       </v-btn>
-    </v-flex>
-    <v-flex sm4 xs4 class="text-xs-center">
-      <v-select v-model="type" :items="typeOptions" label="Type"></v-select>
-    </v-flex>
-    <v-flex sm4 xs4 class="text-sm-right text-xs-center">
+    </td>
+
+    <td sm4 xs4 class="text-xs-center">
+      <h2> {{start_day}}  </h2>
+    </td>
+
+    <td sm4 xs4 class="text-sm-right text-xs-center">
       <v-btn fab small @click="$refs.calendar.next()">
-        
         <v-icon large dark>chevron_right</v-icon>
       </v-btn>
+    </td> -->
+    
+      
+
+      <v-sheet height="500">
+        <v-calendar ref="calendar" v-model="start_day" :type="cal_type" :end="end_day" color="primary">
+            <template v-slot:dayBody="{ date, timeToY, minutesToPixels }">
+            <template v-for="event in eventsMap[date]">
+              <!-- timed events -->
+              <div
+                v-if="event.time"
+                :key="event.title"
+                :style="{ top: timeToY(event.time) + 'px', height: minutesToPixels(event.duration) + 'px' }"
+                class="my-event with-time"
+                @click="open(event)"
+                v-html="event.title"
+              ></div>
+            </template>
+          </template>
+        </v-calendar>
+      </v-sheet>
     </v-flex>
+
+
   </v-layout>
 </template>
 
@@ -29,15 +49,35 @@ import Vue from "vue";
 
 export default {
   name: "eventdayspan",
+  props : {start_day:String , end_day : String , cal_type:String, eid:Number},
+  computed: {
+      // convert the list of events into a map of lists keyed by date
+      eventsMap () {
+        const map = {}
+        this.schedules.forEach(e => (map[e.date] = map[e.date] || []).push(e))
+        return map
+      }
+    },
   data: () => ({
     readOnly: false,
-    events: [],
-    eIndex: 0,
+    schedules: [],
+    // eIndex: 0,
     color: ["#3F51B5", "#4CAF50", "#2196F3", "#1976d2", "#4CAF50"],
+    editedItem: {
+        id: "",
+        eid: "",
+        mid: "",
+        title: "",
+        date: new Date().toISOString().slice(0,10),
+        time: "09:00",
+        duration: 90,
+        color: "aaaaaa",
+        link:"www.google.com"
+      },
 
-    type: "month",
-    start: "2019-01-01",
-    end: "2019-01-06",
+    // type: "day",
+    // start: start_day,
+    // end: end_day,
     typeOptions: [
       { text: "Day", value: "day" },
       { text: "4 Day", value: "4day" },
@@ -47,19 +87,19 @@ export default {
       { text: "Custom Weekly", value: "custom-weekly" }
     ]
   }),
-  mounted() {},
+  mounted() {
+    console.log('day span loaded')
+    console.log(this.start_day)
+    console.log(this.end_day)
+  },
   methods: {
-    async saveState() {},
-    async loadState() {
-      let state = {};
-      try {
-      } catch (e) {
-        // eslint-disable-next-line
-        console.log(e);
-      }
-
-      this.$refs.app.setState(state);
-    }
+    async getSchedules(eid) {
+      this.loading = true;
+      const response = await apiService.fetchSchedule(eid);
+      this.schedules = response.data;
+ 
+      this.loading = false;
+    },
     //  async getevents () {
     //     const response = await apiService.fetchEvents()
     //     this.events = response.data

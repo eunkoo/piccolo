@@ -15,12 +15,12 @@ module.exports = {
     const belong = req.body.belong;
 
     const query = `SELECT a.name, 
+    sum(
+      CASE WHEN (a.attended  %2 = 1 ) THEN '1'
+    END ) AS mornings,
     sum( 
-      (CASE WHEN (a.attended = '3' ) THEN '10'
-             WHEN (a.attended = '2' ) THEN '3'
-             WHEN (a.attended = '1' ) THEN '5' 
-             WHEN (a.attended = '0' ) THEN '0'
-      END))  AS score
+      CASE WHEN (a.attended > 1 ) THEN '1'
+    END ) AS noons
     FROM attendee AS a, events AS e
     WHERE e.id = a.eid 
           AND e.day <= '${date_to}' 
@@ -28,7 +28,7 @@ module.exports = {
           AND e.belongs = ${belong} 
           AND a.attended != 0
     GROUP BY a.name
-    ORDER BY score DESC`;
+    ORDER BY mornings DESC`;
 
     console.log(query);
     sequelize.query(query, { type: sequelize.QueryTypes.SELECT})

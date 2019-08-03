@@ -95,6 +95,7 @@
         </v-btn>
       </v-flex>
     </v-layout>
+
     <v-flex v-if="!printing && userGrade==0">
       <!-- <v-container class="guide_layout">
       <v-layout class="guide">-->
@@ -152,6 +153,12 @@
     <!-- <v-layout class="guide"  justify-center align-center >
          <event-notice  v-if='printing' @changeNotice='changeNotice'  ref='notice' v-bind:datas="editedItem"></event-notice>
     </v-layout>-->
+
+    <v-flex xs12 :key=9>
+      <event-dayspan v-if="!printing " :start_day="cdateFormat" :end_day="edateFormat" :cal_type="'week'">
+      </event-dayspan>
+    </v-flex>
+
     <v-flex :key="8" xs2>
       <v-btn fab @click="print" v-if="userGrade==0">보기</v-btn>
     </v-flex>
@@ -167,6 +174,7 @@ import TwinTable from "./TwinTable";
 import downloadExcel from "vue-json-excel";
 import { en, ko } from "vuejs-datepicker/dist/locale";
 import EditableAttendee from "./EditableAttendee";
+import EventDayspan from "./EventDayspan";
 import Vue from "vue";
 
 export default {
@@ -177,7 +185,8 @@ export default {
     EventNotice,
     TwinTable,
     downloadExcel,
-    EditableAttendee
+    EditableAttendee,
+    EventDayspan
   },
   data() {
     return {
@@ -207,6 +216,8 @@ export default {
       cbelong: 0,
       cdate: null,
       cdateFormat: this.formatDate(new Date()),
+      edate: null,
+      edateFormat: this.formatDate(new Date()),
       dialog: false,
       cplace: "",
       ctitle: "",
@@ -280,6 +291,8 @@ export default {
       this.getevents(0);
       this.cdate = this.prevDay(new Date(), 7);
       this.cdateFormat = this.formatDate(this.cdate);
+      this.edate = this.prevDay(new Date(), 7);
+      this.edateFormat = this.formatDate(this.edate);
     }else{
       console.log(this.$route.params.belongs);
       console.log(this.belong_items[this.$route.params.belongs].text)
@@ -291,6 +304,8 @@ export default {
       this.getevents(this.cbelong);
       this.cdate = new Date(this.$route.params.day)
       this.cdateFormat = this.formatDate(this.cdate);
+      this.edate = new Date(this.$route.params.eday)
+      this.edateFormat = this.formatDate(this.edate);
     }
 
    
@@ -447,7 +462,10 @@ export default {
     changeMorningAtt(t) {
       console.log(t);
       this.att_morning = t;
-      this.editedItem.totalmorning = this.att_morning + this.ex_morning;
+      this.editedItem.totalmorning = this.att_morning //+ this.ex_morning;
+      console.log(this.att_morning );
+      console.log(this.ex_morning );
+      console.log(this.editedItem.totalmorning );
       // this.save()
     },
     changeMorningEx(t) {
@@ -459,7 +477,7 @@ export default {
     changeNoonAtt(t) {
       console.log(t);
       this.att_noon = t;
-      this.editedItem.totalnoon = this.att_noon + this.ex_noon;
+      this.editedItem.totalnoon = this.att_noon //+ this.ex_noon;
       // this.save()
     },
     changeNoonEx(t) {
@@ -485,6 +503,7 @@ export default {
       if (this.events.length === 0) {
         this.editedItem = {
           day: this.cdate,
+          eday:this.edate,
           belongs: belong,
           title: this.ctitle,
           place: this.cplace

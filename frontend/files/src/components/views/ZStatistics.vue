@@ -98,7 +98,7 @@
         ></line-chart>
       </v-flex>
     </v-layout>
-    
+
     <v-layout row wrap>
       <h2>통계 차트</h2>
     </v-layout>
@@ -108,7 +108,7 @@
         <v-btn small color="info" class="ma-0" @click="getStatisticsAttendance">출석 통계</v-btn>
         <v-btn small color="info" class="ma-0" @click="getStatisticsParagraph">암송 통계</v-btn>
         <v-btn small color="info" class="ma-0" @click="getStatisticsBible">성경 통계</v-btn>
-      </v-flex> -->
+      </v-flex>-->
       <!-- 부서 (유치부:0, 유초등부:1, 중고등부:2, 청년부:3) -->
       <v-flex xs4 pa-1 ma-0>
         <v-select
@@ -130,10 +130,20 @@
 
     <v-layout row wrap class="ma-2 elevation-5" text-xs-center>
       <v-flex xs4 class="pa-1">
-        <span class="subheading blue--text">출석 통계 (전체:10점, 오전:5점, 오후3점) </span>
-        <template v-for="(item, index) in statisticsAttendance">
+        <span class="subheading blue--text">오전 출석 통계</span>
+        <template v-for="(item, index) in statisticsMornigns">
           <v-layout row wrap :key="index" class="z-row">
-            <v-flex xs3>{{ `${index}점` }}</v-flex>
+            <v-flex xs3>{{ `${index}\/${no_date}` }}</v-flex>
+            <v-flex xs9 text-xs-left>{{ item.join(', ') }}</v-flex>
+          </v-layout>
+        </template>
+      </v-flex>
+
+      <v-flex xs4 class="pa-1">
+        <span class="subheading blue--text">오후 출석 통계</span>
+        <template v-for="(item, index) in statisticsNoons">
+          <v-layout row wrap :key="index" class="z-row">
+            <v-flex xs3>{{ `${index}\/${no_date}` }}</v-flex>
             <v-flex xs9 text-xs-left>{{ item.join(', ') }}</v-flex>
           </v-layout>
         </template>
@@ -171,7 +181,6 @@ import Datepicker from "vuejs-datepicker";
 import LineChart from "./Chart.vue";
 import apiService from "@/Services/ApiService";
 
-
 export default {
   name: "Home",
   components: { ChartContainer, Datepicker, LineChart },
@@ -195,6 +204,7 @@ export default {
       end_date: new Date().toISOString().substr(0, 10),
       // start_date: this.initDate(),
       // end_date:new Date(),
+      no_date: 0,
       cbelong: 2,
       editedIndex: -1,
       editedItem: {
@@ -236,7 +246,8 @@ export default {
       menuBeginDate: false,
       menuEndDate: false,
 
-      statisticsAttendance: {},
+      statisticsMornigns: {},
+      statisticsNoons: {},
       statisticsParagraph: {},
       statisticsBible: {},
 
@@ -252,6 +263,17 @@ export default {
     this.getStatisticsBible();
   },
   methods: {
+    // week_no(dt) {
+    //   var tdt = new Date(dt.valueOf());
+    //   var dayn = (dt.getDay() + 6) % 7;
+    //   tdt.setDate(tdt.getDate() - dayn + 3);
+    //   var firstThursday = tdt.valueOf();
+    //   tdt.setMonth(0, 1);
+    //   if (tdt.getDay() !== 4) {
+    //     tdt.setMonth(0, 1 + ((4 - tdt.getDay() + 7) % 7));
+    //   }
+    //   return 1 + Math.ceil((firstThursday - tdt) / 604800000);
+    // },
 
     getStatisticsAttendance() {
       console.log("request statistics-attendance");
@@ -264,16 +286,27 @@ export default {
         })
         .then(res => {
           console.log(res);
-          this.statisticsAttendance = {};
+          this.statisticsMornigns = {};
+          this.statisticsNoons = {};
           res.data.forEach(row => {
-            if (this.statisticsAttendance[row.score]) {
-              this.statisticsAttendance[row.score].push(row.name);
-            } else {
-             this.statisticsAttendance[row.score] = [row.name];
+            if(row.mornings!=null ){
+                if ( this.statisticsMornigns[row.mornings]) {
+                  this.statisticsMornigns[row.mornings].push(row.name);
+                } else {
+                  this.statisticsMornigns[row.mornings] = [row.name];
+                }
+            }
+            if(row.noons != null){
+                 if (row.noons!=null && this.statisticsNoons[row.noons]) {
+                  this.statisticsNoons[row.noons].push(row.name);
+                } else {
+                  this.statisticsNoons[row.noons] = [row.name];
+                }
             }
           });
 
-          console.log(this.statisticsAttendance);
+          console.log(this.statisticsMornigns);
+          console.log(this.statisticsNoons);
         })
         .catch(err => {
           console.log(err);
@@ -346,7 +379,6 @@ export default {
       this.getStatisticsAttendance();
       this.getStatisticsParagraph();
       this.getStatisticsBible();
-
     },
     onSelectedStart(selected) {
       this.start_date = selected;
@@ -381,6 +413,7 @@ export default {
         new Date(vm.end_date),
         "Sun"
       );
+      this.no_date = alldate.length;
       vm.zzchartdata = [];
       for (let index = 0; index < vm.category.length; index += 1) {
         // console.log(`통계 데이터 요청. ${vm.category[index].text} index:${index}`);

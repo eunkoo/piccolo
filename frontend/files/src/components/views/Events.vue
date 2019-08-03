@@ -20,19 +20,6 @@
                   <v-text-field label="예배명" v-model="editedItem.title"></v-text-field>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
-                  <v-select
-                    label="부서"
-                    :items="belong_items"
-                    v-model="belong_items[editedItem.belongs]"
-                    single-line
-                    item-text="text"
-                    item-value="id"
-                    return-object
-                    persistent-hint
-                    @change="changeBelong"
-                  ></v-select>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
                   <v-menu
                     ref="date_menu"
                     :close-on-content-click="false"
@@ -48,7 +35,7 @@
                     <v-text-field
                       slot="activator"
                       v-model="editedItem.day"
-                      label="일시"
+                      label="시작"
                       prepend-icon="event"
                       readonly
                     ></v-text-field>
@@ -62,11 +49,53 @@
                   </v-menu>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
-                  <v-text-field label="장소" v-model="editedItem.place"></v-text-field>
+                  <v-menu
+                    ref="edate_menu"
+                    :close-on-content-click="false"
+                    v-model="edate_menu"
+                    :nudge-right="40"
+                    :return-value.sync="editedItem.eday"
+                    lazy
+                    transition="scale-transition"
+                    offset-y
+                    full-width
+                    min-width="290px"
+                  >
+                    <v-text-field
+                      slot="activator"
+                      v-model="editedItem.eday"
+                      label="종료"
+                      prepend-icon="event"
+                      readonly
+                    ></v-text-field>
+                    <v-date-picker
+                      class="mydatepicker"
+                      locale="ko-KR"
+                      v-model="editedItem.eday"
+                      no-title
+                      @input="$refs.edate_menu.save(editedItem.eday)"
+                    ></v-date-picker>
+                  </v-menu>
                 </v-flex>
                 <v-flex xs12 sm6 md4>
-                  <v-text-field label="재적 총원" v-model="editedItem.totalmember"></v-text-field>
+                  <v-select
+                    label="부서"
+                    :items="belong_items"
+                    v-model="belong_items[editedItem.belongs]"
+                    single-line
+                    item-text="text"
+                    item-value="id"
+                    return-object
+                    persistent-hint
+                    @change="changeBelong"
+                  ></v-select>
                 </v-flex>
+                <v-flex xs12 sm6 md4>
+                  <v-text-field label="장소" v-model="editedItem.place"></v-text-field>
+                </v-flex>
+                <!-- <v-flex xs12 sm6 md4>
+                  <v-text-field label="재적 총원" v-model="editedItem.totalmember"></v-text-field>
+                </v-flex> -->
               </v-layout>
             </v-container>
           </v-card-text>
@@ -104,6 +133,7 @@
         <td class="text-xs-left" style="min-width:100px">{{ belong_text(props.item.belongs) }}</td>
         <td class="text-xs-left">{{ props.item.title }}</td>
         <td class="text-xs-left">{{ props.item.day }}</td>
+        <td class="text-xs-left">{{ props.item.eday }}</td>
         <td class="text-xs-left" style="min-width:120px">{{ props.item.place }}</td>
         <td class="text-xs-left">{{ props.item.totalmember }}</td>
         <td  class="text-xs-left" @click="go(props.item)">
@@ -139,7 +169,7 @@ export default {
       loading: false,
       events: [],
       dialog: false,
-      cdate: new Date(),
+      // cdate: new Date(),
       belong_items: [
         { text: "유치부", id: 0 },
         { text: "유초등부", id: 1 },
@@ -148,40 +178,57 @@ export default {
         // { text: '면려회', id: '4' }
       ],
       pagination: {
-        page: 1,
+        sortBy: 'day', // The field that you're sorting by
+      descending: true,
+        // page: 1,
         rowsPerPage: 10,
-        totalItems: 0,
-        rowsPerPageItems: [5, 10, 15, 20, 25]
+        // totalItems: 0,
+        // rowsPerPageItems: [5, 10, 15, 20, 25]
       },
       cbelong: -1,
       editedIndex: -1,
-      date_menu: false,
+      date_menu: null ,
+      edate_menu: null ,
+      defaultItem:{
+        title: "",
+        place: "",
+        day: new Date().toISOString().slice(0,10),
+        eday: new Date().toISOString().slice(0,10),
+        belongs : ""
+      },
       editedItem: {
         id: "",
         title: "",
         place: "",
-        day: this.cdate,
+        day: new Date().toISOString().slice(0,10),
+        eday: new Date().toISOString().slice(0,10),
         belongs: this.cbelong,
-        totalmember: 10
+        totalmember: 0
       },
       headers: [
         {
           text: "소속",
           align: "left",
-          sortable: true,
+          sortable: false,
           value: "place"
         },
         {
           text: "예배명",
           align: "left",
-          sortable: true,
+          sortable: false,
           value: "title"
         },
         {
-          text: "일시",
+          text: "시작",
           align: "left",
           sortable: true,
           value: "day"
+        },
+        {
+          text: "종료",
+          align: "left",
+          sortable: true,
+          value: "eday"
         },
         {
           text: "장소",
@@ -214,6 +261,18 @@ export default {
     }
   },
   methods: {
+    daySort(items, index, isDesc) {
+    items.sort((a, b) => {
+      if (index === "day") {
+        if (!isDesc) {
+          return b.day - a.day;
+        } else {
+          return a.day - b.day;
+        }
+      }
+    });
+    return items;
+  },
     belong_text: function(belong) {
       if (belong === 0) return "유치부";
       if (belong === 1) return "유초등부";
@@ -245,8 +304,8 @@ export default {
     go(items){
       // window.history.replaceState([{day:'items.day'},{"belongs":"items.belongs"}],'','#/api/attendee')
       // window.history.go('#/api/attendee')
-      this.$router.replace('/data/attendee/'+items.day+'/'+items.belongs)
-      this.$router.go({name:"DataAttendee",params:[{day:items.day},{belongs:items.belongs}]})
+      this.$router.push('/data/attendee/'+items.day+'/'+items.eday+'/'+items.belongs)
+      this.$router.go({name:"DataAttendee",params:[{day:items.day},{eday:items.eday},{belongs:items.belongs}]})
     },
     async save() {
       try {

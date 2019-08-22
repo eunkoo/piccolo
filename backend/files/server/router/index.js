@@ -5,14 +5,13 @@ const attendeeController = require('../controllers').attendee;
 const userController = require('../controllers').user;
 const zstatisticsController = require('../controllers').zstatistics;
 const scheduleController = require('../controllers').schedule;
+const organizationController = require('../controllers').organization;
 
 module.exports = (app) => {
 
   app.get('/api', (req, res) => res.status(200).send({
     message: 'Welcome ... API for creation SCHEDULES!'
   }));
-
- 
 
   app.post('/api/user/login', userController.userLogin);
   app.post('/api/user/check_create', userController.check_create);
@@ -55,4 +54,11 @@ module.exports = (app) => {
   app.delete('/api/schedule/:id', scheduleController.destroy);
   app.post('/api/schedule/', scheduleController.create);
   app.put('/api/schedule/:id', scheduleController.update);
+
+  //organization
+  app.get('/api/organization/:year', organizationController.list);
+  app.delete('/api/organization/:id', organizationController.destroy);
+  app.post('/api/organization/', organizationController.create);
+  app.put('/api/organization/:id', organizationController.update);
+
 };

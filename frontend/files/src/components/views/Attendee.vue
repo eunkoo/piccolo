@@ -496,6 +496,7 @@ export default {
       this.cplace = "";
     },
     async getevents(belong) {
+      console.log("getevents "+belong)
       this.loading = true;
       this.clearDatas();
       const response = await apiService.fetchEvent(belong);
@@ -512,17 +513,18 @@ export default {
         return;
       }
 
-      this.cbelong = this.editedItem.belongs;
-      this.ctitle = this.editedItem.title;
-      this.cplace = this.editedItem.place;
+      // 교육부서를 
+      this.cbelong = belong//this.editedItem.belongs;
+      // this.ctitle = this.editedItem.title;
+      // this.cplace = this.editedItem.place;
       await this.loadEventData(belong, this.cdate);
       this.getAttendee(belong, this.cdate);
       this.loading = false;
     },
-    onSelected(selected) {
-      this.cdate = selected;
-      this.getevents(this.cbelong);
-    },
+    // onSelected(selected) {
+    //   this.cdate = selected;
+    //   this.getevents(this.cbelong);
+    // },
     chooseDate(date) {
       this.cdate = new Date(date);
       this.$refs.date_menu.save(date);
@@ -560,9 +562,9 @@ export default {
       console.log(this.attendee);
     },
     loadEventData(belong, cdate) {
-      console.log("loadEventData ");
+      console.log("loadEventData "+belong + ", "+this.formatDate(cdate));
       var item = this.events.filter(ev => {
-        return new Date(ev.day).toDateString() === cdate.toDateString();
+        return this.formatDate(new Date(ev.day)) === this.formatDate(cdate);
       });
 
       if (item.length > 0) {
@@ -579,14 +581,15 @@ export default {
         // console.log(this.editedIndex)
       } else {
         this.editedItem = {
-          day: this.cdate.toDateString(),
+          day : this.formatDate(this.cdate),
+          // day: this.cdate.toDateString(),
           belongs: this.cbelong,
           title: this.ctitle,
           place: this.cplace
         };
         this.editedIndex = -1;
       }
-      this.cbelong = this.editedItem.belongs;
+      // this.cbelong = this.editedItem.belongs;
       this.ctitle = this.editedItem.title;
       this.cplace = this.editedItem.place;
       console.log(this.editedItem);
@@ -738,7 +741,7 @@ export default {
       return d;
     },
     onPrev() {
-      //  console.log(this.cdate)
+       console.log("onPrev" + this.formatDate(this.cdate))
       this.cdate.setDate(this.cdate.getDate() - 1);
       this.cdate = new Date(this.prevDay(this.cdate, 7));
       this.cdateFormat = this.formatDate(this.cdate);
@@ -746,7 +749,7 @@ export default {
       this.getAttendee(this.cbelong, this.cdate);
     },
     onNext() {
-      // console.log(this.cdate)
+      console.log("onNext" + this.formatDate(this.cdate))
       this.cdate.setDate(this.cdate.getDate() + 1);
       this.cdate = new Date(this.nextDay(this.cdate, 7));
       this.cdateFormat = this.formatDate(this.cdate);

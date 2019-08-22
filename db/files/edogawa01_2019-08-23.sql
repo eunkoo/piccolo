@@ -7,7 +7,7 @@
 #
 # Host: 127.0.0.1 (MySQL 5.7.26)
 # Database: edogawa01
-# Generation Time: 2019-05-03 11:55:01 +0000
+# Generation Time: 2019-08-22 16:27:56 +0000
 # ************************************************************
 
 
@@ -67,6 +67,7 @@ CREATE TABLE `events` (
   `totalmorning` int(11) DEFAULT NULL,
   `totalnoon` int(11) DEFAULT NULL,
   `calendar` text,
+  `eday` date DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -100,6 +101,44 @@ CREATE TABLE `members` (
 
 
 
+# Dump of table organization
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `organization`;
+
+CREATE TABLE `organization` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `belongs` int(11) NOT NULL,
+  `name` varchar(11) NOT NULL DEFAULT '',
+  `role` varchar(20) DEFAULT NULL,
+  `year` int(11) NOT NULL,
+  `createdAt` datetime DEFAULT NULL,
+  `updatedAt` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table schedule
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `schedule`;
+
+CREATE TABLE `schedule` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `eid` int(11) DEFAULT NULL,
+  `mid` int(11) DEFAULT NULL,
+  `title` varchar(20) DEFAULT NULL,
+  `date` int(11) DEFAULT NULL,
+  `time` time DEFAULT NULL,
+  `duration` int(11) DEFAULT NULL,
+  `color` varchar(11) DEFAULT NULL,
+  `link` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
 # Dump of table users
 # ------------------------------------------------------------
 
@@ -107,14 +146,14 @@ DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `users` (
   `iduser` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) DEFAULT NULL ,
-  `apellidos` varchar(50) DEFAULT NULL ,
-  `edad` int(11) DEFAULT NULL ,
+  `name` varchar(50) DEFAULT NULL,
+  `apellidos` varchar(50) DEFAULT NULL,
+  `edad` int(11) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
   `password` varchar(100) DEFAULT NULL,
-  `grade` int(11) DEFAULT NULL ,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
+  `grade` int(11) DEFAULT NULL,
   PRIMARY KEY (`iduser`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

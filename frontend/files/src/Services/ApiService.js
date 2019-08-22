@@ -96,7 +96,8 @@ export default {
   reqStatisticsBible(params) {
     return Api().post('/statistics/bible', params);
   },
-  
+
+  // schedule
   fetchSchedule(eid) {
     return Api().get('/schedule/'+eid)
   },
@@ -110,6 +111,18 @@ export default {
     return Api().put('/schedule/' + params.id,params)
   },
  
-
+// organization
+  fetchOrganization(year) {
+    return Api().get('/organization/'+year)
+  },
+  deleteOrganization(id) {
+    return Api().delete('/organization/' + id)
+  },
+  addOrganization(params) {
+    return Api().post('/organization', params)
+  },
+  updateOrganization(params) {
+    return Api().put('/organization/' + params.id,params)
+  },
 
 }

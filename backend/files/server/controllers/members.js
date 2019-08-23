@@ -36,7 +36,8 @@ module.exports = {
       .then(members => {        
         var hostname = ( req.headers.host.match(/:/g) ) ? req.headers.host.slice( 0, req.headers.host.indexOf(":") ) : req.headers.host
         members.forEach(member => {
-          member.photo = `${req.protocol}://${hostname}:8001/uploads/${member.photo}`;
+          if(member.photo!==null)
+            member.photo = `${req.protocol}://${hostname}:8001/uploads/${member.photo}`;
         });
         return res.status(200).send(members);
       })

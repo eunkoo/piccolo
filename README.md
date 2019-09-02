@@ -1,6 +1,9 @@
 # piccolo
 mysql sequalize node.js express webpack-dev-server vue vuetify  
 
+update by ubaba 2019.09.02
+80's cafe
+
 
 ref : https://github.com/dheeyi/goowil
 

@@ -1,4 +1,4 @@
-const events = require('../models').events;
+
 const schedule = require('../models').schedule;
 module.exports = {
   
@@ -11,7 +11,7 @@ module.exports = {
   listForEvent(req, res){
     return schedule
     .all({
-        where :{eid : req.params.eid}
+        where :{eid : req.body.eid}
     })
     .then(schedule => res.status(200).send(schedule))
     .catch(error => res.status(400).send(error));
@@ -51,7 +51,9 @@ module.exports = {
      eid:req.body.eid,
      title: req.body.title,
      time:req.body.time,
-     date:req.body.date,
+     start:req.body.start,
+     end:req.body.end,
+     belongs:req.body.belongs,
      duration:req.body.duration,
      link:req.body.link,
      color:req.body.color,
@@ -64,7 +66,7 @@ module.exports = {
 
   update(req, res) {
     schedule
-      .findById(req.params.id)
+      .findById(req.body.id)
       .then(schedule => {
         if (!schedule) {
           return res.status(404).send({
@@ -77,7 +79,9 @@ module.exports = {
             eid:req.body.eid,
             title: req.body.title,
             time:req.body.time,
-            date:req.body.date,
+            start:req.body.start,
+            end:req.body.end,
+            belongs:req.body.belongs,
             duration:req.body.duration,
             link:req.body.link,
             color:req.body.color,

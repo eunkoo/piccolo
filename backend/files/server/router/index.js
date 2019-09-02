@@ -17,27 +17,27 @@ module.exports = (app) => {
   app.post('/api/user/check_create', userController.check_create);
   app.post('/api/user/', userController.create);
 
-  app.get('/api/members', membersController.list);
-  app.get('/api/members/name/:belong', membersController.names);
-  app.get('/api/members/:belong', membersController.belonglist);
-  app.get('/api/members/birthes/:belong/:month', membersController.birthes);
-  app.get('/api/members/newes/:belong/:month', membersController.newes);
+  app.post('/api/members/list', membersController.list);
+  app.post('/api/members/names', membersController.names);
+  // app.post('/api/members/belong', membersController.belonglist);
+  app.post('/api/members/birthes', membersController.birthes);
+  app.post('/api/members/newes', membersController.newes);
   app.delete('/api/members/:id', membersController.destroy);
-  app.post('/api/members/photo/:id', membersController.uploadPhoto);
+  app.post('/api/members/photo', membersController.uploadPhoto);
   app.post('/api/members/check_create', membersController.check_create);
-  app.post('/api/members/', membersController.create);
+  app.post('/api/members/create', membersController.create);
   app.put('/api/members/:id', membersController.update);
 
-  app.get('/api/events', eventsController.list);
-  app.get('/api/events/:belongs', eventsController.ev);
-  app.get('/api/events/:belongs/:start/:end', eventsController.graph);
+  app.post('/api/events/list', eventsController.list);
+  app.post('/api/events/forbelongs', eventsController.ev);
+  app.post('/api/events/forgraph', eventsController.graph);
   app.delete('/api/events/:id', eventsController.destroy);
   app.post('/api/events/check_create', eventsController.check_create);
-  app.post('/api/events/', eventsController.create);
+  app.post('/api/events/create', eventsController.create);
   app.put('/api/events/:id', eventsController.update);
 
-  app.get('/api/attendee', attendeeController.list);
-  app.get('/api/attendee/:id', attendeeController.listForEvent);
+  app.post('/api/attendee/list', attendeeController.list);
+  app.post('/api/attendee/forevent', attendeeController.listForEvent);
   app.delete('/api/attendee/:id', attendeeController.destroy);
   app.post('/api/attendee/', attendeeController.create);
   app.post('/api/attendee/bulk', attendeeController.bulkCreate);
@@ -49,16 +49,17 @@ module.exports = (app) => {
   app.post('/api/statistics/paragraph', zstatisticsController.paragraph);
   app.post('/api/statistics/bible', zstatisticsController.bible);
 
-  app.get('/api/schedule', scheduleController.list);
-  app.get('/api/schedule/:eid', scheduleController.listForEvent);
+  app.post('/api/schedule/list', scheduleController.list);
+  app.post('/api/schedule/forevent', scheduleController.listForEvent);
   app.delete('/api/schedule/:id', scheduleController.destroy);
   app.post('/api/schedule/', scheduleController.create);
-  app.put('/api/schedule/:id', scheduleController.update);
+  app.put('/api/schedule', scheduleController.update);
 
   //organization
-  app.get('/api/organization/:year', organizationController.list);
+  app.post('/api/organization/list', organizationController.list);
   app.delete('/api/organization/:id', organizationController.destroy);
-  app.post('/api/organization/', organizationController.create);
-  app.put('/api/organization/:id', organizationController.update);
+  app.post('/api/organization/create', organizationController.create);
+  app.put('/api/organization', organizationController.update);
+  app.post('/api/organization/photo', organizationController.uploadPhoto);
 
 };

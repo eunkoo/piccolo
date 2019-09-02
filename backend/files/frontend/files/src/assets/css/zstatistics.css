@@ -1,0 +1,11 @@
+
+.chart-area {
+  border: 1px dashed gainsboro;
+  background-color: beige;
+}
+.z-row {
+  border: 1px dashed gainsboro;
+}
+.mydatepicker {
+  height: 330px;
+}

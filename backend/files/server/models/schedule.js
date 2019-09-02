@@ -14,13 +14,21 @@ module.exports = function(sequelize, DataTypes) {
       },
       mid: {
         type: DataTypes.INTEGER(11),
+        allowNull: true
+      },
+      belongs: {
+        type: DataTypes.INTEGER(11),
         allowNull: false
       },
       title: {
         type: DataTypes.STRING(20),
         allowNull: true
       },
-      date: {
+      start: {
+        type: DataTypes.DATE,
+        allowNull: true
+      },
+      end: {
         type: DataTypes.DATE,
         allowNull: true
       },
@@ -34,11 +42,11 @@ module.exports = function(sequelize, DataTypes) {
       },
       color: {
           type: DataTypes.STRING(11),
-          allowNull: false
+          allowNull: true
       },
       link: {
           type: DataTypes.TEXT,
-          allowNull: false
+          allowNull: true
       },
       createdAt: {
         type: DataTypes.DATE,

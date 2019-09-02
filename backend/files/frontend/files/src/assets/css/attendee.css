@@ -1,0 +1,38 @@
+
+.page-inner {
+  height: 100%;
+  width: 100%;
+}
+.page-wrapper {
+  overflow-x: auto;
+  overflow-y: auto;
+  background: #cccccc;
+  margin: 0;
+  padding: 0;
+  -webkit-print-color-adjust: exact;
+  box-sizing: border-box;
+}
+.resume {
+  height: 100%;
+  width: 100%;
+}
+.page {
+  background: white;
+  position: relative;
+  width: 21cm;
+  height: 100%;
+  display: block;
+  page-break-after: auto;
+  overflow: auto;
+}
+.guide {
+  position: relative;
+  width: 21cm;
+}
+.guide_layout {
+  overflow-x: scroll;
+  max-width: 100%;
+}
+.mydatepicker{
+  height: 330px;
+}

@@ -6,20 +6,24 @@
     <v-alert :value="alert" color="error" icon="error_circle" outlined>{{alertMsg}}</v-alert>
     <div class="formodal">
       <v-dialog v-model="dialog" max-width="800px">
-        <v-btn fab color="primary" dark slot="activator" class="mb-2">
-          <v-icon dark>add</v-icon>
-        </v-btn>
+
+        <template v-slot:activator="{ on }">
+          <v-btn small fab color="primary" dark v-on="on" class="mb-2">
+            <v-icon dark>add</v-icon>
+          </v-btn>
+        </template>
+
         <v-card>
           <v-card-title>
             <span class="headline">{{ formTitle }}</span>
           </v-card-title>
           <v-card-text>
             <v-container grid-list-md>
-              <v-layout wrap>
-                <v-flex xs12 sm6 md4>
+              <v-row>
+                <v-col cols="12" sm="6" md="4">
                   <v-text-field label="예배명" v-model="editedItem.title"></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
+                </v-col>
+                <v-col cols="12" sm="6" md="4">
                   <v-menu
                     ref="date_menu"
                     :close-on-content-click="false"
@@ -47,8 +51,8 @@
                       @input="$refs.date_menu.save(editedItem.day)"
                     ></v-date-picker>
                   </v-menu>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
+                </v-col>
+                <v-col cols="12" sm="6" md="4">
                   <v-menu
                     ref="edate_menu"
                     :close-on-content-click="false"
@@ -76,8 +80,8 @@
                       @input="$refs.edate_menu.save(editedItem.eday)"
                     ></v-date-picker>
                   </v-menu>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
+                </v-col>
+                <v-col cols="12" sm="6" md="4">
                   <v-select
                     label="부서"
                     :items="belong_items"
@@ -89,20 +93,20 @@
                     persistent-hint
                     @change="changeBelong"
                   ></v-select>
-                </v-flex>
-                <v-flex xs12 sm6 md4>
+                </v-col>
+                <v-col cols="12" sm="6" md="4">
                   <v-text-field label="장소" v-model="editedItem.place"></v-text-field>
-                </v-flex>
+                </v-col>
                 <!-- <v-flex xs12 sm6 md4>
                   <v-text-field label="재적 총원" v-model="editedItem.totalmember"></v-text-field>
                 </v-flex> -->
-              </v-layout>
+              </v-row>
             </v-container>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click.native="close">취소</v-btn>
-            <v-btn color="blue darken-1" flat @click.native="save">저장</v-btn>
+            <v-btn color="blue darken-1" @click.native="close">취소</v-btn>
+            <v-btn color="blue darken-1" @click.native="save">저장</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -123,30 +127,30 @@
     <v-data-table
       :headers="headers"
       :items="events"
-      :pagination.sync="pagination"
       :search="search"
-    >
-    
-      <template slot="items" slot-scope="props">
-        
-        <!-- <td class="text-xs-left">{{ props.item.id }}</td> -->
-        <td class="text-xs-left" style="min-width:100px">{{ belong_text(props.item.belongs) }}</td>
-        <td class="text-xs-left">{{ props.item.title }}</td>
-        <td class="text-xs-left">{{ props.item.day }}</td>
-        <td class="text-xs-left">{{ props.item.eday }}</td>
-        <td class="text-xs-left" style="min-width:120px">{{ props.item.place }}</td>
-        <td class="text-xs-left">{{ props.item.totalmember }}</td>
-        <td  class="text-xs-left" @click="go(props.item)">
-          <v-btn small flat fab color="blue"><v-icon> call_made</v-icon></v-btn> </td>
-        <td class="justify-center layout px-0">
-          <v-btn icon class="mx-0" @click="editItem(props.item)">
-            <v-icon color="teal">edit</v-icon>
-          </v-btn>
-          <v-btn icon class="mx-0" @click="deleteEvents(props.item)">
-            <v-icon color="pink">delete</v-icon>
-          </v-btn>
-        </td>
-        
+    >  
+      <template v-slot:body="{ items }">
+        <tbody>
+          <tr v-for="item in items" :key="item.id">
+            <!-- <td class="text-xs-left">{{ props.item.id }}</td> -->
+            <td class="text-xs-left" style="min-width:100px">{{ belong_text(item.belongs) }}</td>
+            <td class="text-xs-left">{{ item.title }}</td>
+            <td class="text-xs-left">{{ item.day }}</td>
+            <td class="text-xs-left">{{ item.eday }}</td>
+            <td class="text-xs-left" style="min-width:120px">{{ item.place }}</td>
+            <td class="text-xs-left">{{ item.totalmember }}</td>
+            <td  class="text-xs-left" @click="go(item)">
+              <v-btn small text fab color="blue"><v-icon> call_made</v-icon></v-btn> </td>
+            <td class="justify-center layout px-0">
+              <v-btn icon class="mx-0" @click="editItem(item)">
+                <v-icon color="teal">edit</v-icon>
+              </v-btn>
+              <v-btn icon class="mx-0" @click="deleteEvents(item)">
+                <v-icon color="pink">delete</v-icon>
+              </v-btn>
+            </td>
+          </tr>
+        </tbody>
       </template>
     </v-data-table>
   </div>

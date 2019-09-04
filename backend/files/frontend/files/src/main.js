@@ -14,15 +14,19 @@
 require("babel-core/register");
 require("babel-polyfill");
 
+
 import Vue from 'vue'
+import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css'
+
 import App from './App.vue'
 import router  from './router'
 import axios  from 'axios'
 import VueAxios  from 'vue-axios'
 import Router from  'vue-router'
-import Vuetify from 'vuetify'
 
 import { Line } from  'vue-chartjs'
+
 
 
 // import 'material-design-icons-iconfont/dist/material-design-icons.css'
@@ -44,6 +48,13 @@ Vue.use(VueImg);
 Vue.use(vuescroll)
 Vue.use(Router)
 Vue.use(Vuetify)
+
+export default new Vuetify({ 
+  icons: {
+    iconfont: 'mdi', // default - only for display purposes
+  },
+})
+
 
 Vue.config.productionTip = false
 

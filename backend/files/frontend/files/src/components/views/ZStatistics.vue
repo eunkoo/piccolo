@@ -1,8 +1,8 @@
 <template>
-  <v-container fluid text-xs-left pa-0>
+  <v-container fluid text-xs-left pa-3>
 
-    <v-layout row wrap>
-            <v-flex xs3>
+    <v-row fluid>
+      <v-col cols="3">
               
         <v-menu
           ref="menuBeginDate"
@@ -37,9 +37,9 @@
           ></v-date-picker>
          
         </v-menu>
+      </v-col>
 
-      </v-flex>
-      <v-flex xs3>
+      <v-col cols="3">
         <v-menu
           ref="menuEndDate"
           v-model="menuEndDate"
@@ -72,15 +72,15 @@
             @input="$refs.menuEndDate.save(end_date)"
           ></v-date-picker>
         </v-menu>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
 
-    <v-layout row wrap>
+    <v-row >
       <h2>출결 그래프</h2>
-    </v-layout>
+    </v-row>
 
-    <v-layout fill-height justify-left>
-      <v-flex xs6>
+    <v-row fill-height justify-left>
+      <v-col cols="6">
         <v-select
           v-model="selectedCategory"
           :items="category"
@@ -91,14 +91,14 @@
           hint="pick your favorite category"
           persistent-hint
         ></v-select>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
 
-    <v-layout row wrap>
-      <v-flex xs12>
+    <v-row >
+      <v-col cols="12">
         <v-btn small @click="fillChartData">load data</v-btn>
-      </v-flex>
-      <v-flex xs12 v-for="dd in zzchartdata" :key="dd.name">
+      </v-col>
+      <v-col xcols="12" v-for="dd in zzchartdata" :key="dd.name">
         <line-chart
           v-if="selectedCategory.includes(dd.name)"
           class="chart-area ma-1"
@@ -106,89 +106,84 @@
           :chartdata="dd.ds"
           :chartTitle="dd.title"
         ></line-chart>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
 
-    <v-layout row wrap>
-      <h2>통계 차트</h2>
-    </v-layout>
-
-    <v-layout row wrap>
-      <!-- <v-flex xs12>
-        <v-btn small color="info" class="ma-0" @click="getStatisticsAttendance">출석 통계</v-btn>
-        <v-btn small color="info" class="ma-0" @click="getStatisticsParagraph">암송 통계</v-btn>
-        <v-btn small color="info" class="ma-0" @click="getStatisticsBible">성경 통계</v-btn>
-      </v-flex>-->
-      <!-- 부서 (유치부:0, 유초등부:1, 중고등부:2, 청년부:3) -->
-      <v-flex xs4 pa-1 ma-0>
-        <v-select
-          color="blue"
-          hide-details
-          dense
-          v-model="cbelong"
-          :items="[0,1,2,3,4]"
-          attach
-          label="부서"
-          persistent-hint
-          @change="changeBelong"
-        >
-          <template slot="item" slot-scope="props">{{ descBelong[props.item] }}</template>
-          <template slot="selection" slot-scope="props">{{ descBelong[props.item] }}</template>
-        </v-select>
-      </v-flex>
-    </v-layout>
-    <v-layout row wrap>
-      <v-flex xs12>
+    <v-row>
+      <v-col cols="12">
+        <h2>통계 차트</h2>
+      </v-col>
+      <v-col cols="12">
+        <v-row xs4 pa-1 ma-0>
+          <v-select
+            color="blue"
+            hide-details
+            dense
+            v-model="cbelong"
+            :items="[0,1,2,3,4]"
+            attach
+            label="부서"
+            persistent-hint
+            @change="changeBelong"
+          >
+            <template slot="item" slot-scope="props">{{ descBelong[props.item] }}</template>
+            <template slot="selection" slot-scope="props">{{ descBelong[props.item] }}</template>
+          </v-select>
+        </v-row>
+      </v-col>
+    </v-row>
+    <v-row >
+      <v-col cols="12">
         <v-btn small @click="fetchStatisticData">load data</v-btn>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
     
-    <v-layout row wrap class="ma-2 elevation-5" text-xs-center>
+    <v-row class="ma-2 elevation-5" text-xs-center>
 
       <!-- 오전 출석  -->
-      <v-flex xs3 class="pa-1">
+      <v-col cols="3" class="pa-1">
         <span class="subheading blue--text">오전 출석 통계</span>
         <template v-for="(item, index) in statisticsMornigns">
-          <v-layout row wrap :key="index" class="z-row">
-            <v-flex xs3>{{ `${index}\/${no_date}` }}</v-flex>
-            <v-flex xs9 text-xs-left>{{ item.join(', ') }}</v-flex>
-          </v-layout>
+          <v-row :key="index" class="z-row">
+            <v-col cols="3">{{ `${index}\/${no_date}` }}</v-col>
+            <v-col cols="3" text-xs-left>{{ item.join(', ') }}</v-col>
+          </v-row>
         </template>
-      </v-flex>
+      </v-col>
 
       <!-- 오후 출석  -->
-      <v-flex xs3 class="pa-1">
+      <v-col cols="3" class="pa-1">
         <span class="subheading blue--text">오후 출석 통계</span>
         <template v-for="(item, index) in statisticsNoons">
-          <v-layout row wrap :key="index" class="z-row">
-            <v-flex xs3>{{ `${index}\/${no_date}` }}</v-flex>
-            <v-flex xs9 text-xs-left>{{ item.join(', ') }}</v-flex>
-          </v-layout>
+          <v-row row wrap :key="index" class="z-row">
+            <v-col cols="3">{{ `${index}\/${no_date}` }}</v-col>
+            <v-col cols="9">{{ item.join(', ') }}</v-col>
+          </v-row>
         </template>
-      </v-flex>
+      </v-col>
 
       <!-- 암송 통계  -->
-      <v-flex xs3 class="pa-1">
+      <v-col cols="3" class="pa-1">
         <span class="subheading blue--text">암송 통계</span>
         <template v-for="(item, index) in statisticsParagraph">
-          <v-layout row wrap :key="index" class="z-row">
-            <v-flex xs3>{{ index == 0 ? "없음" : `${index}회` }}</v-flex>
-            <v-flex xs9 text-xs-left>{{ item.join(', ') }}</v-flex>
-          </v-layout>
+          <v-row :key="index" class="z-row">
+            <v-col cols="3">{{ index == 0 ? "없음" : `${index}회` }}</v-col>
+            <v-col cols="9">{{ item.join(', ') }}</v-col>
+          </v-row>
         </template>
-      </v-flex>
+      </v-col>
 
       <!-- 성경 통계  -->
-      <v-flex xs3 class="pa-1">
+      <v-col cols="3" xs3 class="pa-1">
         <span class="subheading blue--text">성경 통계</span>
         <template v-for="(item, index) in statisticsBible">
           <v-layout row wrap :key="index" class="z-row">
-            <v-flex xs3>{{ index == 0 ? "읽지 않음" : `${index}장 읽음` }}</v-flex>
-            <v-flex xs9 text-xs-left>{{ item.join(', ') }}</v-flex>
+            <v-col cols="3">{{ index == 0 ? "읽지 않음" : `${index}장 읽음` }}</v-col>
+            <v-col cols="9" text-xs-left>{{ item.join(', ') }}</v-col>
           </v-layout>
         </template>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

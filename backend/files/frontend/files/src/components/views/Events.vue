@@ -36,13 +36,15 @@
                     full-width
                     min-width="290px"
                   >
+                  <template v-slot:activator="{ on }">
                     <v-text-field
-                      slot="activator"
+                      v-on="on"
                       v-model="editedItem.day"
                       label="시작"
                       prepend-icon="event"
                       readonly
                     ></v-text-field>
+                  </template>
                     <v-date-picker
                       class="mydatepicker"
                       locale="ko-KR"
@@ -65,13 +67,15 @@
                     full-width
                     min-width="290px"
                   >
+                  <template v-slot:activator="{ on }">
                     <v-text-field
-                      slot="activator"
+                      v-on="on"
                       v-model="editedItem.eday"
                       label="종료"
                       prepend-icon="event"
                       readonly
                     ></v-text-field>
+                  </template>
                     <v-date-picker
                       class="mydatepicker"
                       locale="ko-KR"
@@ -105,8 +109,8 @@
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" @click.native="close">취소</v-btn>
             <v-btn color="blue darken-1" @click.native="save">저장</v-btn>
+            <v-btn color="blue darken-1" @click.native="close">취소</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>

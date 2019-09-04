@@ -98,7 +98,7 @@
       <v-col cols="12">
         <v-btn small @click="fillChartData">load data</v-btn>
       </v-col>
-      <v-col xcols="12" v-for="dd in zzchartdata" :key="dd.name">
+      <v-col cols="12" v-for="dd in zzchartdata" :key="dd.name">
         <line-chart
           v-if="selectedCategory.includes(dd.name)"
           class="chart-area ma-1"

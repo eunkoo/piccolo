@@ -10,8 +10,8 @@ module.exports=  {
     // baseURL: `http://192.168.35.229:8091/api`,
     // baseURL: `http://172.20.10.2:8091/api`,
     // baseURL: `http://localhost:8091/api`,
-  //  baseURL: `http://localhost:8001/api`,
-  baseURL: `http://192.168.43.20:8001/api`,
+   baseURL: `http://localhost:8001/api`,
+  // baseURL: `http://192.168.43.20:8001/api`,
   })
   }
 }

@@ -1,8 +1,7 @@
 <template>
   <div>
-      <v-navigation-drawer app  permanent fixed v-model="drawer">
-
-
+    <v-app>
+      <v-navigation-drawer app  v-model="drawer">
         <v-list dense v-if="loggedIn && (userGrade==1)">
           <v-list-item v-for="(item, i) in menu_guest" :key="i" :to="{path: item.path}">
             <v-list-item-action>
@@ -27,8 +26,7 @@
 
 
       <v-app-bar app color="blue" >
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-        <span class="hidden-sm-and-down" v-text="appTitle"></span>
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer" >{{appTitle}}</v-app-bar-nav-icon>
         <v-toolbar-title style="width: 300px" class="ml-0 pl-3"></v-toolbar-title>
         <!-- <v-text-field
           flat
@@ -190,6 +188,7 @@
       <v-footer app color="blue">
         <span>&copy; 2019 00교회</span>
       </v-footer>
+      </v-app>
   </div>
 </template>
 
@@ -271,14 +270,14 @@ module.exports = {
   computed: {
     loggedIn: {
       get: () => {
-        // return Boolean(localStorage.getItem("user"));
-        return true;
+        return Boolean(localStorage.getItem("user"));
+        // return true;
       }
     },
     userGrade: {
       get: () => {
-        // return localStorage.getItem("grade");
-        return 0;
+        return localStorage.getItem("grade");
+        // return 0;
       },
       userName: {
         get: () => {

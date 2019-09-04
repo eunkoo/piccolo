@@ -26,7 +26,7 @@ import VueAxios  from 'vue-axios'
 import Router from  'vue-router'
 
 import { Line } from  'vue-chartjs'
-
+import VueSweetalert2 from 'vue-sweetalert2';
 
 
 // import 'material-design-icons-iconfont/dist/material-design-icons.css'
@@ -39,9 +39,13 @@ import vuescroll from 'vue-scroll'
 
 
 const vuetifyOptions = { }
+const options = {
+  confirmButtonColor: '#41b882',
+  cancelButtonColor: '#ff7674'
+}
 
 Vue.use(VueAxios, axios)
-// Vue.use(VueSweetalert2)
+Vue.use(VueSweetalert2, options)
 Vue.use(Line)
 Vue.use(VueImg);
 // Vue.use(VueMaterial)

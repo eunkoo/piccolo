@@ -96,10 +96,12 @@
       <v-col cols="12">
         <v-btn small @click="fillChartData"> 데이터 불러오기 </v-btn>
       </v-col>
+
       <v-col cols="12" 
         v-for="dd in zzchartdata" 
         :key="dd.name" 
         class="pa-0">
+
         <line-chart
           v-if="selectedCategory.includes(dd.name)"
           class="chart-area ma-1"

@@ -10,7 +10,6 @@
           :close-on-content-click="false"
           :nudge-right="40"
           :return-value.sync="start_date"
-          lazy
           transition="scale-transition"
           offset-y
           full-width
@@ -46,7 +45,6 @@
           :close-on-content-click="false"
           :nudge-right="40"
           :return-value.sync="end_date"
-          lazy
           transition="scale-transition"
           offset-y
           full-width
@@ -79,7 +77,7 @@
       <h2>출결 그래프</h2>
     </v-row>
 
-    <v-row fill-height justify-left>
+    <v-row >
       <v-col cols="6">
         <v-select
           v-model="selectedCategory"
@@ -94,11 +92,14 @@
       </v-col>
     </v-row>
 
-    <v-row >
+    <v-row>
       <v-col cols="12">
-        <v-btn small @click="fillChartData">load data</v-btn>
+        <v-btn small @click="fillChartData"> 데이터 불러오기 </v-btn>
       </v-col>
-      <v-col xcols="12" v-for="dd in zzchartdata" :key="dd.name">
+      <v-col cols="12" 
+        v-for="dd in zzchartdata" 
+        :key="dd.name" 
+        class="pa-0">
         <line-chart
           v-if="selectedCategory.includes(dd.name)"
           class="chart-area ma-1"
@@ -108,6 +109,7 @@
         ></line-chart>
       </v-col>
     </v-row>
+
 
     <v-row>
       <v-col cols="12">
@@ -137,51 +139,78 @@
         <v-btn small @click="fetchStatisticData">load data</v-btn>
       </v-col>
     </v-row>
-    
-    <v-row class="ma-2 elevation-5" text-xs-center>
 
-      <!-- 오전 출석  -->
+    <v-row no-gutters class='ma-0 pa-0'>
       <v-col cols="3" class="pa-1">
-        <span class="subheading blue--text">오전 출석 통계</span>
-        <template v-for="(item, index) in statisticsMornigns">
-          <v-row :key="index" class="z-row">
-            <v-col cols="3">{{ `${index}\/${no_date}` }}</v-col>
-            <v-col cols="3" text-xs-left>{{ item.join(', ') }}</v-col>
-          </v-row>
-        </template>
+        <span class="subheading blue--text"> 오전 출석 통계 </span>
+        <v-simple-table dense class="elevation-3">
+          <thead>
+            <tr> 
+              <th> 누적 </th>
+              <th> 이름 </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in statisticsMornigns" :key="index">
+              <td class="caption px-1"> {{ `${index}\/${no_date}` }} </td>
+              <td class="caption"> {{ item.join(', ') }} </td>
+            </tr>
+          </tbody>
+        </v-simple-table>
       </v-col>
 
-      <!-- 오후 출석  -->
       <v-col cols="3" class="pa-1">
-        <span class="subheading blue--text">오후 출석 통계</span>
-        <template v-for="(item, index) in statisticsNoons">
-          <v-row row wrap :key="index" class="z-row">
-            <v-col cols="3">{{ `${index}\/${no_date}` }}</v-col>
-            <v-col cols="9">{{ item.join(', ') }}</v-col>
-          </v-row>
-        </template>
+        <span class="subheading blue--text"> 오후 출석 통계 </span>
+        <v-simple-table dense class="elevation-3">
+          <thead>
+            <tr>
+              <th> 누적 </th>
+              <th> 이름 </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in statisticsNoons" :key="index">
+              <td class="caption px-1"> {{ `${index}\/${no_date}` }} </td>
+              <td class="caption"> {{ item.join(', ') }} </td>
+            </tr>
+          </tbody>
+        </v-simple-table>
       </v-col>
 
-      <!-- 암송 통계  -->
       <v-col cols="3" class="pa-1">
-        <span class="subheading blue--text">암송 통계</span>
-        <template v-for="(item, index) in statisticsParagraph">
-          <v-row :key="index" class="z-row">
-            <v-col cols="3">{{ index == 0 ? "없음" : `${index}회` }}</v-col>
-            <v-col cols="9">{{ item.join(', ') }}</v-col>
-          </v-row>
-        </template>
+        <span class="subheading blue--text"> 암송 통계 </span> 
+        <v-simple-table dense class="elevation-3">
+          <thead>
+            <tr>
+              <th> 누적 </th>
+              <th> 이름 </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in statisticsParagraph" :key="index">
+              <td class="caption px-1"> {{ index == 0 ? "없음" : `${index}회` }} </td>
+              <td class="caption"> {{ item.join(', ') }} </td>
+            </tr>
+          </tbody>
+        </v-simple-table>
       </v-col>
 
-      <!-- 성경 통계  -->
-      <v-col cols="3" xs3 class="pa-1">
-        <span class="subheading blue--text">성경 통계</span>
-        <template v-for="(item, index) in statisticsBible">
-          <v-layout row wrap :key="index" class="z-row">
-            <v-col cols="3">{{ index == 0 ? "읽지 않음" : `${index}장 읽음` }}</v-col>
-            <v-col cols="9" text-xs-left>{{ item.join(', ') }}</v-col>
-          </v-layout>
-        </template>
+      <v-col cols="3" class="pa-1">
+        <span class="subheading blue--text"> 성경 통계 </span>
+        <v-simple-table dense class="elevation-3">
+          <thead>
+            <tr>
+              <th> 누적 </th>
+              <th> 이름 </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in statisticsBible" :key="index">
+              <td class="caption px-1"> {{ index == 0 ? "읽지 않음" : `${index}장 읽음` }} </td>
+              <td class="caption"> {{ item.join(', ') }} </td>
+            </tr>
+          </tbody>
+        </v-simple-table>
       </v-col>
     </v-row>
   </v-container>
@@ -300,7 +329,7 @@ module.exports= {
           belong: this.cbelong
         })
         .then(res => {
-          console.log(res);
+          // console.log(res);
           this.statisticsMornigns = {};
           this.statisticsNoons = {};
           res.data.forEach(row => {
@@ -320,8 +349,8 @@ module.exports= {
             }
           });
 
-          console.log(this.statisticsMornigns);
-          console.log(this.statisticsNoons);
+          // console.log(this.statisticsMornigns);
+          // console.log(this.statisticsNoons);
         })
         .catch(err => {
           console.log(err);
@@ -337,7 +366,7 @@ module.exports= {
           belong: this.cbelong
         })
         .then(res => {
-          console.log(res);
+          // console.log(res);
           this.statisticsParagraph = {};
 
           res.data.forEach(row => {
@@ -347,7 +376,7 @@ module.exports= {
               this.statisticsParagraph[row.att] = [row.name];
             }
           });
-          console.log(this.statisticsParagraph);
+          // console.log(this.statisticsParagraph);
         })
         .catch(err => {
           console.log(err);
@@ -363,7 +392,7 @@ module.exports= {
           belong: this.cbelong
         })
         .then(res => {
-          console.log(res);
+          // console.log(res);
           this.statisticsBible = {};
 
           res.data.forEach(row => {
@@ -373,7 +402,7 @@ module.exports= {
               this.statisticsBible[row.att] = [row.name];
             }
           });
-          console.log(this.statisticsBible);
+          // console.log(this.statisticsBible);
         })
         .catch(err => {
           console.log(err);
@@ -384,8 +413,8 @@ module.exports= {
       //    return new Date(new Date().setFullYear(new Date().getFullYear() - 1))
       var s = new Date(new Date().setDate(1));
       s = s.setMonth(0);
-      console.log(`---- initDate -----`);
-      console.log(s);
+      // console.log(`---- initDate -----`);
+      // console.log(s);
       return new Date(s);
       //    console.log( this.start_date)
     },
@@ -430,7 +459,7 @@ module.exports= {
     async fillChartData() {
       let vm = this;
       vm.loaded = false;
-      console.log(`fill chart data. period:${vm.start_date}~${vm.end_date}`);
+      // console.log(`fill chart data. period:${vm.start_date}~${vm.end_date}`);
 
       // start_date ~ end_date 동안의 모든 일요일에 대한 좌표 만들기
       // Get Wednesdays between 15 December, 2016 and 25 February, 2017.
@@ -528,4 +557,9 @@ module.exports= {
 };
 </script>
 
+<style scoped>
+.zguide {
+  border: 1px dashed dodgerblue;  
+}
+</style>
 

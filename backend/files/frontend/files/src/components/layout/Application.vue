@@ -1,14 +1,15 @@
 <template>
   <div>
-    <v-app>
-      <v-navigation-drawer fixed :clipped="$vuetify.breakpoint.mdAndUp" v-model="drawer">
+      <v-navigation-drawer app  permanent fixed v-model="drawer">
+
+
         <v-list dense v-if="loggedIn && (userGrade==1)">
           <v-list-item v-for="(item, i) in menu_guest" :key="i" :to="{path: item.path}">
             <v-list-item-action>
               <v-icon v-html="item.icon"></v-icon>
             </v-list-item-action>
             <v-list-item-content>
-              <v-list-item-title v-text="item.label"></v-list-item-title>
+              <v-list-item-title v-text="item.label"> {{ item.label }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -18,12 +19,14 @@
               <v-icon v-html="item.icon"></v-icon>
             </v-list-item-action>
             <v-list-item-content>
-              <v-list-item-title v-text="item.label"></v-list-item-title>
+              <v-list-item-title v-text="item.label"> {{ item.label }} </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
       </v-navigation-drawer>
-      <v-app-bar color="primary" dark :clipped-left="$vuetify.breakpoint.mdAndUp" fixed>
+
+
+      <v-app-bar app color="blue" >
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
         <span class="hidden-sm-and-down" v-text="appTitle"></span>
         <v-toolbar-title style="width: 300px" class="ml-0 pl-3"></v-toolbar-title>
@@ -158,16 +161,22 @@
           </v-card>
         </v-dialog>
       </v-app-bar>
+
+
       <v-content>
-        <v-container v-if="!loggedIn" fill-height>
-          <v-layout align-center>
-            <v-flex>
+        <v-container fluid v-if="!loggedIn" fill-height>
+          <v-row style="height: 1000px" align="center" justifyCenter >
+            <v-col>
+
+
               <h2 class="display-3">00교회 교육부서</h2>
               <!-- <span class="subheading" v-text="msg"></span> -->
               <v-divider class="my-3"></v-divider>
               <div class="title mb-3">오른쪽 상단을 눌러 로그인을 해주세요</div>
-            </v-flex>
-          </v-layout>
+
+
+            </v-col>
+          </v-row>
         </v-container>
         <v-container fluid>
           <transition>
@@ -177,10 +186,10 @@
           </transition>
         </v-container>
       </v-content>
-      <v-footer app fixed color="primary" dark>
+
+      <v-footer app color="blue">
         <span>&copy; 2019 00교회</span>
       </v-footer>
-    </v-app>
   </div>
 </template>
 
@@ -262,12 +271,14 @@ module.exports = {
   computed: {
     loggedIn: {
       get: () => {
-        return Boolean(localStorage.getItem("user"));
+        // return Boolean(localStorage.getItem("user"));
+        return true;
       }
     },
     userGrade: {
       get: () => {
-        return localStorage.getItem("grade");
+        // return localStorage.getItem("grade");
+        return 0;
       },
       userName: {
         get: () => {

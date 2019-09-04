@@ -1,0 +1,28 @@
+
+body {
+  font-family: Helvetica Neue, Arial, sans-serif;
+  font-size: 14px;
+  color: #444;
+}
+
+.table{
+  border: 1px solid #a5a5a5;
+  border-radius: 1px;
+  background-color: #fff;
+}
+
+th {
+  background-color: #dedede;
+  color: rgba(255, 255, 255, 0.66);
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;   
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.v-datatable.v-table tbody td, .v-datatable.v-table tbody th {
+    min-width: 0;
+    height: 25px;
+}
+

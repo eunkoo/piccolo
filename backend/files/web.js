@@ -3,16 +3,30 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const morgan = require('morgan')
 const fileUpload = require('express-fileupload');
+const path = require('path')
 
+// const app = express()
 
-const app = express()
-/*
+const app = express(),
+            DIST_DIR = __dirname,
+            HTML_FILE = path.join(DIST_DIR, 'frontend/files/dist/index.html')
+
 app.all('/*', function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    next();
-  });
-*/
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin,Accept,X-Requested-With,Content-Type,Access-Control-Request-Method,Access-Control-Request-Headers,Authorization");
+  res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE");
+  res.header("Access-Control-Max-Age", "3600");
+  next();
+});
+
+
+
+// app.use(express.static(path.join(DIST_DIR,'frontend/files/dist')))
+// app.get('*', (req, res) => {
+//     res.sendFile(HTML_FILE)
+// })
+
+
 app.use(morgan('dev'))
 app.use(bodyParser.json())
 app.use(cors())
@@ -24,7 +38,7 @@ app.use(fileUpload({
 }));
 
 
-app.use('/uploads', express.static('uploads'));
+app.use('/frontend/files/uploads', express.static('/frontend/files/uploads'));
 
 require('./server/router')(app);
 

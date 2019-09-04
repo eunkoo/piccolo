@@ -34,10 +34,11 @@ services:
       - /app/node_modules
     networks:
       - db-conn
+    # entrypoint: "node web.js"
     entrypoint: "npm start"
   
   frontend:
-    build: ./frontend
+    build: ./backend/files/frontend
     container_name: piccolo-frontend
     depends_on:
       - backend
@@ -46,7 +47,11 @@ services:
     ports:
       - "8002:8002"
     volumes:
-      - ./frontend/files:/app
+      - ./backend/files/frontend/files:/app
       - /app/node_modules
     entrypoint: "npm run dev"
+
+
+
+
 

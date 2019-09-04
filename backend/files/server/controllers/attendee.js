@@ -11,7 +11,7 @@ module.exports = {
   listForEvent(req, res){
     return attendee
     .all({
-        where :{eid : req.params.id},
+        where :{eid : req.body.id},
         order: ['connected']
     })
     .then(attendee => res.status(200).send(attendee))
@@ -19,7 +19,7 @@ module.exports = {
   },
   destroy(req, res) {
     return attendee
-      .findById(req.params.id)
+      .findById(req.body.id)
       .then(attendee => {
         if (!attendee) {
           return res.status(400).send({

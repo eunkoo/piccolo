@@ -13,50 +13,48 @@ sequelize = new Sequelize(config.database, config.username,config.password, {
       idle: 10000,
     },
   });
-  sequelize.members = sequelize.import('../models/members');
+  // sequelize.members = sequelize.import('../models/members');
 const moment = require('moment')
 
 function getPhotoUrl(req, _memberId, _photoName) {
-  var hostname = ( req.headers.host.match(/:/g) ) ? req.headers.host.slice( 0, req.headers.host.indexOf(":") ) : req.headers.host
-  const photo_url = `${req.protocol}://${hostname}:8001/uploads/${_photoName}`;
-  return photo_url;
+  // var hostname = ( req.headers.host.match(/:/g) ) ? req.headers.host.slice( 0, req.headers.host.indexOf(":") ) : req.headers.host
+  // const photo_url = '../../../uploads/'+_photoName;
+  // return photo_url;
+  return _photoName
 };
 
 function getPhotoName(req, _memberId ) {
   const date = new Date();
   let photo_name = `${_memberId}_${date.getTime()}`;
 
-  return photo_name.substring(0, 19);
+  return `${photo_name.substring(0, 19)}.png`;
 }
 
 module.exports = {
   
   list(req, res) {
-    members.all()
-      .then(members => {        
-        var hostname = ( req.headers.host.match(/:/g) ) ? req.headers.host.slice( 0, req.headers.host.indexOf(":") ) : req.headers.host
-        members.forEach(member => {
-          if(member.photo!==null)
-            member.photo = `${req.protocol}://${hostname}:8001/uploads/${member.photo}`;
-        });
-        return res.status(200).send(members);
-      })
+    return members.all(
+      {
+        // order: ['name']
+      }
+    )
+      .then(members => res.status(200).send(members))
       .catch(error => res.status(400).send(error));
   },
-  belonglist(req,res){
-    return members
-    .all({
-      where: { belong:req.params.belong} ,
-      order: ['connected']
-      })
-    .then(members => res.status(200).send(members))
-    .catch(error => res.status(400).send(error));
-  },
+  // belonglist(req,res){
+  //   return members
+  //   .all({
+  //     where: { belong:req.params.belong} ,
+  //     order: ['connected']
+  //     })
+  //   .then(members => res.status(200).send(members))
+  //   .catch(error => res.status(400).send(error));
+  // },
   names(req, res) {
-    console.log(`get names ${req.params.belong}`)
+    console.log(`get names ${req.body.belong}`)
     return members
       .all({
-        where: { belong:req.params.belong,
+        where: { belong:req.body.belong,
             $and: [{grade: {$lt: 3}}]
         },
         attributes: ['id', 'name','grade','connected'],
@@ -66,12 +64,12 @@ module.exports = {
       .catch(error => res.status(400).send(error));
   },
   birthes(req, res) {
-    console.log(`get birth ${req.params.month}`);
+    console.log(`get birth ${req.body.month}`);
     return members
             .all({
-              where: { belong:req.params.belong, 
+              where: { belong:req.body.belong, 
                   [Sequelize.Op.and]: [
-                      sequelize.where(members.sequelize.fn('MONTH',  members.sequelize.col('birth')), req.params.month)
+                      sequelize.where(members.sequelize.fn('MONTH',  members.sequelize.col('birth')), req.body.month)
                     ]
               } ,
               attributes: ['id', 'name']
@@ -80,10 +78,10 @@ module.exports = {
             .catch(error => res.status(400).send(error));
     },
     newes(req, res) {
-      console.log(`get newes ${req.params.belong}`)
+      console.log(`get newes ${req.body.belong}`)
       return members
               .all({
-                  where: { belong:req.params.belong, 
+                  where: { belong:req.body.belong, 
                           grade : 1
                   } ,
                   attributes: ['id', 'name']
@@ -110,20 +108,21 @@ module.exports = {
   },
 
   uploadPhoto(req, res){
-    console.log(`-------------- upload photo id:${req.params.id} ---------------`);
-    if (req.files === undefined) return;
+    console.log(`-------------- upload photo id:${req.body.id} ---------------`);
+    // console.log(req)
+    if (req.files === undefined || req.body.id === undefined) return res.status(404).send({message:'photo is not exist'});
     var startup_image = req.files.file;
     var extention = startup_image.mimetype.split('/')[1];
 
-    const photoName = getPhotoName(req, req.params.id);
-    const photo_url = getPhotoUrl(req, req.params.id, photoName);
+    const photoName = getPhotoName(req, req.body.id);
+    const photo_url = getPhotoUrl(req, req.body.id, photoName);
 
     var tmp_path = req.files.file.path;
-    var target_path = `uploads/${photoName}`;
+    var target_path = `frontend/files/uploads/${photoName}`;
 
     console.log(` * tmp_path: ${tmp_path}`);
     console.log(` * target_path: ${target_path}`);
-    fs.writeFile(target_path, req.files.file.data, function(err){
+    fs.writeFile(target_path, req.files.file.data,{encoding: 'base64'}, function(err){
       if (err) {
         console.log(`an error occurred while rename uploaded image `, err);
       }
@@ -131,14 +130,14 @@ module.exports = {
       // 접근 가능한 회원이미지 경로를 생성하고 저장한다.     
       console.log(` * 회원 이미지 저장됨. 이미지이름: ${photoName}`);
       members
-        .findById(req.params.id)
+        .findById(req.body.id)
         .then(members => {
           if (!members) {
             return res.status(404).send({
               message: 'members Not Found',
             });
           }
-          members
+          return members
             .update({ photo: photoName })
             .then(() => res.status(200).send({ 'photo_url': photo_url } ))
             .catch((error) => res.status(400).send(error));

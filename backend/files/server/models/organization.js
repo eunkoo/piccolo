@@ -24,6 +24,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER(11),
       allowNull: false
     },
+    photo: {
+    type: DataTypes.STRING(30),
+      allowNull: true
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false

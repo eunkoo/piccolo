@@ -1,10 +1,11 @@
 .DS_Store
-frontend/files/node_modules/
-frontend/files/dist/
-frontend/files/npm-debug.log*
-frontend/files/yarn-debug.log*
-frontend/files/yarn-error.log*
-frontend/files/src/assets/img/
+backend/files/frontend/files/node_modules/
+backend/files/frontend/files/dist/
+backend/files/frontend/files/npm-debug.log*
+backend/files/frontend/files/yarn-debug.log*
+backend/files/frontend/files/yarn-error.log*
+backend/files/frontend/files/src/assets/img/
+backend/files/frontend/files/uploads
 
 db/data/
 

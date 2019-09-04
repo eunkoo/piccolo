@@ -12,7 +12,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(20),
       allowNull: false
     },
-    address: {
+    address: {  
       type: DataTypes.STRING(50),
       allowNull: true
     },

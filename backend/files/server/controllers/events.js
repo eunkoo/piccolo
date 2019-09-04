@@ -1,5 +1,7 @@
 const events = require('../models').events;
 const attendee = require('../models').attendee;
+const schedule = require('../models').schedule;
+const sch_color= ["#3F51B5", "#4CAF50", "#2196F3", "#1976d2", "#4CAF50"]
 // const env = process.env.NODE_ENV || 'development';
 // const config = require(`${__dirname}/../config/config.json`)[env];
 // sequelize = new Sequelize(config.database, config.username,config.password, {
@@ -22,8 +24,9 @@ module.exports = {
   },
 
   ev(req, res) {
+    console.log(req.body)
     return events
-      .all({ where: { belongs:req.params.belongs}})
+      .all({ where: { belongs:req.body.belongs}})
       .then(events => res.status(200).send(events))
       .catch(error => res.status(400).send(error));
   },
@@ -31,8 +34,8 @@ module.exports = {
     return events
       .all(
             { 
-                where: { belongs:req.params.belongs,
-                    $and: [{day: {$gte: req.params.start}}, {day: {$lte:req.params.end}}]
+                where: { belongs:req.body.belongs,
+                    $and: [{day: {$gte: req.body.start}}, {day: {$lte:req.body.end}}]
                 },
                 order: ['day']
             }
@@ -76,7 +79,7 @@ module.exports = {
 
   },
   create(req, res) {
-    return events
+     events
    .create({
      title: req.body.title,
      day:req.body.day,
@@ -96,7 +99,9 @@ module.exports = {
      createdAt: req.body.createdAt,
      updatedAt: req.body.updatedAt,
    })
-   .then(events => res.status(201).send(events))
+   .then(events =>{
+        res.status(200).send(events)
+   } )
    .catch(error => res.status(400).send(error));
   },
 

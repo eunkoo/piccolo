@@ -1,0 +1,31 @@
+
+th {
+  background-color: #dedede;
+  color: rgba(255, 255, 255, 0.66);
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.zguide {
+  border: 1px dashed dodgerblue;
+}
+.datatable-cell-wrapper {
+  width: inherit;
+  position: relative;
+  z-index: 4;
+  padding: 10px 24px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.datatable__expand-content .card__text {
+  z-index: 3;
+  position: relative;
+  height: 24px;
+}
+.mydatepicker{
+  height: 330px;
+}

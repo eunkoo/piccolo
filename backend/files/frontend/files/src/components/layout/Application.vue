@@ -1,6 +1,7 @@
 <template>
   <div>
     <v-app>
+      
       <v-navigation-drawer app  v-model="drawer">
         <v-list dense v-if="loggedIn && (userGrade==1)">
           <v-list-item v-for="(item, i) in menu_guest" :key="i" :to="{path: item.path}">
@@ -24,9 +25,8 @@
         </v-list>
       </v-navigation-drawer>
 
-
       <v-app-bar app color="blue" >
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer" >{{appTitle}}</v-app-bar-nav-icon>
+        <v-app-bar-nav-icon  @click.stop="drawer = !drawer" ><strong >{{appTitle}}</strong ></v-app-bar-nav-icon>
         <v-toolbar-title style="width: 300px" class="ml-0 pl-3"></v-toolbar-title>
         <!-- <v-text-field
           flat

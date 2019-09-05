@@ -132,6 +132,8 @@
       :headers="headers"
       :items="events"
       :search="search"
+      sort-by="day"
+      sort-desc
     >  
       <template v-slot:body="{ items }">
         <tbody>
@@ -293,7 +295,7 @@ module.exports ={
     async getevents() {
       this.loading = true;
       const response = await apiService.fetchEvents();
-      this.events = response.data;
+      this.events = response.data
       this.loading = false;
     },
     async changeBelong(selectObj) {

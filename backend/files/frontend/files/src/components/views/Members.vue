@@ -10,35 +10,34 @@
       ></v-progress-linear>
     </div>
     <v-alert :value="alert" color="error" icon="error_circle" outlined>{{alertMsg}}</v-alert>
-    <v-flex :key="1" xs2 sm2 md2 v-if="userGrade==0">
-      <download-excel
-        class="btn btn-default"
-        :data="members"
-        :fields="member_fields"
-        type="csv"
-        name="선택된 명단.xls"
-      >
-        <v-btn fab>엑셀</v-btn>
-      </download-excel>
-    </v-flex>
 
-    <v-layout row wrap>
-      <v-flex xs12>
+    <v-row  class="ma-2" >
+      <v-col :key="1" xs2 sm2 md2 cols="2" v-if="userGrade==0">
+        <download-excel
+          class="btn btn-default"
+          :data="members"
+          :fields="member_fields"
+          type="csv"
+          name="선택된 명단.xls"
+        >
+          <v-btn fab>엑셀</v-btn>
+        </download-excel>
+      </v-col>
+    </v-row>
+    <v-row  class="ma-2 ">
+      <v-col xs2 sm2 md2 cols="2" >
         <v-btn fab class="primary" @click="createMember">
           <v-icon>person_add</v-icon>
         </v-btn>
-      </v-flex>
-      <v-flex xs12>
-        <v-layout>
-          <v-flex>
-            <v-chip
+      </v-col>
+      <v-col xs12 cols="12">
+        <v-row>
+          <v-col>
+            <v-chip class="ma-1"
               v-for="v in added_word"
               :key="v.id"
               v-model="v.active"
-              close
-              color="black"
-              @input="onChipClose(v)"
-              outlined
+              @click="onChipClose(v)"
             >{{v.search}}</v-chip>
             <v-text-field
               label="검색 후 엔터를 치세요"
@@ -46,8 +45,8 @@
               @input="search_text"
               @keyup.enter="add_word"
             ></v-text-field>
-          </v-flex>
-        </v-layout>
+          </v-col>
+        </v-row>
 
         <!-- 검색/필터 패널 -->
         <!-- <v-layout row wrap>
@@ -110,7 +109,9 @@
           :loading="membersLoading"
           :headers="memberHeader"
           :expanded.sync="expanded"
-           :single-expand="false"
+          :single-expand="false"
+           :items-per-page="10"
+          
           :items="members"
           class="elevation-1"
         >
@@ -141,70 +142,67 @@
           </template>
 
           <template v-slot:item.action="{ item }">
-            <v-icon small text icon color="primary" class="mr-2" @click="editMember(item)">edit</v-icon>
-            <v-icon small text icon color="deep-orange" @click="openRemoveDialog(item)">delete</v-icon>
+            <v-icon   icon color="primary" class="mr-2" @click="editMember(item)">edit</v-icon>
+            <v-icon   icon color="deep-orange" @click="openRemoveDialog(item)">delete</v-icon>
           </template>
 
           <template v-slot:no-data>
-            <td>"no data"</td>
+            <td>"인원이 없습니다"</td>
           </template>
 
           <template v-slot:expanded-item="{ item, headers }">
             <td :colspan="headers.length">
-               <v-card >
-              <v-card-text>
+              <v-card>
                 <div>상태 : {{ grade_text(item.grade ) }}</div>
-              </v-card-text>
-              <v-card-text>생년월일 : {{ item.birth }}</v-card-text>
-              <v-card-text>세례여부 : {{baptism_text( item.baptism ) }}</v-card-text>
-              <v-card-text>비고 : {{ item.tag }}</v-card-text>
-            </v-card>
+                <div>생년월일 : {{ item.birth }}</div>
+                <div>세례여부 : {{baptism_text( item.baptism ) }}</div>
+                <div>비고 : {{ item.tag }}</div>
+              </v-card>
             </td>
           </template>
-    
         </v-data-table>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
 
     <!-- 회원삭제 대화상자 -->
     <v-dialog v-model="removeDialog" persistent max-width="500px">
       <v-card>
         <v-card-title class="headline pt-3">선택한 회원을 삭제하시겠습니까?</v-card-title>
         <v-card-text>
-          <v-layout row wrap>
-            <v-flex xs3 class="zguide">
+          <v-row row wrap>
+            <v-col cols="3" class="zguide">
               <v-img
                 max-height="125"
                 contain
                 :src="getImgUrl(`${selectedMember.photo}`)"
                 v-if="selectedMember.photo"
               ></v-img>
-            </v-flex>
-            <v-flex xs9 class="px-3">
+            </v-col>
+            <v-col cols="9" class="px-3">
               <p>
                 삭제한 회원정보는 되돌릴 수 없으니
                 <strong class="red--text">주의</strong>하세요.
               </p>
               <p>이름 : {{ selectedMember.name }}</p>
               <p>부서 : {{ descBelong[selectedMember.belong] }}</p>
-            </v-flex>
-          </v-layout>
+            </v-col>
+          </v-row>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text outlined @click="removeDialog = false">취소</v-btn>
           <v-btn color="red darken-1" text outlined @click="removeMember(selectedMember)">삭제</v-btn>
+          <v-btn color="green darken-1" text outlined @click="removeDialog = false">취소</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
     <!-- 회원정보 추가/수정 대화상자 -->
-    <v-dialog v-model="editDialog" persistent max-width="700px">
+    <v-dialog v-model="editDialog" persistent width="700px">
       <v-card>
-        <v-layout>
-          <v-flex xs4 class="zguide py-4 px-3 orange lighten-3">
-            <v-img :src="imageUrl" min-height="200" max-height="440" v-if="imageUrl"></v-img>
+        <v-row>
+          <v-col cols="4" class="zguide py-4 px-3 orange lighten-3">
+            <v-img :src="imageUrl" height="200"  v-if="imageUrl"></v-img>
             <v-text-field
               label="사진 선택"
               readonly
@@ -224,20 +222,20 @@
               id="photo"
               @change="onImageFilePicked"
             />
-          </v-flex>
+          </v-col>
 
-          <v-flex xs8>
+          <v-col cols="8">
             <v-card-title primary-title>
               <span class="headline">회원정보 수정</span>
             </v-card-title>
             <v-card-text>
-              <v-layout row wrap>
+              <v-row row wrap>
                 <!-- 이름 -->
-                <v-flex xs6 pa-1 ma-0>
+                <v-col cols="6" pa-1 ma-0>
                   <v-text-field color="blue" hide-details label="이름" v-model="selectedMember.name"></v-text-field>
-                </v-flex>
+                </v-col>
                 <!-- 성별 (남:0 여:1) -->
-                <v-flex xs2 pa-1 ma-0>
+                <v-col cols="2" pa-1 ma-0>
                   <v-select
                     color="blue"
                     hide-details
@@ -252,9 +250,9 @@
                     return-object
                     single-line
                   ></v-select>
-                </v-flex>
+                </v-col>
                 <!-- 부서 (유치부:0, 유초등부:1, 중고등부:2, 청년부:3) -->
-                <v-flex xs4 pa-1 ma-0>
+                <v-col cols="4" pa-1 ma-0>
                   <v-select
                     color="blue"
                     hide-details
@@ -269,38 +267,39 @@
                     return-object
                     single-line
                   ></v-select>
-                </v-flex>
-
+                </v-col>
+              </v-row>
+              <v-row row wrap>
                 <!-- 조 -->
-                <v-flex xs12 pa-1>
+                <v-col cols="4" pa-1>
                   <v-text-field
                     color="blue"
                     hide-details
                     label="조"
                     v-model="selectedMember.connected"
                   ></v-text-field>
-                </v-flex>
+                </v-col>
 
                 <!-- 주소 -->
-                <v-flex xs12 pa-1>
+                <v-col cols="8" pa-1>
                   <v-text-field
                     color="blue"
                     hide-details
                     label="주소"
                     v-model="selectedMember.address"
                   ></v-text-field>
-                </v-flex>
+                </v-col>
                 <!-- 연락처 -->
-                <v-flex xs6 pa-1>
+                <v-col cols="8" pa-1>
                   <v-text-field
                     color="blue"
                     hide-details
                     label="연락처"
                     v-model="selectedMember.phone"
                   ></v-text-field>
-                </v-flex>
+                </v-col>
                 <!-- 등록상태 (등록:0, 새신자:1, 장기결석:2, 기타:3) -->
-                <v-flex xs6 pa-1>
+                <v-col cols="4" pa-1>
                   <v-select
                     color="blue"
                     hide-details
@@ -315,10 +314,11 @@
                     return-object
                     single-line
                   ></v-select>
-                </v-flex>
-
+                </v-col>
+              </v-row>
+              <v-row row wrap>
                 <!-- 생년월일 -->
-                <v-flex xs6 pa-1 ma-0>
+                <v-col cols="6" pa-1 ma-0>
                   <v-menu
                     color="blue"
                     ref="menuBirthday"
@@ -352,8 +352,8 @@
                       @input="$refs.menuBirthday.save(selectedMember.birth)"
                     ></v-date-picker>
                   </v-menu>
-                </v-flex>
-                <v-flex xs6 pa-1>
+                </v-col>
+                <v-col cols="6" pa-1>
                   <!-- 세례 (세례:0, 입교:1, 학습:2, 유아:3) -->
 
                   <v-select
@@ -370,12 +370,12 @@
                     return-object
                     single-line
                   ></v-select>
-                </v-flex>
+                </v-col>
 
-                <v-flex xs12 pa-1>
-                  <v-textarea color="blue" hide-details label="기타" rows="2" hint="Hint text"></v-textarea>
-                </v-flex>
-              </v-layout>
+                <v-col cols="12" pa-1>
+                  <v-textarea color="blue" hide-details label="기타" rows="2" ></v-textarea>
+                </v-col>
+              </v-row>
             </v-card-text>
             <v-divider light></v-divider>
             <v-card-actions class="pa-3">
@@ -385,8 +385,8 @@
               </v-btn>
               <v-btn color="black darken-1" outlined text @click="close">취소</v-btn>
             </v-card-actions>
-          </v-flex>
-        </v-layout>
+          </v-col>
+        </v-row>
       </v-card>
     </v-dialog>
   </div>
@@ -562,14 +562,14 @@ module.exports = {
       isEditMode: false,
       memberData: [],
       memberHeader: [
-        { text: '', value: "expand", align:'end' },
-        { text: "사진", value: "photo", sortable: false , align: 'left'},
-        { text: "이름", value: "name", sortable: true },
-        { text: "연락처", value: "phone", sortable: false },
-        { text: "소속", value: "belong", sortable: true },
-        { text: "등록", value: "grade", sortable: true },
-        { text: "조", value: "group", sortable: true },
-        { text: "수정/삭제", value: "action", sortable: false }
+        { text: "", value: "expand", align: "end" },
+        { text: "사진", value: "photo", sortable: false, align: "center" },
+        { text: "이름", value: "name", sortable: true , align: "center"},
+        { text: "연락처", value: "phone", sortable: false , align: "center"},
+        { text: "소속", value: "belong", sortable: true , align: "center"},
+        { text: "등록", value: "grade", sortable: true , align: "center"},
+        { text: "조", value: "connected", sortable: true , align: "center"},
+        { text: "수정/삭제", value: "action", sortable: false , align: "center"}
       ],
       belongChipStyle: [
         "lime darken-2",

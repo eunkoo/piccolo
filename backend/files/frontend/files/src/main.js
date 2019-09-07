@@ -28,15 +28,10 @@ import Router from  'vue-router'
 import { Line } from  'vue-chartjs'
 import VueSweetalert2 from 'vue-sweetalert2';
 
-
-// import 'material-design-icons-iconfont/dist/material-design-icons.css'
-// import 'vue-material/dist/vue-material.min.css'
-// import './styles/main.sass'
 import VueImg from 'v-img'
 
-// import VueMaterial from 'vue-material'
 import vuescroll from 'vue-scroll'
-
+import '@mdi/font/css/materialdesignicons.css' 
 
 const vuetifyOptions = { }
 const options = {

@@ -1,8 +1,8 @@
 <template>
   <v-container grid-list-xl>
-    <v-layout flex-child wrap>
-      <v-layout wrap fill-height>
-        <v-flex xs12 sm3 md3>
+    <v-row  wrap>
+      <v-row wrap fill-height>
+        <v-col cols="6">
           <v-select
             id="selected_year"
             :items="years_items"
@@ -13,20 +13,24 @@
             return-object
             @change="changeYear"
           ></v-select>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
 
-      <v-flex xs12 md12 :key="belong.id" v-for=" belong in belong_items">
-        <v-flex xs12 md12>
-          <v-sheet :color="belong.color" max-width="520" min-height="520" :elevation="ele">
-            <v-flex xs12 md12>
-              <v-flex xs12 md12 class="card-outter">
+      <v-col cols="12" :key="belong.id" v-for=" belong in belong_items">
+        <v-col cols="12">
+          <v-sheet :color="belong.color" max-width="520" min-height="320" :elevation="ele">
+            <v-col cols="12">
+              <v-col cols="12" class="card-outter">
                 <sheet-footer>{{belong.text}}</sheet-footer>
-              </v-flex>
+              </v-col>
 
-              <v-img contain height="400" :src="getImgUrl(belong.data.photo)" v-if="belong.data">
-                <v-flex xs12 md12 class="card-actions">
-                  <v-btn fab small @click="onChangeBgImge(belong.data)">
+              <v-img contain height="440" :src="getImgUrl(belong.data.photo)" v-if="belong.data">
+                <v-col cols="12" class="card-actions ma-2">
+                  <v-btn 
+                  fab 
+                  small 
+                  class="ma-2" 
+                  @click="onChangeBgImge(belong.data)">
                     <v-icon>keyboard_arrow_up</v-icon>
                   </v-btn>
                   <v-btn
@@ -34,41 +38,41 @@
                     small
                     slot="activator"
                     color="grey lighten-1"
-                    class="mb-2"
+                    class="ma-2"
                     @click="onAdded(belong.id)"
                   >
                     <v-icon>add</v-icon>
                   </v-btn>
-                </v-flex>
+                </v-col>
               </v-img>
-            </v-flex>
+            </v-col>
           </v-sheet>
 
-          <v-layout wrap>
-            <v-flex :key="org.name" xs12 md3 v-for=" org in belongData(belong.id)">
-              <v-card>
-                <v-flex xs12 md12>
-                  <v-img :src="getImgUrl(org.photo)" height="210" contain :class="org.color">
-                    <v-btn fab small @click="onEdited(org)">
+          <v-row wrap>
+            <v-col :key="org.name" cols="12" md="4" sm="4" v-for=" org in belongData(belong.id)">
+              <v-card  >
+                <v-col cols="12" >
+                  <v-img :src="getImgUrl(org.photo)" height="210" contain :color="org.color" class="ma-4">
+                    <v-btn fab small class="ma-2" @click="onEdited(org)">
                       <v-icon>keyboard_arrow_up</v-icon>
                     </v-btn>
                   </v-img>
                   <v-card-title class="title white lighten-4">{{org.role}} : {{org.name}}</v-card-title>
-                </v-flex>
+                </v-col>
               </v-card>
-            </v-flex>
-          </v-layout>
-        </v-flex>
-      </v-flex>
-    </v-layout>
+            </v-col>
+          </v-row>
+        </v-col>
+      </v-col>
+    </v-row>
 
     <v-dialog v-model="bgDialong" max-width="500px">
       <v-card>
         <v-card-text>
           <v-alert outlined color="error" icon="warning" :value="alert" v-text="alertMsg"></v-alert>
           <v-container grid-list-md>
-            <v-layout wrap>
-              <v-flex xs12 class="grey lighten-3">
+            <v-row wrap>
+              <v-col cols="12" class="grey lighten-3">
                 <v-img :src="imageUrl" min-height="200" max-height="440" v-if="imageUrl"></v-img>
                 <v-text-field
                   label="사진 선택"
@@ -89,13 +93,13 @@
                   id="photo"
                   @change="onImageFilePicked"
                 />
-              </v-flex>
-            </v-layout>
+              </v-col>
+            </v-row>
           </v-container>
         </v-card-text>
         <v-card-actions>
-          <v-btn flat color="primary" @click.native="save">저장</v-btn>
-          <v-btn flat color="primary" @click.native="close">취소</v-btn>
+          <v-btn text color="primary" @click.native="save">저장</v-btn>
+          <v-btn text color="primary" @click.native="close">취소</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -105,8 +109,8 @@
         <v-card-text>
           <v-alert outlined color="error" icon="warning" :value="alert" v-text="alertMsg"></v-alert>
           <v-container grid-list-md>
-            <v-layout wrap>
-              <v-flex xs12 class="grey lighten-3">
+            <v-row wrap>
+              <v-col cols="12" class="grey lighten-3">
                 <v-img :src="imageUrl" min-height="200" max-height="440" v-if="imageUrl"></v-img>
                 <v-text-field
                   label="사진 선택"
@@ -127,20 +131,20 @@
                   id="photo"
                   @change="onImageFilePicked"
                 />
-              </v-flex>
+              </v-col>
 
-              <v-flex xs12 sm12 md12>
+              <v-col cols="12">
                 <div class="title">{{belong_items[selectedMember.belongs].text}}</div>
                 <v-text-field label="직책" v-model="selectedMember.role"></v-text-field>
                 <v-text-field label="이름" v-model="selectedMember.name"></v-text-field>
-              </v-flex>
-            </v-layout>
+              </v-col>
+            </v-row>
           </v-container>
         </v-card-text>
         <v-card-actions>
-          <v-btn v-if="editMode" flat color="secondary" @click.native="delOrgs">삭제</v-btn>
-          <v-btn flat color="primary" @click.native="save">저장</v-btn>
-          <v-btn flat color="primary" @click.native="close">취소</v-btn>
+          <v-btn v-if="editMode" text color="secondary" @click.native="delOrgs">삭제</v-btn>
+          <v-btn text color="primary" @click.native="save">저장</v-btn>
+          <v-btn text color="primary" @click.native="close">취소</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -194,19 +198,19 @@ module.exports = {
       console.log(response);
 
       this.organizationData = response.data.filter(data => {
-        return data.id > 3;
+        return data.name != "bg";
       });
       this.belong_items[0].data = response.data.filter(data => {
-        return data.id == 0;
+        return data.belongs == 0 && data.name=="bg";
       })[0];
       this.belong_items[1].data = response.data.filter(data => {
-        return data.id == 1;
+        return data.belongs == 1 && data.name=="bg";
       })[0];
       this.belong_items[2].data = response.data.filter(data => {
-        return data.id == 2;
+        return data.belongs == 2 && data.name=="bg";
       })[0];
       this.belong_items[3].data = response.data.filter(data => {
-        return data.id == 3;
+        return data.belongs == 3 && data.name=="bg";
       })[0];
 
       this.loading = false;

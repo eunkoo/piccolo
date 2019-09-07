@@ -12,7 +12,7 @@
     <v-alert :value="alert" color="error" icon="error_circle" outlined>{{alertMsg}}</v-alert>
 
     <v-row  class="ma-2" >
-      <v-col :key="1" xs2 sm2 md2 cols="2" v-if="userGrade==0">
+      <v-col :key="1"  cols="3" v-if="userGrade==0">
         <download-excel
           class="btn btn-default"
           :data="members"
@@ -25,7 +25,7 @@
       </v-col>
     </v-row>
     <v-row  class="ma-2 ">
-      <v-col xs2 sm2 md2 cols="2" >
+      <v-col cols="3" >
         <v-btn fab class="primary" @click="createMember">
           <v-icon>person_add</v-icon>
         </v-btn>
@@ -128,7 +128,9 @@
             </td>
           </template>
           <template v-slot:item.name="{ item }">
-            <strong :width="80" class="headline">{{ item.name }}</strong>
+            <td :width="120">
+            <strong class="headline">{{ item.name }}</strong>
+            </td>
           </template>
           <template v-slot:item.grade="{ item }">
             <td>{{ descGrade[item.grade] }}</td>
@@ -201,8 +203,9 @@
     <v-dialog v-model="editDialog" persistent width="700px">
       <v-card>
         <v-row>
-          <v-col cols="4" class="zguide py-4 px-3 orange lighten-3">
-            <v-img :src="imageUrl" height="200"  v-if="imageUrl"></v-img>
+          <v-row cols="12"  class="zguide py-4 px-3 orange lighten-3">
+            <v-col pa-2 >
+            <v-img :src="imageUrl" justify="center" height="210" max-width="340"  v-if="imageUrl"></v-img>
             <v-text-field
               label="사진 선택"
               readonly
@@ -222,51 +225,60 @@
               id="photo"
               @change="onImageFilePicked"
             />
-          </v-col>
+            </v-col>
+          </v-row>
 
-          <v-col cols="8">
+          <v-col cols="12">
             <v-card-title primary-title>
               <span class="headline">회원정보 수정</span>
             </v-card-title>
             <v-card-text>
               <v-row row wrap>
                 <!-- 이름 -->
-                <v-col cols="6" pa-1 ma-0>
+                <v-col cols="4" pa-1 ma-0>
                   <v-text-field color="blue" hide-details label="이름" v-model="selectedMember.name"></v-text-field>
                 </v-col>
                 <!-- 성별 (남:0 여:1) -->
-                <v-col cols="2" pa-1 ma-0>
+                <v-col cols="3" pa-1 ma-0>
                   <v-select
                     color="blue"
                     hide-details
                     dense
                     v-model="selectedMember.gender"
-                    :items="descGender"
+                    :items="[0,1]"
                     attach
-                    item-text="descGender[selectedMember.gender]"
-                    item-value="selectedMember.gender"
                     label="성별"
                     persistent-hint
-                    return-object
                     single-line
-                  ></v-select>
+                  >
+                   <template v-slot:item ="{ item, index }">
+                      {{ descGender[item] }}
+                    </template>                
+                    <template v-slot:selection="{ item, index }">
+                      {{ descGender[item] }}
+                    </template>
+                  </v-select>
                 </v-col>
                 <!-- 부서 (유치부:0, 유초등부:1, 중고등부:2, 청년부:3) -->
-                <v-col cols="4" pa-1 ma-0>
+                <v-col cols="5" pa-1 ma-0>
                   <v-select
                     color="blue"
                     hide-details
                     dense
                     v-model="selectedMember.belong"
-                    :items="descBelong"
-                    item-text="descBelong[selectedMember.belong]"
-                    item-value="selectedMember.belong"
+                    :items="[0,1,2,3]"
                     attach
                     label="부서"
                     persistent-hint
-                    return-object
                     single-line
-                  ></v-select>
+                  >
+                  <template v-slot:item ="{ item, index }">
+                      {{ descBelong[item] }}
+                    </template>                
+                    <template v-slot:selection="{ item, index }">
+                      {{ descBelong[item] }}
+                    </template>
+                  </v-select>
                 </v-col>
               </v-row>
               <v-row row wrap>
@@ -305,15 +317,19 @@
                     hide-details
                     dense
                     v-model="selectedMember.grade"
-                    :items="descGrade"
-                    item-text="descGrade[selectedMember.grade]"
-                    item-value="selectedMember.grade"
+                    :items="[0,1,2,3]"
                     attach
                     label="등록상태"
                     persistent-hint
-                    return-object
                     single-line
-                  ></v-select>
+                  > 
+                   <template v-slot:item ="{ item, index }">
+                      {{ descGrade[item] }}
+                    </template>                
+                    <template v-slot:selection="{ item, index }">
+                      {{ descGrade[item] }}
+                    </template>
+                  </v-select>
                 </v-col>
               </v-row>
               <v-row row wrap>
@@ -326,7 +342,6 @@
                     :close-on-content-click="false"
                     :nudge-right="40"
                     :return-value.sync="selectedMember.birth"
-                    lazy
                     offset-y
                     full-width
                     min-width="200px"
@@ -361,15 +376,19 @@
                     hide-details
                     dense
                     v-model="selectedMember.baptism"
-                    :items="descBoptism"
-                    item-text="descBoptism[selectedMember.baptism]"
-                    item-value="selectedMember.baptism"
+                    :items="[0,1,2,3]"
                     attach
                     label="세례여부"
                     persistent-hint
-                    return-object
                     single-line
-                  ></v-select>
+                  >
+                  <template v-slot:item ="{ item, index }">
+                      {{ descBoptism[item] }}
+                    </template>                
+                    <template v-slot:selection="{ item, index }">
+                      {{ descBoptism[item] }}
+                    </template>
+                  </v-select>
                 </v-col>
 
                 <v-col cols="12" pa-1>

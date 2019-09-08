@@ -1,13 +1,13 @@
 <template>
   <v-container fluid text-xs-center>
-    <v-layout row wrap>
-      <v-flex>
+    <v-row row wrap>
+      <v-col>
         <h2>안녕하세요 </h2>
         <div class="title">{{userName}}님 환영 합니다</div>
         <div class="title">메뉴가 보이지 않으면 logout 해주세요</div>
         <router-link to="/logout">Logout</router-link>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

@@ -11,8 +11,8 @@
     </div>
     <v-alert :value="alert" color="error" icon="error_circle" outlined>{{alertMsg}}</v-alert>
 
-    <v-row  class="ma-2" >
-      <v-col :key="1"  cols="3" v-if="userGrade==0">
+    <v-row class="ma-2">
+      <v-col :key="1" cols="3" v-if="userGrade==0">
         <download-excel
           class="btn btn-default"
           :data="members"
@@ -24,8 +24,8 @@
         </download-excel>
       </v-col>
     </v-row>
-    <v-row  class="ma-2 ">
-      <v-col cols="3" >
+    <v-row class="ma-2">
+      <v-col cols="3">
         <v-btn fab class="primary" @click="createMember">
           <v-icon>person_add</v-icon>
         </v-btn>
@@ -33,7 +33,8 @@
       <v-col xs12 cols="12">
         <v-row>
           <v-col>
-            <v-chip class="ma-1"
+            <v-chip
+              class="ma-1"
               v-for="v in added_word"
               :key="v.id"
               v-model="v.active"
@@ -49,8 +50,8 @@
         </v-row>
 
         <!-- 검색/필터 패널 -->
-        <!-- <v-layout row wrap>
-      <v-flex xs12 >
+        <!-- <v-row row wrap>
+      <v-col xs12 >
         <v-select 
           color="blue"
           hide-details
@@ -69,11 +70,11 @@
             {{ descBelong[props.item] }},
           </template>
         </v-select>
-      </v-flex>
-        </v-layout>-->
+      </v-col>
+        </v-row>-->
 
-        <!-- <v-layout>
-      <v-flex xs6 sm6 md4>
+        <!-- <v-row>
+      <v-col xs6 sm6 md4>
             <v-select
             label="부서"
             ref="current_select"
@@ -97,12 +98,12 @@
                 class="mt-2"
             />
             </v-select>
-        </v-flex>
+        </v-col>
         &nbsp;&nbsp;
-        <v-flex>
+        <v-col>
        <v-text-field label="이름, 연락처 또는 조이름으로 찾기" v-model="search" @input="search_text"></v-text-field>
-        </v-flex>
-        </v-layout>-->
+        </v-col>
+        </v-row>-->
 
         <!-- 회원정보 데이터 테이블 -->
         <v-data-table
@@ -110,8 +111,7 @@
           :headers="memberHeader"
           :expanded.sync="expanded"
           :single-expand="false"
-           :items-per-page="10"
-          
+          :items-per-page="10"
           :items="members"
           class="elevation-1"
         >
@@ -122,14 +122,14 @@
             <v-btn x-small @click="expanded = []" v-if="expanded.includes(item)">close</v-btn>
           </template>
 
-          <template v-slot:item.photo="{ item }">
-            <td :width="120" :height="80" class="zguide">
+          <template v-slot:item.photo="{ item }" >
+            <v-card :width="120" :height="80" class="zguide">
               <v-img :width="120" :src="getImgUrl(`${item.photo}`)" v-if="item.photo"></v-img>
-            </td>
+            </v-card>
           </template>
           <template v-slot:item.name="{ item }">
             <td :width="120">
-            <strong class="headline">{{ item.name }}</strong>
+              <strong class="headline">{{ item.name }}</strong>
             </td>
           </template>
           <template v-slot:item.grade="{ item }">
@@ -144,8 +144,8 @@
           </template>
 
           <template v-slot:item.action="{ item }">
-            <v-icon   icon color="primary" class="mr-2" @click="editMember(item)">edit</v-icon>
-            <v-icon   icon color="deep-orange" @click="openRemoveDialog(item)">delete</v-icon>
+            <v-icon icon color="primary" class="mr-2" @click="editMember(item)">edit</v-icon>
+            <v-icon icon color="deep-orange" @click="openRemoveDialog(item)">delete</v-icon>
           </template>
 
           <template v-slot:no-data>
@@ -203,28 +203,28 @@
     <v-dialog v-model="editDialog" persistent width="700px">
       <v-card>
         <v-row>
-          <v-row cols="12"  class="zguide py-4 px-3 orange lighten-3">
-            <v-col pa-2 >
-            <v-img :src="imageUrl" justify="center" height="210" max-width="340"  v-if="imageUrl"></v-img>
-            <v-text-field
-              label="사진 선택"
-              readonly
-              hide-details
-              prepend-icon="attach_file"
-              @click="pickImageFile"
-              v-model="imageName"
-            ></v-text-field>
+          <v-row cols="12" class="zguide py-4 px-3 orange lighten-3">
+            <v-col pa-2>
+              <v-img :src="imageUrl" justify="center" height="210" max-width="340" v-if="imageUrl"></v-img>
+              <v-text-field
+                label="사진 선택"
+                readonly
+                hide-details
+                prepend-icon="attach_file"
+                @click="pickImageFile"
+                v-model="imageName"
+              ></v-text-field>
 
-            <v-spacer></v-spacer>
-            <input
-              type="file"
-              style="display: none"
-              ref="image"
-              accept="image/*"
-              name="photo"
-              id="photo"
-              @change="onImageFilePicked"
-            />
+              <v-spacer></v-spacer>
+              <input
+                type="file"
+                style="display: none"
+                ref="image"
+                accept="image/*"
+                name="photo"
+                id="photo"
+                @change="onImageFilePicked"
+              />
             </v-col>
           </v-row>
 
@@ -251,12 +251,8 @@
                     persistent-hint
                     single-line
                   >
-                   <template v-slot:item ="{ item, index }">
-                      {{ descGender[item] }}
-                    </template>                
-                    <template v-slot:selection="{ item, index }">
-                      {{ descGender[item] }}
-                    </template>
+                    <template v-slot:item="{ item, index }">{{ descGender[item] }}</template>
+                    <template v-slot:selection="{ item, index }">{{ descGender[item] }}</template>
                   </v-select>
                 </v-col>
                 <!-- 부서 (유치부:0, 유초등부:1, 중고등부:2, 청년부:3) -->
@@ -272,12 +268,8 @@
                     persistent-hint
                     single-line
                   >
-                  <template v-slot:item ="{ item, index }">
-                      {{ descBelong[item] }}
-                    </template>                
-                    <template v-slot:selection="{ item, index }">
-                      {{ descBelong[item] }}
-                    </template>
+                    <template v-slot:item="{ item, index }">{{ descBelong[item] }}</template>
+                    <template v-slot:selection="{ item, index }">{{ descBelong[item] }}</template>
                   </v-select>
                 </v-col>
               </v-row>
@@ -322,13 +314,9 @@
                     label="등록상태"
                     persistent-hint
                     single-line
-                  > 
-                   <template v-slot:item ="{ item, index }">
-                      {{ descGrade[item] }}
-                    </template>                
-                    <template v-slot:selection="{ item, index }">
-                      {{ descGrade[item] }}
-                    </template>
+                  >
+                    <template v-slot:item="{ item, index }">{{ descGrade[item] }}</template>
+                    <template v-slot:selection="{ item, index }">{{ descGrade[item] }}</template>
                   </v-select>
                 </v-col>
               </v-row>
@@ -382,17 +370,13 @@
                     persistent-hint
                     single-line
                   >
-                  <template v-slot:item ="{ item, index }">
-                      {{ descBoptism[item] }}
-                    </template>                
-                    <template v-slot:selection="{ item, index }">
-                      {{ descBoptism[item] }}
-                    </template>
+                    <template v-slot:item="{ item, index }">{{ descBoptism[item] }}</template>
+                    <template v-slot:selection="{ item, index }">{{ descBoptism[item] }}</template>
                   </v-select>
                 </v-col>
 
                 <v-col cols="12" pa-1>
-                  <v-textarea color="blue" hide-details label="기타" rows="2" ></v-textarea>
+                  <v-textarea color="blue" hide-details label="기타" rows="2"></v-textarea>
                 </v-col>
               </v-row>
             </v-card-text>
@@ -583,12 +567,12 @@ module.exports = {
       memberHeader: [
         { text: "", value: "expand", align: "end" },
         { text: "사진", value: "photo", sortable: false, align: "center" },
-        { text: "이름", value: "name", sortable: true , align: "center"},
-        { text: "연락처", value: "phone", sortable: false , align: "center"},
-        { text: "소속", value: "belong", sortable: true , align: "center"},
-        { text: "등록", value: "grade", sortable: true , align: "center"},
-        { text: "조", value: "connected", sortable: true , align: "center"},
-        { text: "수정/삭제", value: "action", sortable: false , align: "center"}
+        { text: "이름", value: "name", sortable: true, align: "center" },
+        { text: "연락처", value: "phone", sortable: false, align: "center" },
+        { text: "소속", value: "belong", sortable: true, align: "center" },
+        { text: "등록", value: "grade", sortable: true, align: "center" },
+        { text: "조", value: "connected", sortable: true, align: "center" },
+        { text: "수정/삭제", value: "action", sortable: false, align: "center" }
       ],
       belongChipStyle: [
         "lime darken-2",

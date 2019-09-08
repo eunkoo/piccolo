@@ -1,11 +1,11 @@
 <template>
-  <v-container fluid text-xs-center>
+  <v-container container--fluid text-xs-center>
     <div class="text-xs-center">
       <v-progress-circular v-if="loading" indeterminate color="primary"></v-progress-circular>
     </div>
     <v-alert :value="alert" color="success" icon="check_circle" outlined>저장 되었습니다</v-alert>
-    <v-layout v-if="!printing " wrap fill-height justify-center>
-      <v-flex :key="1" xs12 sm3 md3>
+    <v-row v-if="!printing " wrap fill-height justify-center>
+      <v-col :key="1" cols="12" xs="12" sm="3" md="3">
         <v-select
           ref="current_select"
           :items="belong_items"
@@ -16,178 +16,196 @@
           return-object
           @change="changeBelong"
         ></v-select>
-      </v-flex>
-      <v-flex :key="2" xs3 sm3 md3 v-if="userGrade==0">
+      </v-col>
+      <v-col :key="2"  xs="3" sm="3" md="3" v-if="userGrade==0">
+        <v-row justify="center">
         <div class="formodal">
           <v-dialog v-model="dialog" max-width="500px">
-            <v-btn fab slot="activator" class="mb-2">수동</v-btn>
+            <template v-slot:activator="{ on }">
+              <v-btn fab v-on="on" class="mb-2">수동</v-btn>
+            </template>
             <v-card>
               <v-card-text>
                 <v-container grid-list-md>
-                  <v-layout wrap>
-                    <v-flex xs12 sm6 md4>
+                  <v-row wrap>
+                    <v-col xs="12" sm="6" md="4">
                       <v-text-field label="이름" v-model="addAttendName"></v-text-field>
                       <v-text-field label="조" v-model="addAttendConnected"></v-text-field>
-                    </v-flex>
-                  </v-layout>
+                    </v-col>
+                  </v-row>
                 </v-container>
               </v-card-text>
               <v-card-actions>
-                <v-btn flat color="primary" @click.native="addAttendee">추가 또는 삭제</v-btn>
-                <v-btn flat color="primary" @click.native="close">취소</v-btn>
+                <v-btn text color="primary" @click.native="addAttendee">추가 또는 삭제</v-btn>
+                <v-btn text color="primary" @click.native="close">취소</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
         </div>
-      </v-flex>
-      <v-flex :key="3" xs3 sm3 md3 v-if="userGrade==0">
-        <download-excel
-          class="btn btn-default"
-          :data="attendee"
-          :fields="attendee_fields"
-          type="csv"
-          name="출결현황.xls"
-        >
-          <v-btn fab>엑셀</v-btn>
-        </download-excel>
-      </v-flex>
-
-      <v-flex :key="5" xs3 sm3 md3 v-if="userGrade==0">
+        </v-row>
+      </v-col>
+      <v-col :key="3" xs="3" sm="3" md="3" v-if="userGrade==0">
+        <v-row justify="center">
+          <downloadexcel
+            class="btn btn-default"
+            :data="attendee"
+            :fields="attendee_fields"
+            type="csv"
+            name="출결현황.xls"
+          >
+            <v-btn fab>엑셀</v-btn>
+          </downloadexcel>
+        </v-row>
+      </v-col>
+      <v-col :key="5" xs="3" sm="3" md="3" v-if="userGrade==0">
+      <v-row justify="center">
         <v-btn fab color="primary" @click="save">저장</v-btn>
-      </v-flex>
-    </v-layout>
-    <v-layout v-if="!printing " justify-center align-center>
-      <v-flex :key="6" xs4>
-        <v-btn label="prev" small fab @click="onPrev">
-          <v-icon large color="black">chevron_left</v-icon>
-        </v-btn>
-      </v-flex>
-      <v-flex xs4>
-        <v-layout justify-center>
-          <v-flex xs4 sm4 md4>
+      </v-row>
+      </v-col>
+    </v-row>
+
+    <v-row v-if="!printing " >
+      <v-row justify="start" >
+        <v-col :key="6" xs="4">
+          <v-btn label="prev" small fab @click="onPrev">
+            <v-icon large color="black">chevron_left</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+
+      <v-col xs="4">
+        <v-row justify="center" align="start">
+          <v-col xs="4" sm="4" md="4">
             <v-menu
               ref="date_menu"
               :close-on-content-click="false"
               v-model="date_menu"
               :nudge-right="40"
               :return-value.sync="cdateFormat"
-              lazy
               transition="scale-transition"
               offset-y
-              full-width
               min-width="290px"
             >
-              <v-text-field text-xs-center flat slot="activator" v-model="cdateFormat" readonly></v-text-field>
-              <v-date-picker 
-                  class="mydatepicker"
-                  locale="ko-KR" 
-                  v-model="cdateFormat" 
-                  no-title scrollable 
-                  @input="chooseDate(cdateFormat)">
-              </v-date-picker>
+              <template v-slot:activator="{ on }">
+                <v-text-field class="text-xs-center" text v-on="on" v-model="cdateFormat" readonly />
+              </template>
+              <v-date-picker
+                class="mydatepicker"
+                locale="ko-KR"
+                v-model="cdateFormat"
+                no-title
+                scrollable
+                @input="chooseDate(cdateFormat)"
+              ></v-date-picker>
             </v-menu>
-          </v-flex>
-        </v-layout>
-      </v-flex>
-      <v-flex :key="7" xs4>
+          </v-col>
+        </v-row>
+      </v-col>
+
+      <v-col :key="7" xs="4">
+      <v-row justify="end">
         <v-btn label="next" fab small @click="onNext">
           <v-icon large color="black">chevron_right</v-icon>
         </v-btn>
-      </v-flex>
-    </v-layout>
+        </v-row>
+      </v-col>
+    </v-row>
 
-    <v-flex v-if="!printing && userGrade==0">
-      <!-- <v-container class="guide_layout">
-      <v-layout class="guide">-->
-      <event-detail
+    <v-col v-if="!printing && userGrade==0">
+      <eventdetail
         ref="detail"
-        :printing="true"
+        v-bind:printing="true"
         @changeOffering="changeOffering"
         v-bind:datas="editedItem"
-      ></event-detail>
-      <!-- </v-layout>
-      </v-container>-->
-      <editable-attendee
+      ></eventdetail>
+      <editableattendee
         ref="editable"
-        :attendee="attendee"
+        v-bind:attendee="attendee"
         @changeNoon="changeNoonAtt"
         @changeMorning="changeMorningAtt"
-      ></editable-attendee>
-    </v-flex>
-    <v-flex v-else>
-      <v-layout class="guide" justify-center align-center>
+      ></editableattendee>
+    </v-col>
+    <v-col v-else>
+      <v-row class="guide" justify-center align-center>
         <div id="printMe" class="page-wrapper">
           <div class="page">
             <div class="page-inner">
-              <v-flex>
-                <twin-table
+              <v-col>
+                <twintable
                   :isHeader="true"
                   @changeNoon="changeNoonAtt"
                   @changeMorning="changeMorningAtt"
                   :tableinfo="table_info_text"
                   :attendee1="attendee1"
                   :attendee2="attendee2"
-                ></twin-table>
-                <twin-table
+                ></twintable>
+                <twintable
                   :isHeader="false"
                   @changeNoon="changeNoonEx"
                   @changeMorning="changeMorningEx"
                   :tableinfo="'새신자 및 장기 결석'"
                   :attendee1="expectee1"
                   :attendee2="expectee2"
-                ></twin-table>
-                <event-notice v-bind:datas="editedItem" v-bind:printingview="true"></event-notice>
-              </v-flex>
+                ></twintable>
+                <eventnotice v-bind:datas="editedItem" v-bind:printingview="true"></eventnotice>
+              </v-col>
             </div>
           </div>
         </div>
-      </v-layout>
-    </v-flex>
-    <event-notice
+      </v-row>
+    </v-col>
+    <eventnotice
       v-if="!printing && userGrade==0"
       @changeNotice="changeNotice"
       v-bind:printingview="false"
       ref="notice"
       v-bind:datas="editedItem"
-    ></event-notice>
-    <!-- <v-layout class="guide"  justify-center align-center >
+    ></eventnotice>
+    <!-- <v-row class="guide"  justify-center align-center >
          <event-notice  v-if='printing' @changeNotice='changeNotice'  ref='notice' v-bind:datas="editedItem"></event-notice>
-    </v-layout>-->
+    </v-row>-->
 
-    <v-flex xs12 :key=9>
-      <event-dayspan v-if="!printing " ref="dayspan"  >
-      </event-dayspan>
-    </v-flex>
+    <!-- <v-col xs="12" :key="9">
+      <test2 v-if="!printing " ref="dayspan"></test2>
+    </v-col> -->
 
-    <v-flex :key="8" xs2>
+    <v-col :key="8" xs="2">
       <v-btn fab @click="print" v-if="userGrade==0">보기</v-btn>
-    </v-flex>
+    </v-col>
   </v-container>
 </template>
 
 <script>
-const apiService = require( "@/Services/ApiService" );
-const Datepicker = require( "vuejs-datepicker");
-const EventDetail = require( "./EventDetail");
-const EventNotice = require( "./EventNotice");
-const TwinTable = require( "./TwinTable");
-const downloadExcel = require( "vue-json-excel");
-const { en, ko } = require( "vuejs-datepicker/dist/locale");
-const EditableAttendee = require( "./EditableAttendee");
-const EventDayspan = require( "./EventDayspan");
-const Vue = require( "vue");
-require( '../../assets/css/attendee.css')
+const apiService = require("@/Services/ApiService");
+// const datepicker = require("vuejs-datepicker").defalt;
+// const test = require("vue-json-excel").defalt;
+import downloadexcel from "vue-json-excel";
+import editableattendee from "./EditableAttendee";
+import eventdayspan from "./EventDayspan";
+import eventdetail from "./EventDetail";
+import eventnotice from "./EventNotice";
+import twintable from "./TwinTable";
+const { en, ko } = require("vuejs-datepicker/dist/locale");
+
+// const Vue = require( "vue");
+require("../../assets/css/attendee.css").defalt;
 
 module.exports = {
   name: "attendee",
   components: {
-    Datepicker,
-    EventDetail,
-    EventNotice,
-    TwinTable,
-    downloadExcel,
-    EditableAttendee,
-    EventDayspan
+    downloadexcel,
+    // test,
+    // datepicker,
+    eventdetail,
+    eventnotice,
+    twintable,
+    editableattendee,
+    eventdayspan,
+    // test1,
+    // test2,
+    // test3,
+    // test4
+    
   },
   data() {
     return {
@@ -288,27 +306,27 @@ module.exports = {
     };
   },
   mounted() {
-    if( this.$route.params.day == null){
+    if (this.$route.params.day == null) {
       this.getevents(0);
       this.cdate = this.prevDay(new Date(), 7);
       this.cdateFormat = this.formatDate(this.cdate);
       this.edate = this.prevDay(new Date(), 7);
       this.edateFormat = this.formatDate(this.edate);
-    }else{
+    } else {
       console.log(this.$route.params.belongs);
-      console.log(this.belong_items[this.$route.params.belongs].text)
+      console.log(this.belong_items[this.$route.params.belongs].text);
       this.defaultSelected = {
-            text: this.belong_items[this.$route.params.belongs].text,
-            id: parseInt(this.$route.params.belongs)
-      }
-      this.cbelong = this.$route.params.belongs
+        text: this.belong_items[this.$route.params.belongs].text,
+        id: parseInt(this.$route.params.belongs)
+      };
+      this.cbelong = this.$route.params.belongs;
       this.getevents(this.cbelong);
-      this.cdate = new Date(this.$route.params.day)
+      this.cdate = new Date(this.$route.params.day);
       this.cdateFormat = this.formatDate(this.cdate);
-      this.edate = new Date(this.$route.params.eday)
+      this.edate = new Date(this.$route.params.eday);
       this.edateFormat = this.formatDate(this.edate);
     }
-   
+
     console.log(this.cdate);
     console.log(this.cdateFormat);
   },
@@ -462,10 +480,10 @@ module.exports = {
     changeMorningAtt(t) {
       console.log(t);
       this.att_morning = t;
-      this.editedItem.totalmorning = this.att_morning //+ this.ex_morning;
-      console.log(this.att_morning );
-      console.log(this.ex_morning );
-      console.log(this.editedItem.totalmorning );
+      this.editedItem.totalmorning = this.att_morning; //+ this.ex_morning;
+      console.log(this.att_morning);
+      console.log(this.ex_morning);
+      console.log(this.editedItem.totalmorning);
       // this.save()
     },
     changeMorningEx(t) {
@@ -477,7 +495,7 @@ module.exports = {
     changeNoonAtt(t) {
       console.log(t);
       this.att_noon = t;
-      this.editedItem.totalnoon = this.att_noon //+ this.ex_noon;
+      this.editedItem.totalnoon = this.att_noon; //+ this.ex_noon;
       // this.save()
     },
     changeNoonEx(t) {
@@ -496,15 +514,17 @@ module.exports = {
       this.cplace = "";
     },
     async getevents(belong) {
-      console.log("getevents "+belong)
+      console.log("getevents " + belong);
       this.loading = true;
       this.clearDatas();
-      const response = await apiService.fetchEventForBelong( {belongs:belong});
+      const response = await apiService.fetchEventForBelong({
+        belongs: belong
+      });
       this.events = response.data;
       if (this.events.length === 0) {
         this.editedItem = {
           day: this.cdate,
-          eday:this.edate,
+          eday: this.edate,
           belongs: belong,
           title: this.ctitle,
           place: this.cplace
@@ -513,8 +533,8 @@ module.exports = {
         return;
       }
 
-      // 교육부서를 
-      this.cbelong = belong//this.editedItem.belongs;
+      // 교육부서를
+      this.cbelong = belong; //this.editedItem.belongs;
       // this.ctitle = this.editedItem.title;
       // this.cplace = this.editedItem.place;
       await this.loadEventData(belong, this.cdate);
@@ -539,7 +559,7 @@ module.exports = {
     },
     async saveNames(belong) {
       console.log("saveNames " + belong);
-      const response = await apiService.fetchNames({belong:belong});
+      const response = await apiService.fetchNames({ belong: belong });
       this.names = response.data;
       // console.log(this.names)
       await this.names.forEach(item => {
@@ -556,14 +576,14 @@ module.exports = {
         };
         this.attendee.push(ndata);
       });
-      if(!this.names || this.names.length==0)
+      if (!this.names || this.names.length == 0)
         await apiService.addAttendees(this.attendee).then(result => {
           this.attendee = result.data; //Object.assign({}, result.data)
         });
       console.log(this.attendee);
     },
     loadEventData(belong, cdate) {
-      console.log("loadEventData "+belong + ", "+this.formatDate(cdate));
+      console.log("loadEventData " + belong + ", " + this.formatDate(cdate));
       var item = this.events.filter(ev => {
         return this.formatDate(new Date(ev.day)) === this.formatDate(cdate);
       });
@@ -582,7 +602,7 @@ module.exports = {
         // console.log(this.editedIndex)
       } else {
         this.editedItem = {
-          day : this.formatDate(this.cdate),
+          day: this.formatDate(this.cdate),
           // day: this.cdate.toDateString(),
           belongs: this.cbelong,
           title: this.ctitle,
@@ -590,19 +610,25 @@ module.exports = {
         };
         this.editedIndex = -1;
       }
-      this.$refs.dayspan.getSchedules({eid:this.editedItem.id, 
-          title : this.editedItem.title,
-          belongs : this.editedItem.belongs,
-          start :  this.editedItem.day,
-          end : this.editedItem.eday})
-   
+      // if(this.editedItem.id >-1)
+      //   this.$refs.dayspan.getSchedules({
+      //     eid: this.editedItem.id,
+      //     title: this.editedItem.title,
+      //     belongs: this.editedItem.belongs,
+      //     start: this.editedItem.day,
+      //     end: this.editedItem.eday
+      //   });
+
       this.ctitle = this.editedItem.title;
       this.cplace = this.editedItem.place;
       console.log(this.editedItem);
     },
     async saveNewes(belong, month) {
       console.log("saveNewes");
-      const response = await apiService.fetchNewes({belong:belong, month: month + 1});
+      const response = await apiService.fetchNewes({
+        belong: belong,
+        month: month + 1
+      });
       var newes = response.data;
       var names = "";
       newes.forEach(el => {
@@ -616,7 +642,10 @@ module.exports = {
     },
     async saveBirthes(belong, month) {
       console.log("saveBirthes");
-      const response = await apiService.fetchBirthes( {belong:belong, month:month + 1});
+      const response = await apiService.fetchBirthes({
+        belong: belong,
+        month: month + 1
+      });
       var births = response.data;
       var names = "";
       births.forEach(el => {
@@ -634,11 +663,13 @@ module.exports = {
         this.attendee = [];
         return;
       }
-      const response = await apiService.fetchAttendee({id:this.editedItem.id});
+      const response = await apiService.fetchAttendee({
+        id: this.editedItem.id
+      });
       this.attendee = response.data;
       if (this.attendee.length == 0) {
         // to be created
-        
+
         this.saveNames(belong);
         this.saveBirthes(belong, date.getMonth());
         this.saveNewes(belong, date.getMonth());
@@ -718,13 +749,6 @@ module.exports = {
       // window.open("/#/api/attendee", "_blank")
       this.setInfoText(this.cbelong);
       this.printing = !this.printing;
-      // new Vue({
-      //     el: '#print',
-      //     components: { TwinTable, EventDetail },
-      //     template: '<event-detail></event-detail><twin-table></twin-table>',
-      //     render: h => h(EventDetail,TwinTable)
-      // }).$mount("#app")
-      // // window.print();
     },
     editItem(item) {
       this.editedIndex = this.events.indexOf(item);
@@ -748,7 +772,7 @@ module.exports = {
       return d;
     },
     onPrev() {
-       console.log("onPrev" + this.formatDate(this.cdate))
+      console.log("onPrev" + this.formatDate(this.cdate));
       this.cdate.setDate(this.cdate.getDate() - 1);
       this.cdate = new Date(this.prevDay(this.cdate, 7));
       this.cdateFormat = this.formatDate(this.cdate);
@@ -756,7 +780,7 @@ module.exports = {
       this.getAttendee(this.cbelong, this.cdate);
     },
     onNext() {
-      console.log("onNext" + this.formatDate(this.cdate))
+      console.log("onNext" + this.formatDate(this.cdate));
       this.cdate.setDate(this.cdate.getDate() + 1);
       this.cdate = new Date(this.nextDay(this.cdate, 7));
       this.cdateFormat = this.formatDate(this.cdate);

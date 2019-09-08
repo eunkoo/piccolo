@@ -2,15 +2,6 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 
 
-// import 'babel-polyfill';
-// if (!global._babelPolyfill) {
-//   // require('babel-polyfill');
-//   import 'babel-polyfill';
-// }
-
-// import 'es6-promise/auto'
-// __webpack_nonce__ = '<%=nonce%>';
-
 require("babel-core/register");
 require("babel-polyfill");
 
@@ -33,11 +24,14 @@ import VueImg from 'v-img'
 import vuescroll from 'vue-scroll'
 import '@mdi/font/css/materialdesignicons.css' 
 
+
+
 const vuetifyOptions = { }
 const options = {
   confirmButtonColor: '#41b882',
   cancelButtonColor: '#ff7674'
 }
+
 
 Vue.use(VueAxios, axios)
 Vue.use(VueSweetalert2, options)
@@ -57,9 +51,6 @@ export default new Vuetify({
 
 Vue.config.productionTip = false
 
-
-// __webpack_nonce__ = '<%=nonce%>';
-// __webpack_nonce__ = 'c29tZSBjb29sIHN0cmluZyB3aWxsIHBvcCB1cCAxMjM=';
 
 /* eslint-disable no-new */
 new Vue({

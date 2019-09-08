@@ -1,16 +1,20 @@
 <template>
 <div>
   <v-container fill-height fluid ma-0 pa-2>
-    <v-layout fill-height>
-   <v-flex :key="6" >
+    <v-row fill-height>
+   <v-col :key="6" >
     <td class="text-xs-left">{{tableinfo}}</td>
     <v-data-table
       :headers="headers"
       :items="attendee1"
-      hide-actions
+      dense
+      disable-filtering
+      disable-pagination
+      hide-default-footer
+      disable-sort
        fix-header 
       class="table" >
-      <template slot="headers" slot-scope="props">
+       <!-- <template slot="headers" slot-scope="props">
         <tr v-if="!isHeader" style="display:none">
             </tr>
             <tr v-else>
@@ -18,27 +22,28 @@
                 {{ header.text }}
             </th>
         </tr>
-    </template>
-        <template slot="items" slot-scope="props">
-        <td class="text-xs-left" width="100px">{{ props.item.name }}</td>
-        <td > <img :src="isMorningAttended(props.item.attended)" width="20px" height="20px" /> </td>
-        <td > <img :src="isNoonAttended(props.item.attended)"  width="20px" height="20px" /></td>
-          <td>
-           {{ props.item.comment }}
-        </td>
-        
-      </template>
+    </template> -->
+           <template v-slot:item.attendedm="{ item }">
+        <td > <v-img :src="isMorningAttended(item.attended)" width="20px" height="20px" /> </td>
+           </template>
+           <template v-slot:item.attendedn="{ item }">
+        <td > <v-img :src="isNoonAttended(item.attended)"  width="20px" height="20px" /></td>
+           </template>
     </v-data-table>
-   </v-flex>
-    <v-flex :key="12" xs6>  
+   </v-col>
+    <v-col :key="12" xs6>  
     <td class="text-xs-left">&nbsp;</td> 
     <v-data-table
       :headers="headers"
       :items="attendee2"
-      hide-actions
+      dense
+      disable-filtering
+      disable-pagination
+      hide-default-footer
+      disable-sort
       fix-header 
       class="table" >
-      <template slot="headers" slot-scope="props">
+      <!-- <template slot="headers" slot-scope="props">
         <tr v-if="!isHeader" style="display:none">
             </tr>
             <tr v-else>
@@ -46,25 +51,23 @@
                 {{ header.text }}
             </th>
         </tr>
-    </template>
-      <template slot="items" slot-scope="props" >
-        <td class="text-xs-left" width="100px">{{ props.item.name }}</td>
-         <td > <img :src="isMorningAttended(props.item.attended)" width="20px" height="20px"/> </td>
-         <td > <img :src="isNoonAttended(props.item.attended)"  width="20px" height="20px" /></td>
-        <td>
-          {{ props.item.comment }}
-        </td>
-      </template>
+    </template> -->
+           <template v-slot:item.attendedm="{ item }">
+        <td > <v-img :src="isMorningAttended(item.attended)" width="20px" height="20px" /> </td>
+           </template>
+           <template v-slot:item.attendedn="{ item }">
+        <td > <v-img :src="isNoonAttended(item.attended)"  width="20px" height="20px" /></td>
+           </template>
     </v-data-table>
-    </v-flex>
-    </v-layout>
+    </v-col>
+    </v-row>
   </v-container>
 </div>
 </template>
 
 <script>
 const apiService = require( '@/Services/ApiService')
-require('../../assets/css/twintable.css')
+require('../../assets/css/twintable.css').default
 module.exports ={
   name: 'TwinTable',
   props: {attendee1: Array, attendee2:Array,tableinfo:String, isHeader:Boolean},
@@ -101,7 +104,7 @@ module.exports ={
           text: '오전',
           align: 'center',
           sortable: false,
-          value: 'attended',
+          value: 'attendedm',
           color:'black',
           visibility:'isHeader'
         },
@@ -109,7 +112,7 @@ module.exports ={
           text: '오후',
           align: 'center',
           sortable: false,
-          value: 'attended',
+          value: 'attendedn',
           color:'black',
           visibility:'isHeader'
         },
@@ -117,6 +120,7 @@ module.exports ={
           text: '비고',
           align: 'left',
           sortable: false,
+          value: 'comment',
           visibility:'isHeader'
         }
       ]

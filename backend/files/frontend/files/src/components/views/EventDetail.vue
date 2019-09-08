@@ -1,99 +1,92 @@
 <template>
-    <v-container fluid ma-0 pa-2 >
-    <v-layout fill-height wrap>
-        <v-flex :key="1" xs6 sm3 md3>
-            <v-card  color="#e8e8e8"> 
-            <v-card-text class="px-0">{{this.belong_items(datas.belongs)}}</v-card-text>
+    <v-container container--fluid ma-0  >
+    <v-row cols="12" wrap>
+        <v-col :key="1" cols="6" xs="6" sm="3" md="3" class="pa-1">
+            <v-card  class="pa-4" outlined  tile color="#e8e8e8"> 
+           {{this.belong_items(datas.belongs)}}
             </v-card>
-        </v-flex >
-        <v-flex :key="2" xs6 sm3 md3>
-            <v-card  color="#e8e8e8"> 
-            <v-card-text class="px-0">{{datas.title}}</v-card-text>
+        </v-col >
+        <v-col :key="2" cols="6" xs="6" sm="3" md="3" class="pa-1">
+            <v-card class="pa-4" outlined  tile color="#e8e8e8"> 
+           {{datas.title}}
             </v-card>
-        </v-flex >
-        <v-flex :key="3" xs6 sm3 md3>
-            <v-card  color="#e8e8e8"> 
-            <v-card-text class="px-0">{{datas.day}}</v-card-text>
+        </v-col >
+        <v-col :key="3" cols="6" xs="6" sm="3" md="3" class="pa-1">
+            <v-card class="pa-4" outlined  tile color="#e8e8e8"> 
+          {{datas.day}}
             </v-card>
-        </v-flex >
-        <v-flex :key="4" xs6 sm3 md3>
-            <v-card  color="#e8e8e8"> 
-            <v-card-text  class="px-0">{{datas.place}}</v-card-text>
+        </v-col >
+        <v-col :key="4" cols="6" xs="6" sm="3" md="3" class="pa-1">
+            <v-card class="pa-4" outlined  tile color="#e8e8e8"> 
+           {{datas.place}}
             </v-card>
-        </v-flex >
+        </v-col >
 
-        <v-flex :key="5" xs6 sm3 md3>
-            <v-card  color="#e8e8e8" > 
-            <v-card-text class="px-0">{{mon(datas.day)}}월 생일자</v-card-text>
+        <v-col :key="5" cols="6" xs="6" sm="3" md="3" class="pa-1">
+            <v-card class="pa-4" outlined  tile color="#e8e8e8" > 
+            {{mon(datas.day)}}월 생일자
             </v-card>
-        </v-flex >
-        <v-flex :key="6" xs6 sm3 md3>
-            <v-card  color="#ffffff"> 
-            <v-card-text multiline class="px-0">{{datas.birthes}}</v-card-text >
+        </v-col >
+        <v-col :key="6" cols="6" xs="6" sm="3" md="3" class="pa-1">
+            <v-card class="pa-4" outlined  tile color="#ffffff"> 
+           {{datas.birthes}}
             </v-card>
-        </v-flex >
-        <v-flex :key="7" xs6 sm3 md3>
-            <v-card  color="#e8e8e8"> 
-            <v-card-text class="px-0">새신자</v-card-text>
+        </v-col >
+        <v-col :key="7" cols="6" xs="6" sm="3" md="3" class="pa-1">
+            <v-card class="pa-4" outlined  tile color="#e8e8e8"> 
+           새신자
             </v-card>
-        </v-flex >
-        <v-flex :key="8" xs6 sm3 md3>
-            <v-card  color="#ffffff"> 
-            <v-card-text multiline class="px-0">{{datas.newes}}</v-card-text>
+        </v-col >
+        <v-col :key="8" cols="6" xs="6" sm="3" md="3" class="pa-1">
+            <v-card class="pa-4" outlined  tile color="#ffffff"> 
+           {{datas.newes}}
             </v-card>
-        </v-flex >
+        </v-col >
 
-        <v-flex :key="9" xs6 sm3 md3>
-            <v-card  color="#e8e8e8"> 
-            <v-card-text class="px-0">주일헌금</v-card-text>
+        <v-col :key="9" cols="6" xs="6" sm="3" md="3" class="pa-1">
+            <v-card class="pa-4" outlined  tile color="#e8e8e8"> 
+            주일헌금
             </v-card>
-        </v-flex >
+        </v-col >
      
-        <v-flex :key="10" xs6 sm3 md3>
-            <v-layout wrap color="#ffffff"> 
-                <v-text-field
-                v-model='datas.offering'>
+        <v-col :key="10" cols="6" xs="6" sm="3" md="3" class="pa-1">
+                <v-text-field  solo-inverted prefix=" ￦ " type="number"
+                v-model.number='datas.offering'>
                 </v-text-field>
-            </v-layout> 
-        </v-flex >
-        <v-flex :key="11" xs6 sm3 md3>
-            <v-card  color="#e8e8e8"> 
-            <v-card-text  class="px-0">총 재적</v-card-text>
+        </v-col >
+        <v-col :key="11" cols="6" xs="6" sm="3" md="3" class="pa-1">
+            <v-card class="pa-4" outlined  tile color="#e8e8e8"> 총 재적
             </v-card>
-        </v-flex >
-        <v-flex :key="12" xs6 sm3 md3>
-            <v-card  color="#ffffff"> 
-            <v-card-text  class="px-0">{{datas.totalmember}}</v-card-text>
+        </v-col >
+        <v-col :key="12" cols="6" xs="6" sm="3" md="3" class="pa-1">
+            <v-card class="pa-4" outlined  tile color="#ffffff"> {{datas.totalmember}}
             </v-card>
-        </v-flex >
+        </v-col >
 
-        <v-flex :key="13" xs6 sm3 md3>
-            <v-card  color="#e8e8e8"> 
-            <v-card-text  class="px-0">오전 총원</v-card-text>
+        <v-col :key="13" cols="6" xs="6" sm="3" md="3" class="pa-1">
+            <v-card class="pa-4" outlined  tile color="#e8e8e8"> 오전 총원
             </v-card>
-        </v-flex >
-        <v-flex :key="14" xs6 sm3 md3>
-            <v-card  color="#ffffff"> 
-            <v-card-text  class="px-0">{{datas.totalmorning}}</v-card-text>
+        </v-col >
+        <v-col :key="14" cols="6" xs="6" sm="3" md="3" class="pa-1">
+            <v-card class="pa-4" outlined  tile color="#ffffff">  {{datas.totalmorning}}
             </v-card>
-        </v-flex >
-        <v-flex :key="15" xs6 sm3 md3>
-            <v-card  color="#e8e8e8"> 
-            <v-card-text  class="px-0">오후 총원</v-card-text>
+        </v-col >
+        <v-col :key="15" cols="6" xs="6" sm="3" md="3" class="pa-1">
+            <v-card class="pa-4" outlined  tile color="#e8e8e8"> 오후 총원
             </v-card>
-        </v-flex >
-        <v-flex :key="16" xs6 sm3 md3>
-            <v-card  color="#ffffff"> 
-            <v-card-text  class="px-0">{{datas.totalnoon}}</v-card-text>
+        </v-col >
+        <v-col :key="16" cols="6" xs="6" sm="3" md="3" class="pa-1">
+            <v-card class="pa-4" outlined  tile color="#ffffff">  {{datas.totalnoon}}
             </v-card>
-        </v-flex >
-    </v-layout>
+        </v-col >
+    </v-row>
     </v-container>
 </template>
 <script>
 // import CurrencyField from  "./VCurrencyField"
 const apiService = require( '@/Services/ApiService')
-export default {
+module.exports =  {
+    name: "EventDetail",
     props: ['datas','printing'],
     components:{
         // CurrencyField

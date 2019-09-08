@@ -24,7 +24,7 @@
                 <sheet-footer>{{belong.text}}</sheet-footer>
               </v-col>
 
-              <v-img contain height="440" :src="getImgUrl(belong.data.photo)" v-if="belong.data">
+              <v-img contain height="440"  :src="getImgUrl(belong.data.photo)"  :lazy-src="getImgUrl(belong.data.photo)" v-if="belong.data">
                 <v-col cols="12" class="card-actions ma-2">
                   <v-btn 
                   fab 
@@ -44,6 +44,14 @@
                     <v-icon>add</v-icon>
                   </v-btn>
                 </v-col>
+                 <template v-slot:placeholder>
+                      <v-row
+                        class=" ma-10"
+                        align="center"
+                        justify="center" >
+                        <v-progress-circular  indeterminate color="grey lighten-5"></v-progress-circular>
+                      </v-row>
+                    </template>
               </v-img>
             </v-col>
           </v-sheet>
@@ -52,10 +60,18 @@
             <v-col :key="org.name" cols="12" md="4" sm="4" v-for=" org in belongData(belong.id)">
               <v-card  >
                 <v-col cols="12" >
-                  <v-img :src="getImgUrl(org.photo)" height="210" contain :color="org.color" class="ma-4">
+                  <v-img :src="getImgUrl(org.photo)" :lazy-src="getImgUrl(org.photo)" height="210" contain :color="org.color" >
                     <v-btn fab small class="ma-2" @click="onEdited(org)">
                       <v-icon>keyboard_arrow_up</v-icon>
                     </v-btn>
+                    <template v-slot:placeholder>
+                      <v-row
+                        class=" ma-10"
+                        align="center"
+                        justify="center" >
+                        <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                      </v-row>
+                    </template>
                   </v-img>
                   <v-card-title class="title white lighten-4">{{org.role}} : {{org.name}}</v-card-title>
                 </v-col>

@@ -1,6 +1,6 @@
 <template>
-  <v-layout>
-    <v-container fill-height fluid ma-0 pa-2>
+  <v-row>
+    <v-container container--fluid ma-0 pa-2>
         <v-textarea
             ref="textnotice"
             outlined
@@ -10,12 +10,13 @@
             :readonly="printingview"
             @focus="focusOn" @blur="blur" v-model="datas.notice"></v-textarea>
     </v-container>
-  </v-layout>
+  </v-row>
 </template>
 
 <script>
 const apiService = require( '@/Services/ApiService')
 module.exports ={
+    name: "EventNotice",
     components:{
         
     },

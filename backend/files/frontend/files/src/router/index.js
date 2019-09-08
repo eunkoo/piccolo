@@ -38,11 +38,6 @@ export default  new Router({
       name: 'worship',
       component: Events
     },
-    //     {
-    //     path: '/api/events',
-    //     name: 'events',
-    //     component: EventDayspan
-    // },
     {
       path: '/api/attendee',
       name: 'attendee',

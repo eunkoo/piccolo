@@ -6,7 +6,6 @@
     <v-alert :value="alert" color="error" icon="error_circle" outlined>{{alertMsg}}</v-alert>
     <div class="formodal">
       <v-dialog v-model="dialog" max-width="800px">
-
         <template v-slot:activator="{ on }">
           <v-btn small fab color="primary" dark v-on="on" class="mb-2">
             <v-icon dark>add</v-icon>
@@ -36,15 +35,15 @@
                     full-width
                     min-width="290px"
                   >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-on="on"
-                      v-model="editedItem.day"
-                      label="시작"
-                      prepend-icon="event"
-                      readonly
-                    ></v-text-field>
-                  </template>
+                    <template v-slot:activator="{ on }">
+                      <v-text-field
+                        v-on="on"
+                        v-model="editedItem.day"
+                        label="시작"
+                        prepend-icon="event"
+                        readonly
+                      ></v-text-field>
+                    </template>
                     <v-date-picker
                       class="mydatepicker"
                       locale="ko-KR"
@@ -67,15 +66,15 @@
                     full-width
                     min-width="290px"
                   >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-on="on"
-                      v-model="editedItem.eday"
-                      label="종료"
-                      prepend-icon="event"
-                      readonly
-                    ></v-text-field>
-                  </template>
+                    <template v-slot:activator="{ on }">
+                      <v-text-field
+                        v-on="on"
+                        v-model="editedItem.eday"
+                        label="종료"
+                        prepend-icon="event"
+                        readonly
+                      ></v-text-field>
+                    </template>
                     <v-date-picker
                       class="mydatepicker"
                       locale="ko-KR"
@@ -101,9 +100,9 @@
                 <v-col cols="12" sm="6" md="4">
                   <v-text-field label="장소" v-model="editedItem.place"></v-text-field>
                 </v-col>
-                <!-- <v-flex xs12 sm6 md4>
+                <!-- <v-col xs12 sm6 md4>
                   <v-text-field label="재적 총원" v-model="editedItem.totalmember"></v-text-field>
-                </v-flex> -->
+                </v-col>-->
               </v-row>
             </v-container>
           </v-card-text>
@@ -128,47 +127,39 @@
       ></v-text-field>
     </v-card-title>
 
-    <v-data-table
-      :headers="headers"
-      :items="events"
-      :search="search"
-      sort-by="day"
-      sort-desc
-    >  
-      <template v-slot:body="{ items }">
-        <tbody>
-          <tr v-for="item in items" :key="item.id">
-            <!-- <td class="text-xs-left">{{ props.item.id }}</td> -->
-            <td class="text-xs-left" style="min-width:100px">{{ belong_text(item.belongs) }}</td>
-            <td class="text-xs-left">{{ item.title }}</td>
-            <td class="text-xs-left">{{ item.day }}</td>
-            <td class="text-xs-left">{{ item.eday }}</td>
-            <td class="text-xs-left" style="min-width:120px">{{ item.place }}</td>
-            <td class="text-xs-left">{{ item.totalmember }}</td>
-            <td  class="text-xs-left" @click="go(item)">
-              <v-btn small text fab color="blue"><v-icon> call_made</v-icon></v-btn> </td>
-            <td class="justify-center layout px-0">
-              <v-btn icon class="mx-0" @click="editItem(item)">
-                <v-icon color="teal">edit</v-icon>
-              </v-btn>
-              <v-btn icon class="mx-0" @click="deleteEvents(item)">
-                <v-icon color="pink">delete</v-icon>
-              </v-btn>
-            </td>
-          </tr>
-        </tbody>
+    <v-data-table :headers="headers" :items="events" :search="search" sort-by="day" sort-desc>
+      <template v-slot:item.belongs="{ item }">
+        <v-col align="center">{{ belong_text(item.belongs) }}</v-col>
+      </template>
+
+      <template v-slot:item.go="{ item }">
+        <td class="text-xs-left" @click="go(item)">
+          <v-btn small text fab color="blue">
+            <v-icon>call_made</v-icon>
+          </v-btn>
+        </td>
+      </template>
+
+      <template v-slot:item.edit="{ item }">
+        <td class="justify-center layout px-0">
+          <v-btn icon class="mx-0" @click="editItem(item)">
+            <v-icon color="teal">edit</v-icon>
+          </v-btn>
+          <v-btn icon class="mx-0" @click="deleteEvents(item)">
+            <v-icon color="pink">delete</v-icon>
+          </v-btn>
+        </td>
       </template>
     </v-data-table>
   </div>
 </template>
 
 <script>
-const apiService = require( "@/Services/ApiService");
-const Datepicker = require( "vuejs-datepicker");
-const EventDayspan = require( "./EventDayspan");
-require( '../../assets/css/events.css')
+const apiService = require("@/Services/ApiService");
+const Datepicker = require("vuejs-datepicker");
+require("../../assets/css/events.css");
 
-module.exports ={
+module.exports = {
   name: "events",
   components: {
     Datepicker
@@ -176,7 +167,7 @@ module.exports ={
   data() {
     return {
       alert: false,
-      search: '',
+      search: "",
       alertMsg: "",
       loading: false,
       events: [],
@@ -190,31 +181,31 @@ module.exports ={
         // { text: '면려회', id: '4' }
       ],
       pagination: {
-        sortBy: 'day', // The field that you're sorting by
-      descending: true,
+        sortBy: "day", // The field that you're sorting by
+        descending: true,
         // page: 1,
-        rowsPerPage: 10,
+        rowsPerPage: 10
         // totalItems: 0,
         // rowsPerPageItems: [5, 10, 15, 20, 25]
       },
-      
+
       cbelong: -1,
       editedIndex: -1,
-      date_menu: null ,
-      edate_menu: null ,
-      defaultItem:{
+      date_menu: null,
+      edate_menu: null,
+      defaultItem: {
         title: "",
         place: "",
-        day: new Date().toISOString().slice(0,10),
-        eday: new Date().toISOString().slice(0,10),
-        belongs : ""
+        day: new Date().toISOString().slice(0, 10),
+        eday: new Date().toISOString().slice(0, 10),
+        belongs: ""
       },
       editedItem: {
         id: "",
         title: "",
         place: "",
-        day: new Date().toISOString().slice(0,10),
-        eday: new Date().toISOString().slice(0,10),
+        day: new Date().toISOString().slice(0, 10),
+        eday: new Date().toISOString().slice(0, 10),
         belongs: this.cbelong,
         totalmember: 0
       },
@@ -222,8 +213,8 @@ module.exports ={
         {
           text: "소속",
           align: "left",
-          sortable: false,
-          value: "place"
+          sortable: true,
+          value: "belongs"
         },
         {
           text: "예배명",
@@ -240,7 +231,7 @@ module.exports ={
         {
           text: "종료",
           align: "left",
-          sortable: true,
+          sortable: false,
           value: "eday"
         },
         {
@@ -252,11 +243,11 @@ module.exports ={
         {
           text: "총원",
           align: "left",
-          sortable: true,
+          sortable: false,
           value: "totalmember"
         },
-         { text: "바로가기", value: "title", sortable: false },
-        { text: "편집", value: "title", sortable: false }
+        { text: "바로가기", value: "go", sortable: false },
+        { text: "편집", value: "edit", sortable: false }
       ]
     };
   },
@@ -275,17 +266,17 @@ module.exports ={
   },
   methods: {
     daySort(items, index, isDesc) {
-    items.sort((a, b) => {
-      if (index === "day") {
-        if (!isDesc) {
-          return b.day - a.day;
-        } else {
-          return a.day - b.day;
+      items.sort((a, b) => {
+        if (index === "day") {
+          if (!isDesc) {
+            return b.day - a.day;
+          } else {
+            return a.day - b.day;
+          }
         }
-      }
-    });
-    return items;
-  },
+      });
+      return items;
+    },
     belong_text: function(belong) {
       if (belong === 0) return "유치부";
       if (belong === 1) return "유초등부";
@@ -295,7 +286,7 @@ module.exports ={
     async getevents() {
       this.loading = true;
       const response = await apiService.fetchEvents();
-      this.events = response.data
+      this.events = response.data;
       this.loading = false;
     },
     async changeBelong(selectObj) {
@@ -307,25 +298,36 @@ module.exports ={
       this.cdate = selected;
     },
     async getTotalMember() {
-      const response = await apiService.fetchNames({belong:this.editedItem.belongs});
+      const response = await apiService.fetchNames({
+        belong: this.editedItem.belongs
+      });
       var names = response.data.filter(mem => {
         return mem.grade == 0;
       });
       this.editedItem.totalmember = names.length;
       // console.log(this.editedItem.totalmember);
     },
-    go(items){
+    go(items) {
       // window.history.replaceState([{day:'items.day'},{"belongs":"items.belongs"}],'','#/api/attendee')
       // window.history.go('#/api/attendee')
 
-      this.$router.push('/data/attendee/'+items.day+'/'+items.eday+'/'+items.belongs)
-      this.$router.go({name:"DataAttendee",params:[{day:items.day},{eday:items.eday},{belongs:items.belongs}]})
+      this.$router.push(
+        "/data/attendee/" + items.day + "/" + items.eday + "/" + items.belongs
+      );
+      this.$router.go({
+        name: "DataAttendee",
+        params: [
+          { day: items.day },
+          { eday: items.eday },
+          { belongs: items.belongs }
+        ]
+      });
     },
     async save() {
       try {
         if (this.editedIndex === -1) {
           apiService.checkEvents(this.editedItem).then(result => {
-            console.log(result)
+            console.log(result);
             if (result.data !== "") {
               //error
               this.alert = true;
@@ -337,7 +339,6 @@ module.exports ={
               apiService.addEvents(this.editedItem).then(result => {
                 this.editedItem = Object.assign({}, result.data);
                 this.events.push(this.editedItem);
-
               });
             }
           });

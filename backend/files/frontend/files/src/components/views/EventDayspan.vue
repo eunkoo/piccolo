@@ -42,8 +42,8 @@
 
 <script>
 const apiService = require( "@/Services/ApiService");
-const Vue = require( "vue");
-require('../../assets/css/eventdayspan.css')
+// const Vue = require( "vue");
+require('../../assets/css/eventdayspan.css').default
 
 module.exports = {
   name: "eventdayspan",
@@ -60,7 +60,8 @@ module.exports = {
         return map
       },
     },
-  data: () => ({
+ data(){
+   return{
       // schedules: [
       //   {
       //     title: 'Weekly Meeting',
@@ -113,7 +114,8 @@ module.exports = {
       { text: "Custom Daily", value: "custom-daily" },
       { text: "Custom Weekly", value: "custom-weekly" }
     ]
-  }),
+   }
+  },
   mounted() {
     console.log('day span loaded')
     this.$refs.calendar.scrollToTime('08:00')

@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-container fill-height fluid ma-0 pa-2>
-      <v-layout fill-height>
-        <v-flex :key="6">
+    <v-container fluid ma-0 pa-2>
+      <v-row >
+        <v-col >
           <v-card>
             <v-card-title>
               {{tableinfo}}
@@ -19,72 +19,58 @@
             <v-data-table
               :headers="headers"
               :items="attendee"
-              :pagination.sync="pagination"
+              :items-per-page="10"
               :search="search"
               class="table"
             >
-              <template slot="items" slot-scope="props">
-                <td class="text-xs-left" style="min-width:100px">{{ props.item.connected }}</td>
-                <td class="text-xs-left" style="min-width:100px">{{ props.item.name }}</td>
-                <td>
-                  <img
-                    :src="isMorningAttended(props.item.attended)"
-                    width="20px"
-                    height="20px"
-                    @click="onMorning($event,props.item)"
-                  >
-                </td>
-                <td>
-                  <img
-                    :src="isNoonAttended(props.item.attended)"
-                    width="20px"
-                    height="20px"
-                    @click="onNoon($event,props.item)"
-                  >
-                </td>
-                <td>
-                  <v-edit-dialog
-                    :return-value.sync="props.item.bible"
-                    @save="closeBible(props.item)"
-                    @close="closeBible(props.item)"
-                    lazy
-                  >
-                    {{ props.item.bible }}
+              <template v-slot:item.attendedm="{ item }">
+                  <v-img
+                    :src="isMorningAttended(item.attended)"
+                    width="20"
+                    height="20"
+                    @click="onMorning($event,item)"
+                  />
+              </template>
+               <template v-slot:item.attendedn="{ item }">
+                  <v-img
+                    :src="isNoonAttended(item.attended)"
+                    width="20"
+                    height="20"
+                    @click="onNoon($event,item)"
+                  />
+               </template>
+                <template v-slot:item.bible="{ item }">
+                <v-row xs="3" justify="center">
                     <v-text-field
-                      slot="input"
                       type="number"
-                      v-model.number="props.item.bible"
+                      v-model.number="item.bible"
                       label="장수"
                       single-line
                       counter
-                    ></v-text-field>
-                  </v-edit-dialog>
-                </td>
-                <td>
-                  <v-switch @change="closeEdit" v-model="props.item.paragraph"></v-switch>
-                </td>
-                <td>
-                  <v-edit-dialog
-                    :return-value.sync="props.item.comment"
-                    @save="closeEdit"
-                    @close="closeEdit"
-                    lazy
-                  >
-                    {{ props.item.comment }}
-                    <v-text-field
-                      slot="input"
-                      v-model="props.item.comment"
+                    >{{ item.bible }}</v-text-field>
+                </v-row>
+                </template>
+                 <template v-slot:item.paragraph="{ item }">
+                <v-row xs="3" justify="center">
+                  <v-switch @change="closeEdit" v-model="item.paragraph"></v-switch>
+                </v-row>
+                 </template>
+
+                  <template v-slot:item.comment="{ item }">
+                <v-row xs="3" justify="center">
+                      <v-text-field
+                      width="120"
+                      v-model="item.comment"
                       label="비고"
                       single-line
-                      counter
-                    ></v-text-field>
-                  </v-edit-dialog>
-                </td>
-              </template>
+                      counter/>
+                </v-row>
+                  </template>
+             
             </v-data-table>
           </v-card>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
@@ -92,11 +78,11 @@
 
 <script>
 const apiService = require( "@/Services/ApiService")
-require('../../assets/css/editableattendee.css')
+require('../../assets/css/editableattendee.css').default
 
  module.exports ={
   name: "EditableAttendee",
-  props: { attendee: Array },
+  props: ['attendee'],
   components: {},
   data() {
     return {
@@ -143,7 +129,7 @@ require('../../assets/css/editableattendee.css')
           text: "오전",
           align: "center",
           sortable: false,
-          value: "attended",
+          value: "attendedm",
           color: "black",
           height: "20px"
         },
@@ -151,7 +137,7 @@ require('../../assets/css/editableattendee.css')
           text: "오후",
           align: "center",
           sortable: false,
-          value: "attended",
+          value: "attendedn",
           color: "black",
           height: "20px"
         },
@@ -159,7 +145,8 @@ require('../../assets/css/editableattendee.css')
           text: "성경",
           align: "left",
           sortable: false,
-          value: "bible"
+          value: "bible",
+          width: "120"
         },
         {
           text: "암송",
@@ -172,7 +159,8 @@ require('../../assets/css/editableattendee.css')
           text: "비고",
           align: "left",
           sortable: false,
-          value: "comment"
+          value: "comment",
+          width: "120"
         }
       ]
     };

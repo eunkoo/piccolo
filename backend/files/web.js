@@ -5,7 +5,6 @@ const morgan = require('morgan')
 const fileUpload = require('express-fileupload');
 const path = require('path')
 
-// const app = express()
 
 const app = express(),
             DIST_DIR = __dirname,
@@ -21,10 +20,10 @@ app.all('/*', function(req, res, next) {
 
 
 
-// app.use(express.static(path.join(DIST_DIR,'frontend/files/dist')))
-// app.get('*', (req, res) => {
-//     res.sendFile(HTML_FILE)
-// })
+app.use(express.static(path.join(DIST_DIR,'frontend/files/dist')))
+app.get('*', (req, res) => {
+    res.sendFile(HTML_FILE)
+})
 
 
 app.use(morgan('dev'))

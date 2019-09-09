@@ -747,9 +747,9 @@ module.exports = {
           : this.pre_categorized_items;
       items = items.filter(item => {
         var ret = [];
-        if (item.name !== null) ret = item.name.toLowerCase().includes(search);
-        if (item.phone !== null) ret += item.phone.includes(search);
-        if (item.connected !== null)
+        if (item.name !== null && item.name!= undefined) ret = item.name.toLowerCase().includes(search);
+        if (item.phone !== null && item.phone!= undefined) ret += item.phone.includes(search);
+        if (item.connected !== null && item.connected != undefined)
           ret += item.connected.toLowerCase().includes(search);
         if (item.grade !== null && this.grade_text(item.grade) !== undefined)
           ret += this.grade_text(item.grade)

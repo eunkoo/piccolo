@@ -167,7 +167,7 @@
             <v-col>
 
 
-              <h2 class="display-3">00교회 교육부서</h2>
+              <h2 class="display-3">광성교회 교육부서</h2>
               <!-- <span class="subheading" v-text="msg"></span> -->
               <v-divider class="my-3"></v-divider>
               <div class="title mb-3">오른쪽 상단을 눌러 로그인을 해주세요</div>
@@ -186,7 +186,7 @@
       </v-content>
 
       <v-footer app color="blue">
-        <span>&copy; 2019 00교회</span>
+        <span>&copy; 2019 광성교회</span>
       </v-footer>
       </v-app>
   </div>

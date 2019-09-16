@@ -8,6 +8,7 @@ const Events = require( '@/components/views/Events').default
 const Attendee = require( '@/components/views/Attendee').default
 const Organization = require( '@/components/views/Organization').default
 const StatisticsPage = require( '@/components/views/ZStatistics').default
+const InnerSchedule = require( '@/components/views/InnerSchedule').default
 
 
 export default  new Router({
@@ -39,14 +40,14 @@ export default  new Router({
       component: Events
     },
     {
-      path: '/api/attendee',
-      name: 'attendee',
-      component: Attendee,
+      path: '/api/innerSchedule',
+      name: 'innerSchedule',
+      component: InnerSchedule,
     },
     {
-      path: '/data/attendee/:day/:eday/:belongs',
-      name: 'DataAttendee',
-      component: Attendee,
+      path: '/data/dataInnerSchedule/:day/:eday/:belongs',
+      name: 'dataInnerSchedule',
+      component: InnerSchedule,
       props: true,
     },
     {

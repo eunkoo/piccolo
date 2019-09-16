@@ -1,48 +1,96 @@
 <template>
- <v-sheet height="400">
-    <v-calendar
-      ref="calendar"
-      :now="start_day"
-      :value="start_day"
-      :events="eventsMap"
-      color="primary"
-      type="week"
-    >
-      <!-- the events at the top (all-day) -->
-      <template slot="dayHeader" slot-scope="{ date }">
-        <template v-for="event in eventsMap[date]">
-          <div
-            v-if="!event.time"
-            :key="event.title"
-            class="my-event"
-            @click="open(event)"
-            v-html="event.title"
-          ></div>
-        </template>
-      </template>
+  <v-row>
+    <v-col>
+      <v-sheet height="400">
+        <v-calendar
+          ref="calendar"
+          :value="start_day"
+          v-model="start_day"
+          :events="schedules"
+          color="primary"
+          :type="cal_type"
+          :event-margin-bottom="3"
 
-      <!-- the events at the bottom (timed) -->
-      <template slot="dayBody" slot-scope="{ date, timeToY, minutesToPixels }">
-        <template v-for="event in eventsMap[date]">
-          <!-- timed events -->
-          <div
-            v-if="event.time"
-            :key="event.title"
-            :style="{ top: timeToY(event.time) + 'px', height: minutesToPixels(event.duration) + 'px' }"
-            class="my-event with-time"
-            @click="open(event)"
-            v-html="event.title"
-          ></div>
-        </template>
-      </template>
-    </v-calendar>
-  </v-sheet>
+        >
+          <!-- the events at the top (all-day) -->
+          <template v-slot:day-header="{ date }">
+            <template v-for="e in eventsMap[date]">
+              <!-- all day events don't have time -->
+              <div
+                v-if="!e.time"
+                :key="e.title"
+                class="my-event "
+                 :style="{ backgroundColor: e.color, borderColor:e.color}"
+                @click="showEvent($event, e)"
+                v-html="e.title"
+              ></div>
+            </template>
+          </template>
+          <!-- the events at the bottom (timed) -->
+          <template v-slot:day-body="{ date, timeToY, minutesToPixels }">
+            <template v-for="e in eventsMap[date]">
+              <!-- timed events -->
+              <div
+                v-if="e.time"
+                :key="e.title"
+                :style="{ top: timeToY(e.time) + 'px', height: minutesToPixels(e.duration) + 'px' }"
+                class="my-event with-time"
+                @click="showEvent($event, e)"
+                v-html="e.title"
+              ></div>
+            </template>
+          </template>
+        </v-calendar>
+        <v-menu
+          v-model="selectedOpen"
+          :close-on-content-click="false"
+          :activator="selectedElement"
+          
+          max-width="450"
+        >
+          <v-card
+            color="grey lighten-4"
+            min-width="350px"
+            flat
+          >
+            <v-toolbar
+              :color="editedItem.color"
+              dark
+            >
+              <v-btn icon>
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+              <v-toolbar-title v-html="editedItem.title"></v-toolbar-title>
+              <div class="flex-grow-1"></div>
+              <v-btn icon>
+                <v-icon>mdi-heart</v-icon>
+              </v-btn>
+              <v-btn icon>
+                <v-icon>mdi-dots-vertical</v-icon>
+              </v-btn>
+            </v-toolbar>
+            <v-card-text>
+              <span v-html="editedItem.title"></span>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn
+                text
+                color="secondary"
+                @click="selectedOpen = false"
+              >
+                Cancel
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-menu>
+      </v-sheet>
+    </v-col>
+  </v-row>
 </template>
 
 
 <script>
 const apiService = require( "@/Services/ApiService");
-// const Vue = require( "vue");
 require('../../assets/css/eventdayspan.css').default
 
 module.exports = {
@@ -102,22 +150,25 @@ module.exports = {
         color: "aaaaaa",
         link:"www.google.com"
       },
+      selectedElement: null,
+      selectedOpen: false,
 
     // type: "day",
     // start: start_day,
     // end: end_day,
-    typeOptions: [
-      { text: "Day", value: "day" },
-      { text: "4 Day", value: "4day" },
-      { text: "Week", value: "week" },
-      { text: "Month", value: "month" },
-      { text: "Custom Daily", value: "custom-daily" },
-      { text: "Custom Weekly", value: "custom-weekly" }
-    ]
+    // typeOptions: [
+    //   { text: "Day", value: "day" },
+    //   { text: "4 Day", value: "4day" },
+    //   { text: "Week", value: "week" },
+    //   { text: "Month", value: "month" },
+    //   { text: "Custom Daily", value: "custom-daily" },
+    //   { text: "Custom Weekly", value: "custom-weekly" }
+    // ]
    }
   },
   mounted() {
     console.log('day span loaded')
+    this.$refs.calendar.checkChange()
     this.$refs.calendar.scrollToTime('08:00')
   },
   methods: {
@@ -142,18 +193,62 @@ module.exports = {
       this.loading = false;
       return this.schedules
     },
-    open (event) {
-        alert(event.title)
-      },
+    clearData(){
+      this.schedules = [];
+      this.editedItem = {
+        id: -1,
+        eid: -1,
+        mid: -1,
+        belongs: -1,
+        title: "",
+        start: new Date().toISOString().slice(0,10),
+        end: new Date().toISOString().slice(0,10),
+        time: "09:00",
+        duration: 90,
+        color: "aaaaaa",
+        link:"www.google.com"
+      };
+    },
+    // open (event) {
+    //     alert(event.title)
+    //   },
     async addSchedule(sch){
+      console.log(sch);
       await apiService.addSchedule( Object.assign(sch,{color:this.color[sch.belongs] }))
       .then(res => {
-          console.log(res.data);
-          this.schedules.push( res.data )
+          // console.log(res.data);
+          this.schedules.push( sch )
       }).catch(err =>{
         console.log(err);
       });
-    }
+    },
+
+      getEventColor (event) {
+        // return  'style=background-color: {{event.color}}'
+        
+      },
+
+      showEvent (event, e) {
+        const open = () => {
+          this.editedItem = e
+          this.selectedElement = event.target //nativeEvent.target
+          setTimeout(() => this.selectedOpen = true, 10)
+        }
+
+        if (this.selectedOpen) {
+          this.selectedOpen = false
+          setTimeout(open, 10)
+        } else {
+          open()
+        }
+
+        // nativeEvent.stopPropagation()
+      },
+      // updateRange ({ start, end }) {
+      //   // You could load events from an outside source (like database) now that we have the start and end dates on the calendar
+      //   this.start_day = start
+      //   this.end_day = end
+      // },
   }
 };
 </script>

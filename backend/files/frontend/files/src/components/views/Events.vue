@@ -3,7 +3,7 @@
     <div class="text-xs-center">
       <v-progress-circular v-if="loading" indeterminate color="primary"></v-progress-circular>
     </div>
-    <v-alert :value="alert" color="error" icon="error_circle" outlined>{{alertMsg}}</v-alert>
+    <v-snackbar :value="alert" top color="error" icon="error_circle" outlined>{{alertMsg}}</v-snackbar>
     <div class="formodal">
       <v-dialog v-model="dialog" max-width="800px">
         <template v-slot:activator="{ on }">
@@ -312,10 +312,10 @@ module.exports = {
       // window.history.go('#/api/attendee')
 
       this.$router.push(
-        "/data/attendee/" + items.day + "/" + items.eday + "/" + items.belongs
+        "/data/dataInnerSchedule/" + items.day + "/" + items.eday + "/" + items.belongs
       );
       this.$router.go({
-        name: "DataAttendee",
+        name: "dataInnerSchedule",
         params: [
           { day: items.day },
           { eday: items.eday },

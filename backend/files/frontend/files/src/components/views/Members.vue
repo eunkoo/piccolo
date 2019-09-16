@@ -9,7 +9,7 @@
         indeterminate
       ></v-progress-linear>
     </div>
-    <v-alert :value="alert" color="error" icon="error_circle" outlined>{{alertMsg}}</v-alert>
+    <v-snackbar :value="alert" top color="error" icon="error_circle" outlined>{{alertMsg}}</v-snackbar>
 
     <v-row class="ma-2">
       <v-col :key="1" cols="3" v-if="userGrade==0">
@@ -331,7 +331,6 @@
                     :nudge-right="40"
                     :return-value.sync="selectedMember.birth"
                     offset-y
-                    full-width
                     min-width="200px"
                   >
                     <template v-slot:activator="{ on }">

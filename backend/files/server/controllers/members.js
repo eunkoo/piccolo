@@ -33,7 +33,7 @@ function getPhotoName(req, _memberId ) {
 module.exports = {
   
   list(req, res) {
-    return members.all(
+    return members.findAll(
       {
         // order: ['name']
       }

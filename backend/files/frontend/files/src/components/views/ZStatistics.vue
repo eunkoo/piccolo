@@ -12,7 +12,6 @@
           :return-value.sync="start_date"
           transition="scale-transition"
           offset-y
-          full-width
           min-width="200px"
         >
          <template v-slot:activator="{ on }">

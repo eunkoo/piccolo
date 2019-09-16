@@ -1,177 +1,114 @@
 <template>
   <v-container container--fluid text-xs-center>
-    <div class="text-xs-center">
+    
+    <v-btn v-if="!isLoadedAttendee" v-model="isLoadedAttendee" @click.native='insertAttendee'>출석부 추가하기</v-btn>
+    <div v-if="isLoadedAttendee">
       <v-progress-circular v-if="loading" indeterminate color="primary"></v-progress-circular>
-    </div>
-    <v-alert :value="alert" color="success" icon="check_circle" outlined>저장 되었습니다</v-alert>
-    <v-row v-if="!printing " wrap fill-height justify-center>
-      <v-col :key="1" cols="12" xs="12" sm="3" md="3">
-        <v-select
-          ref="current_select"
-          :items="belong_items"
-          v-model="defaultSelected"
-          single-line
-          item-text="text"
-          item-value="id"
-          return-object
-          @change="changeBelong"
-        ></v-select>
-      </v-col>
-      <v-col :key="2"  xs="3" sm="3" md="3" v-if="userGrade==0">
-        <v-row justify="center">
-        <div class="formodal">
-          <v-dialog v-model="dialog" max-width="500px">
-            <template v-slot:activator="{ on }">
-              <v-btn fab v-on="on" class="mb-2">수동</v-btn>
-            </template>
-            <v-card>
-              <v-card-text>
-                <v-container grid-list-md>
-                  <v-row wrap>
-                    <v-col xs="12" sm="6" md="4">
-                      <v-text-field label="이름" v-model="addAttendName"></v-text-field>
-                      <v-text-field label="조" v-model="addAttendConnected"></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn text color="primary" @click.native="addAttendee">추가 또는 삭제</v-btn>
-                <v-btn text color="primary" @click.native="close">취소</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </div>
-        </v-row>
-      </v-col>
-      <v-col :key="3" xs="3" sm="3" md="3" v-if="userGrade==0">
-        <v-row justify="center">
-          <downloadexcel
-            class="btn btn-default"
-            :data="attendee"
-            :fields="attendee_fields"
-            type="csv"
-            name="출결현황.xls"
-          >
-            <v-btn fab>엑셀</v-btn>
-          </downloadexcel>
-        </v-row>
-      </v-col>
-      <v-col :key="5" xs="3" sm="3" md="3" v-if="userGrade==0">
-      <v-row justify="center">
-        <v-btn fab color="primary" @click="save">저장</v-btn>
-      </v-row>
-      </v-col>
-    </v-row>
 
-    <v-row v-if="!printing " >
-      <v-row justify="start" >
-        <v-col :key="6" xs="4">
-          <v-btn label="prev" small fab @click="onPrev">
-            <v-icon large color="black">chevron_left</v-icon>
-          </v-btn>
+      <v-snackbar :value="alert" top color="success" icon="check_circle" outlined>저장 되었습니다</v-snackbar>
+
+      <v-row v-if="!printing " wrap justify-center>
+        <v-col :key="2" xs="4" sm="4" md="4" v-if="userGrade==0">
+          <v-row justify="center">
+            <div class="formodal">
+              <v-dialog v-model="dialog" max-width="500px">
+                <template v-slot:activator="{ on }">
+                  <v-btn fab v-on="on" class="mb-2">수동</v-btn>
+                </template>
+                <v-card>
+                  <v-card-text>
+                    <v-container grid-list-md>
+                      <v-row wrap>
+                        <v-col xs="12" sm="6" md="4">
+                          <v-text-field label="이름" v-model="addAttendName"></v-text-field>
+                          <v-text-field label="조" v-model="addAttendConnected"></v-text-field>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn text color="primary" @click.native="addOrDel">추가 또는 삭제</v-btn>
+                    <v-btn text color="primary" @click.native="close">취소</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </div>
+          </v-row>
+        </v-col>
+        <v-col :key="3" xs="4" sm="4" md="4" v-if="userGrade==0">
+          <v-row justify="center">
+            <downloadexcel
+              class="btn btn-default"
+              :data="attendee"
+              :fields="attendee_fields"
+              type="csv"
+              name="출결현황.xls"
+            >
+              <v-btn fab>엑셀</v-btn>
+            </downloadexcel>
+          </v-row>
+        </v-col>
+        <v-col :key="5" xs="4" sm="4" md="4" v-if="userGrade==0">
+          <v-row justify="center">
+            <v-btn fab color="primary" @click="save">저장</v-btn>
+          </v-row>
         </v-col>
       </v-row>
 
-      <v-col xs="4">
-        <v-row justify="center" align="start">
-          <v-col xs="4" sm="4" md="4">
-            <v-menu
-              ref="date_menu"
-              :close-on-content-click="false"
-              v-model="date_menu"
-              :nudge-right="40"
-              :return-value.sync="cdateFormat"
-              transition="scale-transition"
-              offset-y
-              min-width="290px"
-            >
-              <template v-slot:activator="{ on }">
-                <v-text-field class="text-xs-center" text v-on="on" v-model="cdateFormat" readonly />
-              </template>
-              <v-date-picker
-                class="mydatepicker"
-                locale="ko-KR"
-                v-model="cdateFormat"
-                no-title
-                scrollable
-                @input="chooseDate(cdateFormat)"
-              ></v-date-picker>
-            </v-menu>
-          </v-col>
-        </v-row>
+      <v-col v-if="!printing && userGrade==0">
+        <eventdetail
+          ref="detail"
+          v-bind:printing="true"
+          :changeOffering="changeOffering"
+          v-bind:datas="editedItem"
+        ></eventdetail>
+        <editableattendee
+          ref="editable"
+          v-bind:attendee="attendee"
+          @changeNoon="changeNoonAtt"
+          @changeMorning="changeMorningAtt"
+        ></editableattendee>
       </v-col>
-
-      <v-col :key="7" xs="4">
-      <v-row justify="end">
-        <v-btn label="next" fab small @click="onNext">
-          <v-icon large color="black">chevron_right</v-icon>
-        </v-btn>
-        </v-row>
-      </v-col>
-    </v-row>
-
-    <v-col v-if="!printing && userGrade==0">
-      <eventdetail
-        ref="detail"
-        v-bind:printing="true"
-        @changeOffering="changeOffering"
-        v-bind:datas="editedItem"
-      ></eventdetail>
-      <editableattendee
-        ref="editable"
-        v-bind:attendee="attendee"
-        @changeNoon="changeNoonAtt"
-        @changeMorning="changeMorningAtt"
-      ></editableattendee>
-    </v-col>
-    <v-col v-else>
-      <v-row class="guide" justify-center align-center>
-        <div id="printMe" class="page-wrapper">
-          <div class="page">
-            <div class="page-inner">
-              <v-col>
-                <twintable
-                  :isHeader="true"
-                  @changeNoon="changeNoonAtt"
-                  @changeMorning="changeMorningAtt"
-                  :tableinfo="table_info_text"
-                  :attendee1="attendee1"
-                  :attendee2="attendee2"
-                ></twintable>
-                <twintable
-                  :isHeader="false"
-                  @changeNoon="changeNoonEx"
-                  @changeMorning="changeMorningEx"
-                  :tableinfo="'새신자 및 장기 결석'"
-                  :attendee1="expectee1"
-                  :attendee2="expectee2"
-                ></twintable>
-                <eventnotice v-bind:datas="editedItem" v-bind:printingview="true"></eventnotice>
-              </v-col>
+      <v-col v-else>
+        <v-row class="guide" justify-center align-center>
+          <div id="printMe" class="page-wrapper">
+            <div class="page">
+              <div class="page-inner">
+                <v-col>
+                  <twintable
+                    :isHeader="true"
+                    :changeNoon="changeNoonAtt"
+                    :changeMorning="changeMorningAtt"
+                    :tableinfo="table_info_text"
+                    :attendee1="attendee1"
+                    :attendee2="attendee2"
+                  ></twintable>
+                  <twintable
+                    :isHeader="false"
+                    :changeNoon="changeNoonEx"
+                    :changeMorning="changeMorningEx"
+                    :tableinfo="'새신자 및 장기 결석'"
+                    :attendee1="expectee1"
+                    :attendee2="expectee2"
+                  ></twintable>
+                  <eventnotice v-bind:datas="editedItem" v-bind:printingview="true"></eventnotice>
+                </v-col>
+              </div>
             </div>
           </div>
-        </div>
-      </v-row>
-    </v-col>
-    <eventnotice
-      v-if="!printing && userGrade==0"
-      @changeNotice="changeNotice"
-      v-bind:printingview="false"
-      ref="notice"
-      v-bind:datas="editedItem"
-    ></eventnotice>
-    <!-- <v-row class="guide"  justify-center align-center >
-         <event-notice  v-if='printing' @changeNotice='changeNotice'  ref='notice' v-bind:datas="editedItem"></event-notice>
-    </v-row>-->
-
-    <!-- <v-col xs="12" :key="9">
-      <test2 v-if="!printing " ref="dayspan"></test2>
-    </v-col> -->
-
-    <v-col :key="8" xs="2">
-      <v-btn fab @click="print" v-if="userGrade==0">보기</v-btn>
-    </v-col>
+        </v-row>
+      </v-col>
+      <eventnotice
+        v-if="!printing && userGrade==0"
+        :changeNotice="changeNotice"
+        v-bind:printingview="false"
+        ref="notice"
+        v-bind:datas="editedItem"
+      ></eventnotice>
+      <v-col :key="8" xs="2">
+        <v-btn fab @click="print" v-if="userGrade==0">보기</v-btn>
+      </v-col>
+    </div>
   </v-container>
 </template>
 
@@ -181,7 +118,7 @@ const apiService = require("@/Services/ApiService");
 // const test = require("vue-json-excel").defalt;
 import downloadexcel from "vue-json-excel";
 import editableattendee from "./EditableAttendee";
-import eventdayspan from "./EventDayspan";
+// import eventdayspan from "./EventDayspan";
 import eventdetail from "./EventDetail";
 import eventnotice from "./EventNotice";
 import twintable from "./TwinTable";
@@ -192,6 +129,7 @@ require("../../assets/css/attendee.css").defalt;
 
 module.exports = {
   name: "attendee",
+  props: { cdate: Date, edate: Date, cbelong: Number },
   components: {
     downloadexcel,
     // test,
@@ -199,21 +137,20 @@ module.exports = {
     eventdetail,
     eventnotice,
     twintable,
-    editableattendee,
-    eventdayspan,
+    editableattendee
+    // eventdayspan,
     // test1,
     // test2,
     // test3,
     // test4
-    
   },
   data() {
     return {
       events: [],
       attendee: [],
       names: [],
-      en: en,
-      ko: ko,
+      // en: en,
+      // ko: ko,
       dateClicked: false,
       table_info_text: "출석 인원",
       belong_items: [
@@ -223,19 +160,20 @@ module.exports = {
         { text: "청년부", id: 3 }
         // { text: '면려회', id: '4' }
       ],
-      defaultSelected: {
-        text: "유치부",
-        id: 0
-      },
+      // defaultSelected: {
+      //   text: "유치부",
+      //   id: 0
+      // },
+
       alert: false,
       loading: false,
       printing: false,
       addAttendName: "",
       addAttendConnected: "",
-      cbelong: 0,
-      cdate: null,
+      // cbelong: 0,
+      // cdate: null,
       cdateFormat: this.formatDate(new Date()),
-      edate: null,
+      // edate: null,
       edateFormat: this.formatDate(new Date()),
       dialog: false,
       cplace: "",
@@ -253,18 +191,7 @@ module.exports = {
         attended: 0,
         name: ""
       },
-      editedItem: {
-        id: -1,
-        title: "",
-        day: "",
-        place: "",
-        offering: 0,
-        totalmorning: 0,
-        totalnoon: 0,
-        newes: "",
-        birthes: "",
-        belongs: 0
-      },
+      editedItem: null,
       attendee_fields: {
         이름: "name",
         조: "connected",
@@ -306,31 +233,13 @@ module.exports = {
     };
   },
   mounted() {
-    if (this.$route.params.day == null) {
-      this.getevents(0);
-      this.cdate = this.prevDay(new Date(), 7);
-      this.cdateFormat = this.formatDate(this.cdate);
-      this.edate = this.prevDay(new Date(), 7);
-      this.edateFormat = this.formatDate(this.edate);
-    } else {
-      console.log(this.$route.params.belongs);
-      console.log(this.belong_items[this.$route.params.belongs].text);
-      this.defaultSelected = {
-        text: this.belong_items[this.$route.params.belongs].text,
-        id: parseInt(this.$route.params.belongs)
-      };
-      this.cbelong = this.$route.params.belongs;
-      this.getevents(this.cbelong);
-      this.cdate = new Date(this.$route.params.day);
-      this.cdateFormat = this.formatDate(this.cdate);
-      this.edate = new Date(this.$route.params.eday);
-      this.edateFormat = this.formatDate(this.edate);
-    }
-
-    console.log(this.cdate);
-    console.log(this.cdateFormat);
+    console.log("mounted");
+    console.log(this.editedItem);
   },
   computed: {
+    isLoadedAttendee: function() {
+      return  this.attendee && this.attendee.length > 0;
+    },
     userGrade: {
       get: () => {
         return localStorage.getItem("grade");
@@ -350,8 +259,6 @@ module.exports = {
       });
       this.att_morning = mt;
       this.att_noon = nt;
-      // this.editedItem.totalnoon = nt
-      // this.editedItem.attendee_total = this.editedItem.attendee_total + t;
       return en;
     },
     attendee2: function() {
@@ -401,7 +308,7 @@ module.exports = {
         date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
       );
     },
-    async addAttendee() {
+    async addOrDel() {
       var item = this.attendee.filter(ev => {
         return ev.name === this.addAttendName;
       });
@@ -447,8 +354,8 @@ module.exports = {
       }
     },
     setInfoText(belong) {
-      console.log("setInfoText " + belong);
-      console.log(this.belong_items[belong].text);
+      // console.log("setInfoText " + belong);
+      // console.log(this.belong_items[belong].text);
       this.table_info_text =
         this.cdateFormat +
         " " +
@@ -466,16 +373,22 @@ module.exports = {
         (this.editedItem.totalnoon == undefined
           ? 0
           : this.editedItem.totalnoon);
+
+          console.log("setInfoText :" + this.table_info_text);
     },
     changeNotice(notice) {
       console.log("changeNotice " + notice);
-      if (this.events[this.editedIndex])
+      if (this.events[this.editedIndex]) {
         this.events[this.editedIndex].notice = notice;
+        this.editedItem.notice = notice;
+      }
     },
     changeOffering(offering) {
       console.log("chagneOffering " + offering);
-      if (this.events[this.editedIndex])
+      if (this.events[this.editedIndex]) {
+        this.editedItem.offering = offering;
         this.events[this.editedIndex].offering = offering;
+      }
     },
     changeMorningAtt(t) {
       console.log(t);
@@ -513,50 +426,14 @@ module.exports = {
       this.ctitle = "";
       this.cplace = "";
     },
-    async getevents(belong) {
-      console.log("getevents " + belong);
-      this.loading = true;
-      this.clearDatas();
-      const response = await apiService.fetchEventForBelong({
-        belongs: belong
-      });
-      this.events = response.data;
-      if (this.events.length === 0) {
-        this.editedItem = {
-          day: this.cdate,
-          eday: this.edate,
-          belongs: belong,
-          title: this.ctitle,
-          place: this.cplace
-        };
-        this.attendee = [];
-        return;
-      }
 
-      // 교육부서를
-      this.cbelong = belong; //this.editedItem.belongs;
-      // this.ctitle = this.editedItem.title;
-      // this.cplace = this.editedItem.place;
-      await this.loadEventData(belong, this.cdate);
-      this.getAttendee(belong, this.cdate);
-      this.loading = false;
-    },
-    // onSelected(selected) {
-    //   this.cdate = selected;
-    //   this.getevents(this.cbelong);
-    // },
-    chooseDate(date) {
-      this.cdate = new Date(date);
-      this.$refs.date_menu.save(date);
-      this.getevents(this.cbelong);
-    },
     dateClick() {
       this.dateClicked = true;
     },
     onOpened() {},
-    onClosed() {
-      this.dateClicked = false;
-    },
+    // onClosed() {
+    //   this.dateClicked = false;
+    // },
     async saveNames(belong) {
       console.log("saveNames " + belong);
       const response = await apiService.fetchNames({ belong: belong });
@@ -576,53 +453,13 @@ module.exports = {
         };
         this.attendee.push(ndata);
       });
-      if (!this.names || this.names.length == 0)
+      // if (!this.names || this.names.length == 0)
         await apiService.addAttendees(this.attendee).then(result => {
           this.attendee = result.data; //Object.assign({}, result.data)
         });
       console.log(this.attendee);
     },
-    loadEventData(belong, cdate) {
-      console.log("loadEventData " + belong + ", " + this.formatDate(cdate));
-      var item = this.events.filter(ev => {
-        return this.formatDate(new Date(ev.day)) === this.formatDate(cdate);
-      });
 
-      if (item.length > 0) {
-        this.editedItem = Object.assign(
-          {
-            totalmorning: this.att_morning + this.ex_morning,
-            totalnoon: this.att_noon + this.ex_noon,
-            newes: "",
-            birthes: ""
-          },
-          item[0]
-        );
-        this.editedIndex = this.events.indexOf(item[0]);
-        // console.log(this.editedIndex)
-      } else {
-        this.editedItem = {
-          day: this.formatDate(this.cdate),
-          // day: this.cdate.toDateString(),
-          belongs: this.cbelong,
-          title: this.ctitle,
-          place: this.cplace
-        };
-        this.editedIndex = -1;
-      }
-      // if(this.editedItem.id >-1)
-      //   this.$refs.dayspan.getSchedules({
-      //     eid: this.editedItem.id,
-      //     title: this.editedItem.title,
-      //     belongs: this.editedItem.belongs,
-      //     start: this.editedItem.day,
-      //     end: this.editedItem.eday
-      //   });
-
-      this.ctitle = this.editedItem.title;
-      this.cplace = this.editedItem.place;
-      console.log(this.editedItem);
-    },
     async saveNewes(belong, month) {
       console.log("saveNewes");
       const response = await apiService.fetchNewes({
@@ -654,26 +491,45 @@ module.exports = {
       this.editedItem.birthes = names;
       // this.events.birthes = this.editedItem.birthes;
       apiService.updateEvents(this.editedItem);
-      console.log(this.births);
+      console.log(births);
     },
-    async getAttendee(belong, date) {
-      console.log("getAttendee " + this.editedItem.id);
-      this.setInfoText(belong);
-      if (this.editedItem.id === undefined) {
-        this.attendee = [];
-        return;
+    insertAttendee() {
+      console.log("insertAttendee "+this.editedItem.id);
+      if (this.editedItem.id == undefined || this.editedItem.id <0) {
+       this.attendee = [];
+       return;
       }
+      this.saveNames(this.cbelong);
+      this.saveBirthes(this.cbelong, this.cdate.getMonth());
+      this.saveNewes(this.cbelong, this.cdate.getMonth());
+    },
+    async getAttendee(inputItem, belong, date) {
+      console.log("getAttendee " + inputItem.id);
+      this.editedItem = inputItem;
+      if (inputItem.id == undefined || inputItem.id <0) {
+       this.attendee = [];
+       return;
+      }
+      this.cdateFormat = this.formatDate(this.cdate);
+      this.edateFormat = this.formatDate(this.edate);
+      
+      this.setInfoText(belong);
+      // if (this.editedItem.id === undefined) {
+      //   this.attendee = [];
+      //   return;
+      // }
       const response = await apiService.fetchAttendee({
         id: this.editedItem.id
       });
       this.attendee = response.data;
-      if (this.attendee.length == 0) {
-        // to be created
+      // if (this.attendee.length == 0) {
+      //   // to be created
 
-        this.saveNames(belong);
-        this.saveBirthes(belong, date.getMonth());
-        this.saveNewes(belong, date.getMonth());
-      } else {
+      //   this.saveNames(belong);
+      //   this.saveBirthes(belong, date.getMonth());
+      //   this.saveNewes(belong, date.getMonth());
+      // } else {
+      if (this.attendee.length > 0) {
         var mt = 0,
           nt = 0;
         this.attendee.forEach(el => {
@@ -684,10 +540,10 @@ module.exports = {
         this.editedItem.totalnoon = nt;
       }
     },
-    async changeBelong(selectObj) {
-      this.cbelong = selectObj.id;
-      await this.getevents(this.cbelong);
-    },
+    // async changeBelong(selectObj) {
+    //   this.cbelong = selectObj.id;
+    //   await this.getevents(this.cbelong);
+    // },
 
     async save() {
       console.log("Attendee view save()");
@@ -702,8 +558,10 @@ module.exports = {
         //   this.$refs.att_table.save()
         //   this.$refs.ex_table.save()
         this.$refs.notice.save();
-        await apiService.updateEvents(this.editedItem);
-        //   Object.assign(this.events[this.editedIndex], this.editedItem)
+        await apiService.updateEvents(this.editedItem).then(result => {
+          // Object.assign(this.events[this.editedIndex], this.editedItem)
+        });
+
         // }
         this.alert = true;
         setTimeout(() => {
@@ -715,16 +573,6 @@ module.exports = {
         // this.close()
       }
     },
-    // async saveAttendee () {
-    //   try {
-    //       await apiService.addAttendee(this.editedItem)
-    //       this.attendee.push(this.editedItem)
-    //   } catch (err) {
-    //     return console.log(err.message)
-    //   } finally {
-    //     this.close()
-    //   }
-    // },
 
     async deleteEvents(events) {
       const $this = this;
@@ -762,30 +610,6 @@ module.exports = {
       //     this.editedItem = Object.assign({}, this.defaultItem)
       //     this.editedIndex = -1
       //   }, 300)
-    },
-    prevDay(d, dow) {
-      d.setDate(d.getDate() + ((dow + (-7 - d.getDay())) % 7));
-      return d;
-    },
-    nextDay(d, dow) {
-      d.setDate(d.getDate() + ((dow + (7 - d.getDay())) % 7));
-      return d;
-    },
-    onPrev() {
-      console.log("onPrev" + this.formatDate(this.cdate));
-      this.cdate.setDate(this.cdate.getDate() - 1);
-      this.cdate = new Date(this.prevDay(this.cdate, 7));
-      this.cdateFormat = this.formatDate(this.cdate);
-      this.loadEventData(this.cbelong, this.cdate);
-      this.getAttendee(this.cbelong, this.cdate);
-    },
-    onNext() {
-      console.log("onNext" + this.formatDate(this.cdate));
-      this.cdate.setDate(this.cdate.getDate() + 1);
-      this.cdate = new Date(this.nextDay(this.cdate, 7));
-      this.cdateFormat = this.formatDate(this.cdate);
-      this.loadEventData(this.cbelong, this.cdate);
-      this.getAttendee(this.cbelong, this.cdate);
     }
   }
 };

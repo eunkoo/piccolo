@@ -18,7 +18,12 @@ services:
     networks:
       - db-conn
     volumes:
+      - ./files/mycustom.cnf:/etc/mysql/conf.d/custom.cnf
       - ./db/data:/var/lib/mysql
+      - ./files:/docker-entrypoint-initdb.d/
+      
+    # volumes:
+    #   - ./db/data:/var/lib/mysql
   
   backend:
     build: ./backend

@@ -5,9 +5,9 @@
 # http://www.sequelpro.com/
 # https://github.com/sequelpro/sequelpro
 #
-# Host: nodejs-004.cafe24.com (MySQL 5.1.61-log)
+# Host: 127.0.0.1 (MySQL 5.7.27)
 # Database: edogawa01
-# Generation Time: 2019-09-14 08:17:57 +0000
+# Generation Time: 2019-09-16 16:16:00 +0000
 # ************************************************************
 
 
@@ -3925,22 +3925,24 @@ CREATE TABLE `organization` (
   `role` varchar(20) DEFAULT NULL,
   `year` int(11) NOT NULL,
   `photo` varchar(30) DEFAULT NULL,
+  `createdAt` date DEFAULT NULL,
+  `updatedAt` date DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 LOCK TABLES `organization` WRITE;
 /*!40000 ALTER TABLE `organization` DISABLE KEYS */;
 
-INSERT INTO `organization` (`id`, `belongs`, `name`, `role`, `year`, `photo`)
+INSERT INTO `organization` (`id`, `belongs`, `name`, `role`, `year`, `photo`, `createdAt`, `updatedAt`)
 VALUES
-	(1,0,'bg',NULL,2019,NULL),
-	(2,1,'bg',NULL,2019,NULL),
-	(3,2,'bg',NULL,2019,NULL),
-	(4,3,'bg',NULL,2019,NULL),
-	(5,0,'bg',NULL,2018,NULL),
-	(6,1,'bg',NULL,2018,NULL),
-	(7,2,'bg',NULL,2018,NULL),
-	(8,3,'bg',NULL,2018,NULL);
+	(1,0,'bg',NULL,2019,NULL,'2019-01-30','2019-01-30'),
+	(2,1,'bg',NULL,2019,NULL,'2019-01-30','2019-01-30'),
+	(3,2,'bg',NULL,2019,NULL,'2019-01-30','2019-01-30'),
+	(4,3,'bg',NULL,2019,NULL,'2019-01-30','2019-01-30'),
+	(5,0,'bg',NULL,2018,NULL,'2019-01-30','2019-01-30'),
+	(6,1,'bg',NULL,2018,NULL,'2019-01-30','2019-01-30'),
+	(7,2,'bg',NULL,2018,NULL,'2019-01-30','2019-01-30'),
+	(8,3,'bg',NULL,2018,NULL,'2019-01-30','2019-01-30');
 
 /*!40000 ALTER TABLE `organization` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -3954,13 +3956,13 @@ DROP TABLE IF EXISTS `schedule`;
 CREATE TABLE `schedule` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `eid` int(11) NOT NULL,
-  `mid` int(11) NOT NULL,
+  `mid` int(11) DEFAULT NULL,
   `title` varchar(20) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
   `time` time DEFAULT NULL,
   `duration` int(11) DEFAULT NULL,
   `color` varchar(11) NOT NULL,
-  `link` text NOT NULL,
+  `link` text,
   `createdAt` datetime NOT NULL,
   `updatedAt` datetime NOT NULL,
   `belongs` int(11) NOT NULL,
@@ -3969,6 +3971,18 @@ CREATE TABLE `schedule` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+LOCK TABLES `schedule` WRITE;
+/*!40000 ALTER TABLE `schedule` DISABLE KEYS */;
+
+INSERT INTO `schedule` (`id`, `eid`, `mid`, `title`, `date`, `time`, `duration`, `color`, `link`, `createdAt`, `updatedAt`, `belongs`, `start`, `end`)
+VALUES
+	(1,121,NULL,'주일예배',NULL,NULL,NULL,'#2196F3',NULL,'2019-09-16 16:14:16','2019-09-16 16:14:16',2,'2019-09-01','2019-09-01'),
+	(2,128,NULL,'주일예배',NULL,NULL,NULL,'#2196F3',NULL,'2019-09-16 16:14:20','2019-09-16 16:14:20',2,'2019-09-08','2019-09-08'),
+	(3,127,NULL,'주일예배',NULL,NULL,NULL,'#3F51B5',NULL,'2019-09-16 16:14:32','2019-09-16 16:14:32',0,'2019-09-01','2019-09-01'),
+	(4,125,NULL,'주일예배',NULL,NULL,NULL,'#3F51B5',NULL,'2019-09-16 16:14:34','2019-09-16 16:14:34',0,'2019-08-18','2019-08-18');
+
+/*!40000 ALTER TABLE `schedule` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 # Dump of table users

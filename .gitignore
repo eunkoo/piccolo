@@ -5,7 +5,7 @@ backend/files/frontend/files/npm-debug.log*
 backend/files/frontend/files/yarn-debug.log*
 backend/files/frontend/files/yarn-error.log*
 backend/files/frontend/files/src/assets/img/
-backend/files/frontend/files/uploads
+#backend/files/frontend/files/uploads
 
 db/data/
 

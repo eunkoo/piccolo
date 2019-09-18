@@ -1,8 +1,13 @@
 <template>
-  <v-container fluid text-xs-left pa-3>
+  <v-container fluid text-xs-left pa-0>
 
-    <v-row fluid>
-      <v-col cols="3">
+    <v-row>
+      <v-col>
+        <h2>출결 통계</h2>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="6" md="6">
               
         <v-menu
           ref="menuBeginDate"
@@ -21,8 +26,8 @@
             label="조회 시작 일자"
             prepend-icon="event"
             readonly
-            hint="please select a date to start the query"
             persistent-hint
+            hide-details
           ></v-text-field>
          </template>
           <v-date-picker
@@ -37,7 +42,7 @@
         </v-menu>
       </v-col>
 
-      <v-col cols="3">
+      <v-col cols="6" md="6">
         <v-menu
           ref="menuEndDate"
           v-model="menuEndDate"
@@ -55,8 +60,8 @@
             label="조회 종료 일자"
             prepend-icon="event"
             readonly
-            hint="Please select a last date for your search"
             persistent-hint
+            hide-details
           ></v-text-field>
           </template>
           <v-date-picker
@@ -71,20 +76,17 @@
       </v-col>
     </v-row>
 
-    <v-row >
-      <h2>출결 그래프</h2>
-    </v-row>
 
     <v-row >
-      <v-col cols="6">
+      <v-col cols="12">
         <v-select
           v-model="selectedCategory"
           :items="category"
           attach
-          chips
+          small-chips
           label="category"
+          hide-details
           multiple
-          hint="pick your favorite category"
           persistent-hint
         ></v-select>
       </v-col>
@@ -103,7 +105,7 @@
         <line-chart
           v-if="selectedCategory.includes(dd.name)"
           class="chart-area ma-1"
-          :height="180"
+          :height="220"
           :chartdata="dd.ds"
           :chartTitle="dd.title"
         ></line-chart>
@@ -111,11 +113,8 @@
     </v-row>
 
 
-    <v-row>
-      <v-col cols="12">
-        <h2>통계 차트</h2>
-      </v-col>
-      <v-col cols="12">
+    <v-row class="pa-0 ma-0">
+      <v-col cols="10">
         <v-row xs4 pa-1 ma-0>
           <v-select
             color="blue"
@@ -125,7 +124,7 @@
             :items="[0,1,2,3,4]"
             attach
             label="부서"
-            persistent-hint
+            solo
             @change="changeBelong"
           >
             <template slot="item" slot-scope="props">{{ descBelong[props.item] }}</template>
@@ -133,15 +132,15 @@
           </v-select>
         </v-row>
       </v-col>
-    </v-row>
-    <v-row >
-      <v-col cols="12">
-        <v-btn small @click="fetchStatisticData">load data</v-btn>
+      <v-col cols="2">
+        <v-btn block @click="fetchStatisticData">
+          <v-icon> refresh </v-icon>
+        </v-btn>
       </v-col>
     </v-row>
 
     <v-row no-gutters class='ma-0 pa-0'>
-      <v-col cols="3" class="pa-1">
+      <v-col cols="12" sm="6" md="3" lg="3" class="pa-1">
         <span class="subheading blue--text"> 오전 출석 통계 </span>
         <v-simple-table dense class="elevation-3">
           <thead>
@@ -159,7 +158,7 @@
         </v-simple-table>
       </v-col>
 
-      <v-col cols="3" class="pa-1">
+      <v-col cols="12" sm="6" md="3" lg="3" class="pa-1">
         <span class="subheading blue--text"> 오후 출석 통계 </span>
         <v-simple-table dense class="elevation-3">
           <thead>
@@ -177,7 +176,7 @@
         </v-simple-table>
       </v-col>
 
-      <v-col cols="3" class="pa-1">
+      <v-col cols="12" sm="6" md="3" lg="3" class="pa-1">
         <span class="subheading blue--text"> 암송 통계 </span> 
         <v-simple-table dense class="elevation-3">
           <thead>
@@ -195,7 +194,7 @@
         </v-simple-table>
       </v-col>
 
-      <v-col cols="3" class="pa-1">
+      <v-col cols="12" sm="6" md="3" lg="3" class="pa-1">
         <span class="subheading blue--text"> 성경 통계 </span>
         <v-simple-table dense class="elevation-3">
           <thead>
@@ -272,7 +271,7 @@ module.exports= {
       selectedCategory: ["중고등부", "유치부"],
 
       borderColors: [
-        "rgba(255, 99, 132, 1)",
+        "rgba(153, 204, 0, 1)",
         "rgba(54, 162, 235, 1)",
         "rgba(255, 206, 86, 1)",
         "rgba(75, 192, 192, 1)",
@@ -280,7 +279,7 @@ module.exports= {
         "rgba(255, 159, 64, 1)"
       ],
       bgColors: [
-        "rgba(255, 99, 132, 0.1)",
+        "rgba(153, 204, 0, 0.1)",
         "rgba(54, 162, 235, 0.1)",
         "rgba(255, 206, 86, 0.1)",
         "rgba(75, 192, 192, 0.1)",
@@ -419,7 +418,7 @@ module.exports= {
       //    console.log( this.start_date)
     },
     async fetchStatisticData(){
-        const alldate = this.getDaysBetweenDates(
+      const alldate = this.getDaysBetweenDates(
         new Date(this.start_date),
         new Date(this.end_date),
         "Sun"
@@ -525,7 +524,7 @@ module.exports= {
                 label: `정원`,
                 data: totals,
                 borderWidth: 1,
-                pointRadius: 3,
+                pointRadius: 2,
                 borderColor: vm.borderColors[0],
                 backgroundColor: vm.bgColors[0]
               },
@@ -533,7 +532,7 @@ module.exports= {
                 label: `오전출석`,
                 data: mornings,
                 borderWidth: 1,
-                pointRadius: 3,
+                pointRadius: 2,
                 borderColor: vm.borderColors[4],
                 backgroundColor: vm.bgColors[4]
               },
@@ -541,7 +540,7 @@ module.exports= {
                 label: `오후출석`,
                 data: noons,
                 borderWidth: 1,
-                pointRadius: 3,
+                pointRadius: 2,
                 borderColor: vm.borderColors[1],
                 backgroundColor: vm.bgColors[1]
               }

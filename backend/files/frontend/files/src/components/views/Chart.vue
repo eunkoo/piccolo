@@ -21,7 +21,7 @@ const { Line } = require( 'vue-chartjs')
       },
       legend: {
         display: true, 
-        position: 'right', 
+        position: 'bottom', 
       },
       responsive: true,
       maintainAspectRatio: false,

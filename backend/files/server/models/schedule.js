@@ -1,5 +1,5 @@
 /* jshint indent: 2 */
-
+const moment = require('moment')
 module.exports = function(sequelize, DataTypes) {
     return sequelize.define('schedule', {
       id: {
@@ -20,17 +20,23 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.INTEGER(11),
         allowNull: false
       },
-      title: {
+      name: {
         type: DataTypes.STRING(20),
         allowNull: true
       },
       start: {
         type: DataTypes.DATE,
-        allowNull: true
+        allowNull: true,
+        get() {
+          return moment(this.getDataValue('start')).format('YYYY-MM-DD HH:mm:SS');
+        }
       },
       end: {
         type: DataTypes.DATE,
-        allowNull: true
+        allowNull: true,
+        get() {
+          return moment(this.getDataValue('end')).format('YYYY-MM-DD HH:mm:SS');
+        }
       },
       time: {
         type: DataTypes.TIME,

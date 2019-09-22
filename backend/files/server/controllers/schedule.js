@@ -11,7 +11,8 @@ module.exports = {
   listForEvent(req, res){
     return schedule
     .all({
-        where :{eid : req.body.eid}
+        where :{eid : req.body.eid },
+        
     })
     .then(schedule => res.status(200).send(schedule))
     .catch(error => res.status(400).send(error));
@@ -45,11 +46,12 @@ module.exports = {
 
 //   },
   create(req, res) {
+    console.log(req.body)
     return schedule
    .create({
      mid:req.body.mid,
      eid:req.body.eid,
-     title: req.body.title,
+     name: req.body.name,
      time:req.body.time,
      start:req.body.start,
      end:req.body.end,
@@ -77,7 +79,7 @@ module.exports = {
           .update({
             mid:req.body.mid,
             eid:req.body.eid,
-            title: req.body.title,
+            name: req.body.name,
             time:req.body.time,
             start:req.body.start,
             end:req.body.end,

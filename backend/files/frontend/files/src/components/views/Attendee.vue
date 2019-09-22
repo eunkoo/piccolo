@@ -1,7 +1,7 @@
 <template>
   <v-container container--fluid text-xs-center>
     
-    <v-btn v-if="!isLoadedAttendee&&this.editedItem.id > 0" v-model="isLoadedAttendee" @click.native='insertAttendee'>출석부 추가하기</v-btn>
+    <v-btn v-if="!isLoadedAttendee&&this.editedItem&& this.editedItem.id > 0" v-model="isLoadedAttendee" @click.native='insertAttendee'>출석부 추가하기</v-btn>
     <div v-if="isLoadedAttendee">
       <v-progress-circular v-if="loading" indeterminate color="primary"></v-progress-circular>
 

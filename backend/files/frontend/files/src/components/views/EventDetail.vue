@@ -13,7 +13,7 @@
         </v-col >
         <v-col :key="3" cols="6" xs="6" sm="3" md="3" class="pa-1">
             <v-card class="pa-4" outlined  tile color="#e8e8e8"> 
-          {{datas.day}}
+          {{datas.start}}
             </v-card>
         </v-col >
         <v-col :key="4" cols="6" xs="6" sm="3" md="3" class="pa-1">
@@ -24,7 +24,7 @@
 
         <v-col :key="5" cols="6" xs="6" sm="3" md="3" class="pa-1">
             <v-card class="pa-4" outlined  tile color="#e8e8e8" > 
-            {{mon(datas.day)}}월 생일자
+            {{mon(datas.start)}}월 생일자
             </v-card>
         </v-col >
         <v-col :key="6" cols="6" xs="6" sm="3" md="3" class="pa-1">

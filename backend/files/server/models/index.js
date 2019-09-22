@@ -19,6 +19,7 @@ if (config.use_env_variable) {
       min: 0,
       idle: 10000,
     },
+
     // sync: { force: true }, 
   });
 }

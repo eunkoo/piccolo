@@ -1,5 +1,5 @@
 /* jshint indent: 2 */
-
+const moment = require('moment')
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('events', {
     id: {
@@ -8,7 +8,7 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true,
       autoIncrement: true
     },
-    title: {
+    name: {
       type: DataTypes.STRING(20),
       allowNull: true
     },
@@ -16,17 +16,19 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(20),
       allowNull: true
     },
-    day: {
+    start: {
       type: DataTypes.DATEONLY,
-      allowNull: true
+      allowNull: true,
+      get() {
+        return moment(this.getDataValue('start')).format('YYYY-MM-DD');
+      }
     },
-    eday: {
+    end: {
       type: DataTypes.DATEONLY,
-      allowNull: true
-    },
-    time: {
-      type: DataTypes.INTEGER(11),
-      allowNull: true
+      allowNull: true,
+      get() {
+        return moment(this.getDataValue('end')).format('YYYY-MM-DD');
+      }
     },
     director: {
       type: DataTypes.INTEGER(11),

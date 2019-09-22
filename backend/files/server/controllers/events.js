@@ -35,9 +35,9 @@ module.exports = {
       .all(
             { 
                 where: { belongs:req.body.belongs,
-                    $and: [{day: {$gte: req.body.start}}, {day: {$lte:req.body.end}}]
+                    $and: [{start: {$gte: req.body.start}}, {start: {$lte:req.body.end}}]
                 },
-                order: ['day']
+                order: ['start']
             }
         )
       .then(events => res.status(200).send(events))
@@ -70,8 +70,8 @@ module.exports = {
   check_create(req,res){
     return  events.findOne({
       where: {
-        day: req.body.day,
-        title:req.body.title,
+        start: req.body.start,
+        name:req.body.name,
         belongs : req.body.belongs
       }
     }).then(events => res.status(201).send(events))
@@ -82,9 +82,8 @@ module.exports = {
      events
    .create({
      title: req.body.title,
-     day:req.body.day,
-     eday:req.body.eday,
-     time:req.body.time,
+     start:req.body.start,
+     end:req.body.end,
      place:req.body.place,
      director:req.body.director,
      belongs:req.body.belongs,
@@ -117,9 +116,8 @@ module.exports = {
         return events
           .update({
             title: req.body.title || events.name,
-            day:req.body.day || events.day,
-            eday:req.body.eday || events.eday,
-            time:req.body.time || events.time,
+            start:req.body.start || events.start,
+            end:req.body.end || events.end,
             place:req.body.place || events.place,
             director:req.body.director || events.director,
             belongs:req.body.belongs || events.belongs,

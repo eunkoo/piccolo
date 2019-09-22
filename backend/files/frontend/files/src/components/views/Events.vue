@@ -20,7 +20,7 @@
             <v-container grid-list-md>
               <v-row>
                 <v-col cols="12" sm="6" md="4">
-                  <v-text-field label="예배명" v-model="editedItem.title"></v-text-field>
+                  <v-text-field label="예배명" v-model="editedItem.name"></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="6" md="4">
                   <v-menu
@@ -28,7 +28,7 @@
                     :close-on-content-click="false"
                     v-model="date_menu"
                     :nudge-right="40"
-                    :return-value.sync="editedItem.day"
+                    :return-value.sync="editedItem.start"
                     lazy
                     transition="scale-transition"
                     offset-y
@@ -37,7 +37,7 @@
                     <template v-slot:activator="{ on }">
                       <v-text-field
                         v-on="on"
-                        v-model="editedItem.day"
+                        v-model="editedItem.start"
                         label="시작"
                         prepend-icon="event"
                         readonly
@@ -46,9 +46,9 @@
                     <v-date-picker
                       class="mydatepicker"
                       locale="ko-KR"
-                      v-model="editedItem.day"
+                      v-model="editedItem.start"
                       no-title
-                      @input="$refs.date_menu.save(editedItem.day)"
+                      @input="$refs.date_menu.save(editedItem.start)"
                     ></v-date-picker>
                   </v-menu>
                 </v-col>
@@ -58,7 +58,7 @@
                     :close-on-content-click="false"
                     v-model="edate_menu"
                     :nudge-right="40"
-                    :return-value.sync="editedItem.eday"
+                    :return-value.sync="editedItem.end"
                     lazy
                     transition="scale-transition"
                     offset-y
@@ -67,7 +67,7 @@
                     <template v-slot:activator="{ on }">
                       <v-text-field
                         v-on="on"
-                        v-model="editedItem.eday"
+                        v-model="editedItem.end"
                         label="종료"
                         prepend-icon="event"
                         readonly
@@ -76,9 +76,9 @@
                     <v-date-picker
                       class="mydatepicker"
                       locale="ko-KR"
-                      v-model="editedItem.eday"
+                      v-model="editedItem.end"
                       no-title
-                      @input="$refs.edate_menu.save(editedItem.eday)"
+                      @input="$refs.edate_menu.save(editedItem.end)"
                     ></v-date-picker>
                   </v-menu>
                 </v-col>
@@ -125,7 +125,7 @@
       ></v-text-field>
     </v-card-title>
 
-    <v-data-table :headers="headers" :items="events" :search="search" sort-by="day" sort-desc>
+    <v-data-table :headers="headers" :items="events" :search="search" sort-by="start" sort-desc>
       <template v-slot:item.belongs="{ item }">
         <v-col align="center">{{ belong_text(item.belongs) }}</v-col>
       </template>
@@ -179,7 +179,7 @@ module.exports = {
         // { text: '면려회', id: '4' }
       ],
       pagination: {
-        sortBy: "day", // The field that you're sorting by
+        sortBy: "start", // The field that you're sorting by
         descending: true,
         // page: 1,
         rowsPerPage: 10
@@ -192,18 +192,18 @@ module.exports = {
       date_menu: null,
       edate_menu: null,
       defaultItem: {
-        title: "",
+        name: "",
         place: "",
-        day: new Date().toISOString().slice(0, 10),
-        eday: new Date().toISOString().slice(0, 10),
+        start: new Date().toISOString().slice(0, 10),
+        end: new Date().toISOString().slice(0, 10),
         belongs: ""
       },
       editedItem: {
         id: "",
-        title: "",
+        name: "",
         place: "",
-        day: new Date().toISOString().slice(0, 10),
-        eday: new Date().toISOString().slice(0, 10),
+        start: new Date().toISOString().slice(0, 10),
+        end: new Date().toISOString().slice(0, 10),
         belongs: this.cbelong,
         totalmember: 0
       },
@@ -218,19 +218,19 @@ module.exports = {
           text: "예배명",
           align: "left",
           sortable: false,
-          value: "title"
+          value: "name"
         },
         {
           text: "시작",
           align: "left",
           sortable: true,
-          value: "day"
+          value: "start"
         },
         {
           text: "종료",
           align: "left",
           sortable: false,
-          value: "eday"
+          value: "end"
         },
         {
           text: "장소",
@@ -265,11 +265,11 @@ module.exports = {
   methods: {
     daySort(items, index, isDesc) {
       items.sort((a, b) => {
-        if (index === "day") {
+        if (index === "start") {
           if (!isDesc) {
-            return b.day - a.day;
+            return b.start - a.start;
           } else {
-            return a.day - b.day;
+            return a.start - b.start;
           }
         }
       });
@@ -310,13 +310,13 @@ module.exports = {
       // window.history.go('#/api/attendee')
 
       this.$router.push(
-        "/data/dataInnerSchedule/" + items.day + "/" + items.eday + "/" + items.belongs
+        "/data/dataInnerSchedule/" + items.start + "/" + items.end + "/" + items.belongs
       );
       this.$router.go({
         name: "dataInnerSchedule",
         params: [
-          { day: items.day },
-          { eday: items.eday },
+          { start: items.start },
+          { end: items.end },
           { belongs: items.belongs }
         ]
       });

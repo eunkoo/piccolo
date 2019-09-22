@@ -45,7 +45,7 @@ export default  new Router({
       component: InnerSchedule,
     },
     {
-      path: '/data/dataInnerSchedule/:day/:eday/:belongs',
+      path: '/data/dataInnerSchedule/:start/:end/:belongs',
       name: 'dataInnerSchedule',
       component: InnerSchedule,
       props: true,

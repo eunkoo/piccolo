@@ -67,13 +67,13 @@
     </v-row>
 
     <v-col xs="12">
-      <eventdayspan
+      <schedule-detail
         v-if="!printing "
-        ref="dayspan"
-        v-bind:start_day="editedItem.day"
-        v-bind:end_day="editedItem.eday"
+        ref="scheduleDetail"
+        v-bind:start_day="cdateFormat"
+        v-bind:end_day="edateFormat"
         cal_type="week"
-      ></eventdayspan>
+      ></schedule-detail>
     </v-col>
 
     <v-col xs="12" sm="4">
@@ -96,8 +96,8 @@
 const apiService = require("@/Services/ApiService");
 // const datepicker = require("vuejs-datepicker").defalt;
 // const test = require("vue-json-excel").defalt;
-import eventdayspan from "./EventDayspan";
-import attendee from "./Attendee";
+import ScheduleDetail from "./ScheduleDetail";
+import Attendee from "./Attendee";
 const { en, ko } = require("vuejs-datepicker/dist/locale");
 
 // const Vue = require( "vue");
@@ -113,8 +113,8 @@ module.exports = {
     // eventnotice,
     // twintable,
     // editableattendee,
-    attendee,
-    eventdayspan
+    Attendee,
+    ScheduleDetail
     // test1,
     // test2,
     // test3,
@@ -146,10 +146,10 @@ module.exports = {
       //   addAttendName: "",
       //   addAttendConnected: "",
       cbelong: 0,
-      cdate: null,
+      cdate: new Date(),
       cdateFormat: this.formatDate(new Date()),
-      edate: null,
-      edateFormat: this.formatDate(new Date()),
+      edate: new Date(Date.now+6),
+      edateFormat: this.formatDate(new Date(Date.now+6)),
       dialog: false,
       //   cplace: "",
       //   ctitle: "",
@@ -168,8 +168,9 @@ module.exports = {
       //   },
       editedItem: {
         id: -1,
-        title: "",
-        day: "",
+        name: "",
+        start: "",
+        end: "",
         place: "",
         offering: 0,
         totalmorning: 0,
@@ -182,12 +183,12 @@ module.exports = {
     };
   },
   mounted() {
-    if (this.$route.params.day == null) {
-      this.getevents(0);
+    if (this.$route.params.start == null) {
       this.cdate = this.prevDay(new Date(), 7);
       this.cdateFormat = this.formatDate(this.cdate);
-      this.edate = this.prevDay(new Date(), 7);
+      this.edate = this.prevDay(new Date(), 6);
       this.edateFormat = this.formatDate(this.edate);
+      this.getevents(0);
     } else {
       console.log(this.$route.params.belongs);
       console.log(this.belong_items[this.$route.params.belongs].text);
@@ -196,15 +197,17 @@ module.exports = {
         id: parseInt(this.$route.params.belongs)
       };
       this.cbelong = this.$route.params.belongs;
-      this.getevents(this.cbelong);
-      this.cdate = new Date(this.$route.params.day);
+      
+      this.cdate = new Date(this.$route.params.start);
       this.cdateFormat = this.formatDate(this.cdate);
-      this.edate = new Date(this.$route.params.eday);
+      this.edate = new Date(this.$route.params.end);
       this.edateFormat = this.formatDate(this.edate);
+      this.getevents(this.cbelong);
     }
 
-    console.log(this.cdate);
+    // console.log(this.cdate);
     console.log(this.cdateFormat);
+    console.log(this.edateFormat);
   },
   computed: {
     userGrade: {
@@ -232,7 +235,7 @@ module.exports = {
       this.att_noon = 0;
       this.ex_noon = 0;
       this.cbelong = 0;
-      this.ctitle = "";
+      this.cname = "";
       this.cplace = "";
     },
     async getevents(belong) {
@@ -245,10 +248,10 @@ module.exports = {
       this.events = response.data;
       if (this.events.length === 0) {
         this.editedItem = {
-          day: this.cdate,
-          eday: this.edate,
+          start: this.cdate,
+          end: this.edate,
           belongs: belong,
-          title: this.ctitle,
+          name: this.cname,
           place: this.cplace
         };
         this.attendee = [];
@@ -257,7 +260,7 @@ module.exports = {
 
       // 교육부서를
       this.cbelong = belong; //this.editedItem.belongs;
-      await this.loadEventData(belong, this.cdate);
+      await this.loadEventData(belong, this.cdate, this.edate);
       //   this.getAttendee(belong, this.cdate);
 
       this.loading = false;
@@ -303,13 +306,15 @@ module.exports = {
         });
       console.log(this.attendee);
     },
-    loadEventData(belong, cdate) {
-      console.log("loadEventData " + belong + ", " + this.formatDate(cdate));
-      var item = this.events.filter(ev => {
-        return this.formatDate(new Date(ev.day)) === this.formatDate(cdate);
+
+    loadEventData(belong, cdate , edate) {
+      console.log("loadEventData " + belong + ", " + cdate.toISOString().slice(0, 10) +" ~ " + edate.toISOString().slice(0, 10));
+      var items = this.events.filter(ev => {
+        //  console.log(ev.start)
+        return (ev.start >= cdate.toISOString().slice(0, 10)&& ev.start <= edate.toISOString().slice(0, 10) );
       });
 
-      if (item.length > 0) {
+      if (items.length > 0) {
         this.editedItem = Object.assign(
           {
             totalmorning: this.att_morning + this.ex_morning,
@@ -317,36 +322,38 @@ module.exports = {
             newes: "",
             birthes: ""
           },
-          item[0]
+          items[0]
         );
-        this.editedIndex = this.events.indexOf(item[0]);
+        this.editedIndex = this.events.indexOf(items[0]);
         // console.log(this.editedIndex)
       } else {
         this.editedItem = {
           id:-1,
-          day: this.formatDate(this.cdate),
+          start: this.formatDate(this.cdate),
           // day: this.cdate.toDateString(),
           belongs: this.cbelong,
-          title: this.ctitle,
+          name: this.cname,
           place: this.cplace
         };
         this.editedIndex = -1;
       }
 
       if (this.editedItem.id > -1){
-        this.$refs.dayspan.getSchedules({
+        this.$refs.scheduleDetail.getSchedules( 
+          items,
+        {
           eid: this.editedItem.id,
-          title: this.editedItem.title,
+          name: this.editedItem.name,
           belongs: this.editedItem.belongs,
-          start: this.editedItem.day,
-          end: this.editedItem.eday
+          start: this.editedItem.start,
+          end: this.editedItem.end
         });
       }else{
-          this.$refs.dayspan.clearData();
+          this.$refs.scheduleDetail.clearData();
       }
 
       this.$refs.attendee.getAttendee(this.editedItem,this.cbelong, this.cdate);
-      this.ctitle = this.editedItem.title;
+      this.cname = this.editedItem.name;
       this.cplace = this.editedItem.place;
       console.log(this.editedItem);
     },
@@ -420,19 +427,29 @@ module.exports = {
       return d;
     },
     onPrev() {
-      console.log("onPrev" + this.formatDate(this.cdate));
+      console.log("onPrev " + this.formatDate(this.cdate));
       this.cdate.setDate(this.cdate.getDate() - 1);
       this.cdate = new Date(this.prevDay(this.cdate, 7));
       this.cdateFormat = this.formatDate(this.cdate);
-      this.loadEventData(this.cbelong, this.cdate);
+
+      this.edate.setDate(this.edate.getDate() - 1);
+      this.edate = new Date(this.prevDay(this.edate, 6));
+      this.edateFormat = this.formatDate(this.edate);
+
+      this.loadEventData(this.cbelong, this.cdate, this.edate);
       //   this.getAttendee(this.cbelong, this.cdate);
     },
     onNext() {
-      console.log("onNext" + this.formatDate(this.cdate));
+      console.log("onNext " + this.formatDate(this.cdate));
       this.cdate.setDate(this.cdate.getDate() + 1);
       this.cdate = new Date(this.nextDay(this.cdate, 7));
       this.cdateFormat = this.formatDate(this.cdate);
-      this.loadEventData(this.cbelong, this.cdate);
+
+      this.edate.setDate(this.edate.getDate() + 7);
+      this.edate = new Date(this.nextDay(this.edate, 6));
+      this.edateFormat = this.formatDate(this.edate);
+
+      this.loadEventData(this.cbelong, this.cdate, this.edate);
       //   this.getAttendee(this.cbelong, this.cdate);
     }
   }

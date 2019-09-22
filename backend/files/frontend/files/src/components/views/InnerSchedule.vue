@@ -184,9 +184,11 @@ module.exports = {
   },
   mounted() {
     if (this.$route.params.start == null) {
+      var after7even = new Date();
+      after7even.setDate(after7even.getDate() + 7);
       this.cdate = this.prevDay(new Date(), 7);
       this.cdateFormat = this.formatDate(this.cdate);
-      this.edate = this.prevDay(new Date(), 6);
+      this.edate = this.prevDay(after7even, 6);
       this.edateFormat = this.formatDate(this.edate);
       this.getevents(0);
     } else {
@@ -432,7 +434,7 @@ module.exports = {
       this.cdate = new Date(this.prevDay(this.cdate, 7));
       this.cdateFormat = this.formatDate(this.cdate);
 
-      this.edate.setDate(this.edate.getDate() - 1);
+      this.edate.setDate(this.edate.getDate() -1);
       this.edate = new Date(this.prevDay(this.edate, 6));
       this.edateFormat = this.formatDate(this.edate);
 

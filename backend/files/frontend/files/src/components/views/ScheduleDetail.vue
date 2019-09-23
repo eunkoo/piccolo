@@ -104,16 +104,7 @@ module.exports = {
   name: "eventdayspan",
   props : {start_day:String , end_day : String , cal_type:String},
   computed: {
-      // convert the list of events into a map of lists keyed by date
-      // eventsMap () {
-      //   const map = {}
-      //   this.schedules.forEach(e => {
-      //     (map[e.start] = map[e.start] || [])
-      //        .push(e)
-      //     })
-      //   console.log(map)
-      //   return map
-      // },
+
     },
  data(){
    return{
@@ -188,8 +179,6 @@ module.exports = {
         hour++;
       }
       console.log("dayMouseDown time : " + date+" "+hour+":"+minute)
-      // this.editedItem.start = date+" "+time;
-      // this.editedItem.resetContent
       var temp = JSON.parse(JSON.stringify(this.editedItem));
       this.editedItem = Object.assign( temp, { eid:this.currentEvent.eid, 
                                                       belongs:this.currentEvent.belongs,  
@@ -198,12 +187,6 @@ module.exports = {
                                                       name:"새 일정", 
                                                       color:"pink" }) 
       this.editedItem = JSON.parse(JSON.stringify(temp));
-      // this.editedItem = JSON.parse(JSON.stringify(this.editedItem, { eid:this.currentEvent.eid, 
-      //                                                 belongs:this.currentEvent.belongs,  
-      //                                                 start:date+" "+hour+":"+minute, 
-      //                                                 end: date+" "+hour+":"+minute,  
-      //                                                 name:"새 일정", 
-      //                                                 color:"pink" }));
       this.schedules.push( this.editedItem )
       this.isMouseDown = true;
     },
@@ -216,14 +199,8 @@ module.exports = {
         console.log(res.data);
         this.currentEvent = Object.assign( current );
         // console.log(this.currentEvent)
+        this.schedules = items.concat(res.data)
 
-        // if(!res.data || res.data.length==0){
-        //   this.addSchedule(current, true)
-        // }else{
-          this.schedules = items.concat(res.data)
-          // this.schedules = res.data;
-          // this.schedules.push( items )
-        // }
       })
       .catch(err =>{
         console.log(err);

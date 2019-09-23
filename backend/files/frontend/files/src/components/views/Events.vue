@@ -29,7 +29,7 @@
                     v-model="date_menu"
                     :nudge-right="40"
                     :return-value.sync="editedItem.start"
-                    lazy
+                    
                     transition="scale-transition"
                     offset-y
                     min-width="290px"
@@ -59,7 +59,7 @@
                     v-model="edate_menu"
                     :nudge-right="40"
                     :return-value.sync="editedItem.end"
-                    lazy
+                    
                     transition="scale-transition"
                     offset-y
                     min-width="290px"
@@ -334,6 +334,7 @@ module.exports = {
                 this.alert = !this.alert;
               }, 3000);
             } else {
+              
               apiService.addEvents(this.editedItem).then(result => {
                 this.editedItem = Object.assign({}, result.data);
                 this.events.push(this.editedItem);
@@ -341,6 +342,7 @@ module.exports = {
             }
           });
         } else {
+          console.log(this.editedItem);
           apiService.updateEvents(this.editedItem);
           Object.assign(this.events[this.editedIndex], this.editedItem);
         }

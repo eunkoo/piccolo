@@ -81,7 +81,7 @@ module.exports = {
   create(req, res) {
      events
    .create({
-     title: req.body.title,
+     name: req.body.name,
      start:req.body.start,
      end:req.body.end,
      place:req.body.place,
@@ -113,9 +113,10 @@ module.exports = {
             message: '등록된 이벤트가 없습니다',
           });
         }
+        console.log(req.body)
         return events
           .update({
-            title: req.body.title || events.name,
+            name: req.body.name || events.name,
             start:req.body.start || events.start,
             end:req.body.end || events.end,
             place:req.body.place || events.place,

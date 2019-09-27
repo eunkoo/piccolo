@@ -9,6 +9,8 @@
           :events="schedules"
           color="primary"
           :type="cal_type"
+          @mouseenter:time="mouseCellEntered($event)"
+          @mouseleave:time="mouseCellLeaved($event)"
           @mouseenter:event="mouseOnEvent=true"
           @mouseleave:event="mouseOnEvent=false"
           @click:event ="editEvent"
@@ -102,17 +104,20 @@ require('../../assets/css/eventdayspan.css').default
 
 module.exports = {
   name: "eventdayspan",
-  props : {start_day:String , end_day : String , cal_type:String},
+  props : { cal_type:String},
   computed: {
 
     },
  data(){
    return{
      mouseOnEvent:false,
+     start_day:"",
+     end_day:"",
     schedules: [],
     // eIndex: 0,
     color: ["#3F51B5", "#4CAF50", "#2196F3", "#1976d2", "#4CAF50"],
     isEdit : false,
+    parentItems:null,
     editedItem: {
         id: -1,
         eid: -1,
@@ -150,7 +155,20 @@ module.exports = {
       },
     viewDay ({ date }) {
         this.focus = date
+
       },
+    mouseCellEntered({date}){
+      // console.log(event)
+      // console.log(" cell date "+ (new Date(date).setHours(0,0,0,0) +" "+ (new Date(this.end_day).setHours(0,0,0,0))))
+      if( ( +(new Date(date).setHours(0,0,0,0)) >= +(new Date(this.start_day).setHours(0,0,0,0)) ) && (+(new Date(date).setHours(0,0,0,0)) <= +(new Date(this.end_day).setHours(0,0,0,0)) )  )
+        event.target.style.backgroundColor = "rgba(128, 255, 128, 0.3)"
+      else
+        event.target.style.backgroundColor = "rgba(255, 128, 128, 0.3)"
+    },
+    mouseCellLeaved({date}){
+      // console.log(event.target)
+      event.target.style.backgroundColor = "rgba(255, 255, 255, 1)"
+    },
     timeMouseUp( {hour, minute,date, year}){
       if(this.isMouseDown == false ) return
       minute = Math.round(minute/10)*10
@@ -161,7 +179,7 @@ module.exports = {
       console.log("timeMouseUp : " + date+" "+hour+":"+minute)
       this.editedItem.end = date+" "+hour+":"+minute;
       this.isMouseDown = false;
-      this.showEvent(  this.editedItem )
+      this.newEvent(  this.editedItem )
 
     },
     timeMouseMove({hour, minute, date, year}){
@@ -173,34 +191,47 @@ module.exports = {
     timeMouseDown({ date, year, hour, minute}){
       if(!this.currentEvent ) return
       if(this.mouseOnEvent) return
-      minute = Math.round(minute/10)*10
-      if(minute==60){
-        minute = 0;
-        hour++;
+      if( ( +(new Date(date).setHours(0,0,0,0)) >= +(new Date(this.start_day).setHours(0,0,0,0)) ) && (+(new Date(date).setHours(0,0,0,0)) <= +(new Date(this.end_day).setHours(0,0,0,0)) )  )
+      {
+        minute = Math.round(minute/10)*10
+        if(minute==60){
+          minute = 0;
+          hour++;
+        }
+        console.log("dayMouseDown time : " + date+" "+hour+":"+minute)
+        // var temp = JSON.parse(JSON.stringify(this.editedItem));
+        this.editedItem = Object.assign( {}, {  eid:this.currentEvent.id, 
+                                                id : -1,
+                                                createdAt:"",
+                                                updateddAt:"",
+                                                belongs:this.currentEvent.belongs,  
+                                                start:date+" "+hour+":"+minute, 
+                                                end: date+" "+hour+":"+minute,  
+                                                name:"새 일정", 
+                                                color:"pink" }) 
+        // this.editedItem = JSON.parse(JSON.stringify(temp));
+        this.schedules.push( this.editedItem )
+        this.isMouseDown = true;
       }
-      console.log("dayMouseDown time : " + date+" "+hour+":"+minute)
-      var temp = JSON.parse(JSON.stringify(this.editedItem));
-      this.editedItem = Object.assign( temp, { eid:this.currentEvent.eid, 
-                                                      belongs:this.currentEvent.belongs,  
-                                                      start:date+" "+hour+":"+minute, 
-                                                      end: date+" "+hour+":"+minute,  
-                                                      name:"새 일정", 
-                                                      color:"pink" }) 
-      this.editedItem = JSON.parse(JSON.stringify(temp));
-      this.schedules.push( this.editedItem )
-      this.isMouseDown = true;
+      
+    },
+    changeEvent(e){
+      // this.start_day = e.start;
+      // this.end_day = e.end;
+      this.getSchedules(this.parentItems, e)
+      this.$emit("changeEvent", e);
     },
     async getSchedules( items, current ) {
-      // console.log(this.start_day+" ~ "+this.end_day+" : "+current.eid)
       console.log(items)
       this.loading = true;
-      await apiService.fetchScheduleForEvent({eid:current.eid})
+      this.parentItems = items;
+      await apiService.fetchScheduleForEvent({eid:current.id})
       .then(res =>{
         console.log(res.data);
         this.currentEvent = Object.assign( current );
         // console.log(this.currentEvent)
         this.schedules = items.concat(res.data)
-
+        
       })
       .catch(err =>{
         console.log(err);
@@ -208,6 +239,9 @@ module.exports = {
       
       console.log(this.schedules)
       this.loading = false;
+      this.start_day = current.start;
+      this.end_day = current.end;
+      console.log(current.start+" ~ "+current.end+" : "+current.id)
       return this.schedules
     },
     clearData(){
@@ -230,8 +264,8 @@ module.exports = {
     //     alert(event.title)
     //   },
 
-      showEvent ( e ) {
-        console.log("showEvent");
+      newEvent ( e ) {
+        console.log("newEvent");
         const open = () => {
           this. isEdit = false;
           this.editedItem = e
@@ -247,8 +281,15 @@ module.exports = {
         }
 
       },
+      
       editEvent({ nativeEvent, event }){
         console.log("editEvent");
+        console.log(event);
+        if(event.eid == undefined){
+          this.changeEvent(event);
+          return;
+        }
+          
         const open = () => {
           this. isEdit = true;
           this.editedItem = event
@@ -278,9 +319,13 @@ module.exports = {
         if(!this.isEdit){  // newItem
         await apiService.addSchedule( Object.assign(this.editedItem,{color:this.color[this.currentEvent.belongs] }))
           .then(res => {
+            this.editedItem = res.data;
             this.editedItem.resetContent
+            // console.log(res.data);
           }).catch(err =>{
             console.log(err);
+            var index = this.schedules.indexOf(this.editedItem);
+                this.schedules.splice(index, 1);
           });
 
         }else{
@@ -289,6 +334,8 @@ module.exports = {
               this.editedItem.resetContent
           }).catch(err =>{
             console.log(err);
+            var index = this.schedules.indexOf(this.editedItem);
+                this.schedules.splice(index, 1);
           });
         }
       },
@@ -298,12 +345,12 @@ module.exports = {
           apiService.deleteSchedule(this.editedItem.id).then(
             res =>{
               this.editedItem.resetContent
-                var index = this.schedules.indexOf(this.editedItem);
-                this.schedules.splice(index, 1);
             }
           ).catch(e=>{
                console.log(e)
           })
+          var index = this.schedules.indexOf(this.editedItem);
+          this.schedules.splice(index, 1);
       },
 
   }

@@ -17,6 +17,9 @@
           @change="changeBelong"
         ></v-select>
       </v-col>
+      <v-col :key="2" cols="12" xs="12" sm="6" md="6">
+        <div v-if="editedItem.id>0"> <h2>선택된 일정 :</h2> <h1>{{editedItem.start}} {{belong_items[ editedItem.belongs ].text}} {{editedItem.name}} </h1> </div>
+      </v-col>
     </v-row>
 
     <v-row v-if="!printing ">
@@ -69,9 +72,8 @@
     <v-col xs="12">
       <schedule-detail
         v-if="!printing "
+        @changeEvent="changeEvent"
         ref="scheduleDetail"
-        v-bind:start_day="cdateFormat"
-        v-bind:end_day="edateFormat"
         cal_type="week"
       ></schedule-detail>
     </v-col>
@@ -308,7 +310,14 @@ module.exports = {
         });
       console.log(this.attendee);
     },
-
+    changeEvent(e){
+      this.editedItem = e;
+        
+      this.$refs.attendee.getAttendee(this.editedItem,this.cbelong, this.cdate);
+      this.cname = this.editedItem.name;
+      this.cplace = this.editedItem.place;
+      console.log(this.editedItem);
+    },
     loadEventData(belong, cdate , edate) {
       console.log("loadEventData " + belong + ", " + cdate.toISOString().slice(0, 10) +" ~ " + edate.toISOString().slice(0, 10));
       var items = this.events.filter(ev => {
@@ -344,7 +353,7 @@ module.exports = {
         this.$refs.scheduleDetail.getSchedules( 
           items,
         {
-          eid: this.editedItem.id,
+          id: this.editedItem.id,
           name: this.editedItem.name,
           belongs: this.editedItem.belongs,
           start: this.editedItem.start,

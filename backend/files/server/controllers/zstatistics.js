@@ -3,7 +3,7 @@ module.exports = {
   
   list(req, res) {
     return events
-      .all()
+      .FindAll()
       .then(events => res.status(200).send(events))
       .catch(error => res.status(400).send(error));
   },
@@ -23,8 +23,8 @@ module.exports = {
     END ) AS noons
     FROM attendee AS a, events AS e
     WHERE e.id = a.eid 
-          AND e.day <= '${date_to}' 
-          AND e.day >= '${date_from}' 
+          AND e.start <= '${date_to}' 
+          AND e.start >= '${date_from}' 
           AND e.belongs = ${belong} 
           AND a.attended != 0
     GROUP BY a.name
@@ -51,8 +51,8 @@ module.exports = {
     const query = `SELECT a.name, sum(paragraph) AS att
     FROM  attendee AS a, events AS e
     WHERE e.id = a.eid 
-          AND e.day <= '${date_to}' 
-          AND e.day >= '${date_from}'
+          AND e.start <= '${date_to}' 
+          AND e.start >= '${date_from}'
           AND e.belongs = ${belong}
     GROUP BY a.name
     ORDER BY att DESC`;
@@ -81,8 +81,8 @@ module.exports = {
     const query = `SELECT a.name, SUM(bible) as att 
     FROM  attendee AS a, events AS e
     WHERE e.id = a.eid 
-          AND e.day <= '${date_to}' 
-          AND e.day >= '${date_from}' 
+          AND e.start <= '${date_to}' 
+          AND e.start >= '${date_from}' 
           AND belongs = ${belong}
     GROUP BY a.name
     ORDER BY att DESC`;

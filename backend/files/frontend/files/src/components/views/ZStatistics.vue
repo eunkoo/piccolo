@@ -252,8 +252,8 @@ module.exports= {
       editedIndex: -1,
       editedItem: {
         id: "",
-        title: "",
-        day: "",
+        name: "",
+        start: "",
         place: "",
         belongs: 0
       },
@@ -495,9 +495,9 @@ module.exports= {
           let found = false;
           res.data.forEach(item => {
             // console.log(`compare two date ${target_date}   and ${item.day}`);
-            if (target_date === item.day) {
+            if (target_date === item.start) {
               // console.log(`found day: ${item.day}`);
-              dateLabels.push(item.day);
+              dateLabels.push(item.start);
               totals.push(item.totalmember);
               mornings.push(item.totalmorning);
               noons.push(item.totalnoon);

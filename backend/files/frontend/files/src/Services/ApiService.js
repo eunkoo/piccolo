@@ -111,6 +111,13 @@ module.exports=  {
   updateSchedule(params) {
     return Api.base().put('/schedule',params)
   },
+
+  fetchScheduleAttachments(params) {
+    return Api.base().post('/schedule/attachments', params);
+  },
+  uploadScheduleAttachments(params) {
+    return Api.base().post('/schedule/upload', params);
+  },
  
 // organization
   fetchOrganization(year) {

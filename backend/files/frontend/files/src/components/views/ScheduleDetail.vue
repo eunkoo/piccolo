@@ -23,6 +23,9 @@
           >
  
         </v-calendar>
+
+
+
         <v-dialog
         persistent
           v-model="selectedOpen"
@@ -68,15 +71,86 @@
                     </v-list-item>
                   </v-list>
                 </v-menu>
+
+                <v-menu :close-on-content-click="false" :nudge-width="200" offset-x>
+                  <template v-slot:activator="{ on }">
+                    <v-btn text icon color="white" dark v-on="on">                      
+                      <v-icon>
+                        mdi-arrow-up-bold-box-outline
+                      </v-icon>
+                    </v-btn>
+                  </template>
+                  <v-card>
+                    <v-list>
+                      <v-list-item>
+                        <v-list-item-title> attached file list here </v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                    
+                    <v-divider></v-divider>
+                    
+                    <v-list>
+                      <v-list-item>
+                        <v-list-item-action>
+
+                        </v-list-item-action>
+                        <v-list-item-title>
+
+                        </v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-card>
+
+                  <v-card-actions>
+                    <v-btn> cancel </v-btn>
+                    <v-btn> save </v-btn>
+                  </v-card-actions>
+                </v-menu>
             </v-toolbar>
+
+
+            <v-card-text v-if="editedItem.attachments">
+              <span> Attachments ( {{ editedItem.attachments.length }} ) </span>
+              <v-divider></v-divider>
+              <v-chip 
+                v-for="file in editedItem.attachments" 
+                :key="file.name"
+                color="cyan"
+                text-color="white"
+                close
+                label 
+                small
+                class="mr-1 mb-1"
+                >
+                {{ file.name }}
+              </v-chip>
+            </v-card-text>            
             <v-card-text>
-              <span v-html="editedItem.start"></span>
-            <br>
-              <span v-html="editedItem.end"></span>
+
+              file upload 
+              <v-file-input 
+                label="select file to upload..."
+                filled
+                chips
+                clearable 
+                solo 
+                hide-details
+                @change="fileSelected"
+                v-model="selectedFile"
+                prepend-icon="mdi-camera">
+              </v-file-input>
+            </v-card-text>
+            <v-divider></v-divider>
+
+            <v-card-text>
+              {{ editedItem.start }} ~ {{ editedItem.end }}
             </v-card-text>
             <v-card-actions>
+              <v-spacer></v-spacer>
               <v-btn
                 text
+                small
+                outlined
                 color="secondary"
                 @click="cancelEvent"
               >
@@ -84,6 +158,8 @@
               </v-btn>
                <v-btn
                 text
+                small
+                outlined
                 color="pramary"
                 @click="saveEvent"
               >
@@ -93,6 +169,13 @@
           </v-card>
         </v-dialog>
       </v-sheet>
+    </v-col>
+
+
+    <v-col cols="12">
+      test 
+      <v-img  witdh="100" :src="testPath"></v-img>
+      {{ testPath }}
     </v-col>
   </v-row>
 </template>
@@ -135,11 +218,17 @@ module.exports = {
            this.end = "";
            this.name = ""; 
         },
+        files: [],
       },
       selectedElement: null,
       selectedOpen: false,
       isMouseDown : false,
-      currentEvent : null
+      currentEvent : null,
+
+
+      selectedFile: null,
+
+      testPath: '',
    }
   },
   mounted() {
@@ -148,6 +237,17 @@ module.exports = {
     this.$refs.calendar.scrollToTime('08:00')
   },
   methods: {
+
+    fileSelected(file) {
+      if (!this.editedItem.files) {
+        this.editedItem.files = [];
+      }
+      if (file) {
+        this.editedItem.files.push(file);
+        console.log(`editedItem.files length: ${this.editedItem.files.length}`);
+        console.log(file);
+      }
+    },
 
     getEventColor (event) {
         return this.color[event.belongs]
@@ -227,16 +327,42 @@ module.exports = {
       this.parentItems = items;
       await apiService.fetchScheduleForEvent({eid:current.id})
       .then(res =>{
+        console.log('get schedules response is ');
         console.log(res.data);
         this.currentEvent = Object.assign( current );
         // console.log(this.currentEvent)
-        this.schedules = items.concat(res.data)
-        
+        this.schedules = items.concat(res.data)        
       })
       .catch(err =>{
         console.log(err);
       });
       
+      // ----------------------- get attached file info 
+      console.log(` * event name: ${current.name} `);
+      // this.schedules.forEach(item => {
+      for (let index = 0; index < this.schedules.length; index += 1 ){
+        const item = this.schedules[index];
+        
+        console.log(`   try get attachments list. eid:${item.eid} id:${item.id}`);
+        await apiService.fetchScheduleAttachments({ eid: item.eid, id:item.id })
+          .then(res => {
+            console.log(` ---> get attachments response `);
+            console.log(res);
+
+            if (res.data.attachments.length > 1) {
+              this.testPath = res.data.attachments[1].fullpath;
+              console.log(` test path : ${this.testPath}`);
+            }
+
+            this.schedules[index].attachments = res.data.attachments;
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+      // });
+
+      console.log(`schedule list`);
       console.log(this.schedules)
       this.loading = false;
       this.start_day = current.start;
@@ -257,7 +383,8 @@ module.exports = {
         // time: "09:00",
         // duration: 90,
         color: "",
-        link:""
+        link:"", 
+        files: [],
       };
     },
     // open (event) {
@@ -289,7 +416,8 @@ module.exports = {
           this.changeEvent(event);
           return;
         }
-          
+        
+        
         const open = () => {
           this. isEdit = true;
           this.editedItem = event
@@ -317,7 +445,7 @@ module.exports = {
       async saveEvent(){
         this.selectedOpen = false
         if(!this.isEdit){  // newItem
-        await apiService.addSchedule( Object.assign(this.editedItem,{color:this.color[this.currentEvent.belongs] }))
+          await apiService.addSchedule( Object.assign(this.editedItem,{color:this.color[this.currentEvent.belongs] }))
           .then(res => {
             this.editedItem = res.data;
             this.editedItem.resetContent
@@ -327,7 +455,6 @@ module.exports = {
             var index = this.schedules.indexOf(this.editedItem);
                 this.schedules.splice(index, 1);
           });
-
         }else{
           await apiService.updateSchedule( this.editedItem )
           .then(res => {
@@ -337,6 +464,34 @@ module.exports = {
             var index = this.schedules.indexOf(this.editedItem);
                 this.schedules.splice(index, 1);
           });
+        }
+
+        // upload attached files ----------------------------------//
+        if (this.editedItem.files) {
+          console.log(`try files upload------- eid:${this.editedItem.eid} id:${this.editedItem.id}`);
+          console.log(this.editedItem);
+
+          for (let index = 0; index < this.editedItem.files.length; index += 1) {
+            const file = this.editedItem.files[index];
+            console.log(` * filename: ${file.name}`);
+
+            let formData = new FormData();
+            formData.append('file', file, file.name);
+            formData.append('eid', this.editedItem.eid);
+            formData.append('id', this.editedItem.id);
+            formData.append('headers', ['Content-Type', 'multipart/form-data']);
+            await apiService.uploadScheduleAttachments(formData)
+              .then(res => {
+                console.log(` ---> upload response`);
+                console.log(res);
+                this.editedItem.attachments = res.data.attachments;
+              })
+              .catch(err => {
+                console.log(` ---x upload failed`);
+                console.log(err);
+              });
+          }
+          this.editedItem.files = [];
         }
       },
       removeEvent(){

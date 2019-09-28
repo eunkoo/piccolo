@@ -55,6 +55,9 @@ module.exports = (app) => {
   app.post('/api/schedule/', scheduleController.create);
   app.put('/api/schedule', scheduleController.update);
 
+  app.post('/api/schedule/upload', scheduleController.upload);
+  app.post('/api/schedule/attachments', scheduleController.attachments);
+
   //organization
   app.post('/api/organization/list', organizationController.list);
   app.delete('/api/organization/:id', organizationController.destroy);

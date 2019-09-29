@@ -23,16 +23,12 @@
           >
  
         </v-calendar>
-
-
-
         <v-dialog
         persistent
           v-model="selectedOpen"
           :close-on-content-click="false"
           :activator="selectedElement"
-          width="800"
-          max-width="850"
+          max-width="450"
         >
           <v-card
             color="grey lighten-4"
@@ -73,73 +69,14 @@
                   </v-list>
                 </v-menu>
             </v-toolbar>
-
-            <v-card-text class="pt-3">
-              <h2> {{ editedItem.name }} </h2>
-              <h3> {{ editedItem.start }} ~ {{ editedItem.end }} </h3>
-            </v-card-text>
-
-            <v-divider inset></v-divider>
-            <v-card-text v-if="editedItem.attachments">
-              <p> Attachments : {{ testMessage }} </p>
-              <v-chip 
-                v-for="file in editedItem.attachments" 
-                :key="file.name"
-                @click:close="deleteAttachments(file.name)"
-                color="cyan"
-                text-color="white"
-                close
-                label                 
-                class="mr-1 mb-1"
-                >
-                {{ file.name }}
-              </v-chip>
-            </v-card-text>
-            <v-card-text v-else>
-              The attached file does not exist.
-            </v-card-text>
-
             <v-card-text>
-              <v-row>
-                <v-col cols="2">
-                  file upload 
-                </v-col>
-                <v-col cols="8">
-                  <v-file-input 
-                    label="select file to upload..."
-                    filled
-                    chips
-                    clearable 
-                    solo 
-                    hide-details
-                    v-model="selectedFile"
-                    prepend-icon="mdi-camera">
-                  </v-file-input>
-                </v-col>
-                <v-col cols="2">
-                  <v-btn 
-                    :disabled="!selectedFile"
-                    color="blue"
-                    class="white--text"
-                    @click="uploadAttachments" 
-                    small>
-                    upload
-                  </v-btn>
-                </v-col>
-              </v-row>
-
-            </v-card-text>
-
-
-            <v-divider></v-divider>
-
-            <v-card-text>
+              <span v-html="editedItem.start"></span>
+            <br>
+              <span v-html="editedItem.end"></span>
             </v-card-text>
             <v-card-actions>
-              <v-spacer></v-spacer>
               <v-btn
                 text
-                outlined
                 color="secondary"
                 @click="cancelEvent"
               >
@@ -147,7 +84,6 @@
               </v-btn>
                <v-btn
                 text
-                outlined
                 color="pramary"
                 @click="saveEvent"
               >
@@ -158,13 +94,11 @@
         </v-dialog>
       </v-sheet>
     </v-col>
-
   </v-row>
 </template>
 
 
 <script>
-import Vue from 'vue';
 const apiService = require( "@/Services/ApiService");
 require('../../assets/css/eventdayspan.css').default
 
@@ -205,71 +139,15 @@ module.exports = {
       selectedElement: null,
       selectedOpen: false,
       isMouseDown : false,
-      currentEvent : null,
-
-
-      selectedFile: null,
-
-      testPath: '',
-      testMessage: '',
+      currentEvent : null
    }
   },
   mounted() {
+    console.log('Schedule detail loaded')
     this.$refs.calendar.checkChange()
     this.$refs.calendar.scrollToTime('08:00')
   },
   methods: {
-    deleteAttachmentsAll(event_id, schedule_id) {
-      console.log(`delete attachments all`);
-      apiService.deleteScheduleAttachmentsAll({ 'eid': event_id, 'id': schedule_id })
-      .then(res => {
-        console.log(` ---> received delete all attachments response`);
-        console.log(res);
-        this.editedItem.attachments = [];
-        this.testMessage = res.data.attachments.length;
-      })
-      .catch(err => {
-        console.log(` ---x delete all attachments failed`);
-        console.log(err);
-      });
-    },
-    deleteAttachments(filename) {
-      console.log(`delete attachments filename:${filename}`);
-      apiService.deleteScheduleAttachments({ 'eid': this.editedItem.eid, 'id': this.editedItem.id, 'test': filename })
-      .then(res => {
-        console.log(` ---> received delete response`);
-        console.log(res);
-        this.editedItem.attachments = res.data.attachments;
-        console.log(this.editedItem.attachments);
-        this.testMessage = res.data.attachments.length;
-      })
-      .catch(err => {
-        console.log(` ---x delete attachments failed`);
-        console.log(err);
-      });
-    },
-    uploadAttachments() {
-      if (this.selectedFile) {
-        console.log(` try upload attachments. eid:${this.editedItem.eid}  id:${this.editedItem.id} file:${this.selectedFile.name}`);
-        let formData = new FormData();
-        formData.append('test', this.selectedFile, this.selectedFile.name);
-        formData.append('eid', this.editedItem.eid);
-        formData.append('id', this.editedItem.id);
-        formData.append('headers', ['Content-Type', 'multipart/form-data']);
-        apiService.uploadScheduleAttachments(formData)
-        .then(res => {
-          console.log(` ---> received upload response`);
-          console.log(res);
-          this.editedItem.attachments = res.data.attachments;
-          this.testMessage = res.data.attachments.length;
-          this.selectedFile = null;
-        })
-        .catch(err => {
-          console.log(` ---x upload attachments failed`);
-          console.log(err);
-        });
-      }
-    },
 
     getEventColor (event) {
         return this.color[event.belongs]
@@ -349,38 +227,17 @@ module.exports = {
       this.parentItems = items;
       await apiService.fetchScheduleForEvent({eid:current.id})
       .then(res =>{
-        console.log('get schedules response is ');
         console.log(res.data);
         this.currentEvent = Object.assign( current );
         // console.log(this.currentEvent)
-        this.schedules = items.concat(res.data)        
+        this.schedules = items.concat(res.data)
+        
       })
       .catch(err =>{
         console.log(err);
       });
       
-      // ----------------------- get attached file info 
-      console.log(` * event name: ${current.name} `);
-      // this.schedules.forEach(item => {
-      for (let index = 0; index < this.schedules.length; index += 1 ){
-        const item = this.schedules[index];
-        
-        console.log(`   try get attachments list. eid:${item.eid} id:${item.id}`);
-        await apiService.fetchScheduleAttachments({ eid: item.eid, id:item.id })
-          .then(res => {
-            console.log(` ---> get attachments response `);
-            console.log(res);
-
-            if (res.data.attachments.length > 1) {
-              this.testPath = res.data.attachments[1].fullpath;
-              console.log(` test path : ${this.testPath}`);
-            }
-            this.schedules[index].attachments = res.data.attachments;
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      }
+      console.log(this.schedules)
       this.loading = false;
       this.start_day = current.start;
       this.end_day = current.end;
@@ -400,8 +257,7 @@ module.exports = {
         // time: "09:00",
         // duration: 90,
         color: "",
-        link:"", 
-        files: [],
+        link:""
       };
     },
     // open (event) {
@@ -416,12 +272,14 @@ module.exports = {
           this.selectedElement = event != undefined ? event.target : this.$refs.calendar //nativeEvent.target
           setTimeout(() => this.selectedOpen = true, 10)
         }
+
         if (this.selectedOpen) {
           this.selectedOpen = false
           setTimeout(open, 10)
         } else {
           open()
         }
+
       },
       
       editEvent({ nativeEvent, event }){
@@ -431,10 +289,11 @@ module.exports = {
           this.changeEvent(event);
           return;
         }
+          
         const open = () => {
           this. isEdit = true;
-          this.editedItem = event;
-          this.selectedElement = nativeEvent.target;
+          this.editedItem = event
+          this.selectedElement = nativeEvent.target
           setTimeout(() => this.selectedOpen = true, 10)
         }
 
@@ -455,28 +314,29 @@ module.exports = {
             // this.editedItem.resetContent
       },
       
-      saveEvent(){
+      async saveEvent(){
         this.selectedOpen = false
         if(!this.isEdit){  // newItem
-          apiService.addSchedule( Object.assign(this.editedItem,{color:this.color[this.currentEvent.belongs] }))
-            .then(res => {
-              this.editedItem = res.data;
-              this.editedItem.resetContent
-              // console.log(res.data);
-            }).catch(err =>{
-              console.log(err);
-              var index = this.schedules.indexOf(this.editedItem);
-                  this.schedules.splice(index, 1);
-            });
+        await apiService.addSchedule( Object.assign(this.editedItem,{color:this.color[this.currentEvent.belongs] }))
+          .then(res => {
+            this.editedItem = res.data;
+            this.editedItem.resetContent
+            // console.log(res.data);
+          }).catch(err =>{
+            console.log(err);
+            var index = this.schedules.indexOf(this.editedItem);
+                this.schedules.splice(index, 1);
+          });
+
         }else{
-          apiService.updateSchedule( this.editedItem )
-            .then(res => {
-                this.editedItem.resetContent
-            }).catch(err =>{
-              console.log(err);
-              var index = this.schedules.indexOf(this.editedItem);
-                  this.schedules.splice(index, 1);
-            });
+          await apiService.updateSchedule( this.editedItem )
+          .then(res => {
+              this.editedItem.resetContent
+          }).catch(err =>{
+            console.log(err);
+            var index = this.schedules.indexOf(this.editedItem);
+                this.schedules.splice(index, 1);
+          });
         }
       },
       removeEvent(){
@@ -491,9 +351,6 @@ module.exports = {
           })
           var index = this.schedules.indexOf(this.editedItem);
           this.schedules.splice(index, 1);
-
-          // when schedule is deleted, related attachments are also deleted
-          this.deleteAttachmentsAll(this.editedItem.eid, this.editedItem.id);
       },
 
   }

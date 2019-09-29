@@ -111,21 +111,7 @@ module.exports=  {
   updateSchedule(params) {
     return Api.base().put('/schedule',params)
   },
-
-  fetchScheduleAttachments(params) {
-    return Api.base().post('/schedule/attachments', params);
-  },
-  uploadScheduleAttachments(params) {
-    return Api.base().post('/schedule/upload', params);
-  },
-  deleteScheduleAttachments(params) {
-    return Api.base().post('/schedule/attachments_delete', params);
-  },
-  deleteScheduleAttachmentsAll(params) {
-    return Api.base().post('/schedule/attachments_delete_all', params);
-  },
-
-
+ 
 // organization
   fetchOrganization(year) {
     return Api.base().post('/organization/list',year)

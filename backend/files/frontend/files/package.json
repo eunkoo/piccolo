@@ -7,7 +7,7 @@
   "scripts": {
     "build": "node build/build.js",
     "lint": "eslint --ext .js,.vue src",
-    "dev": "webpack-dev-server --host 0.0.0.0  --hot --inline --progress --config build/webpack.dev.conf.js",
+    "dev": "webpack-dev-server --host 0.0.0.0   --progress --config build/webpack.dev.conf.js",
     "prod": "webpack-dev-server --host 0.0.0.0  --inline --progress --config build/webpack.prod.conf.js",
     "start": "npm run dev"
   },

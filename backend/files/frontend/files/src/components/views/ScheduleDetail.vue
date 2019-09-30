@@ -21,7 +21,7 @@
 
           :event-color="getEventColor"
           >
- 
+
         </v-calendar>
 
 
@@ -106,6 +106,7 @@
                 </v-col>
                 <v-col cols="8">
                   <v-file-input 
+                    :disabled="editedItem.id < 0"
                     label="select file to upload..."
                     filled
                     chips
@@ -117,6 +118,9 @@
                   </v-file-input>
                 </v-col>
                 <v-col cols="2">
+
+                  eid: {{ editedItem.eid }}
+                  id: {{ editedItem.id }}
                   <v-btn 
                     :disabled="!selectedFile"
                     color="blue"
@@ -426,13 +430,16 @@ module.exports = {
       
       editEvent({ nativeEvent, event }){
         console.log("editEvent");
+        console.log(`native event is`);
+        console.log(nativeEvent);
+        console.log(`event`);
         console.log(event);
         if(event.eid == undefined){
           this.changeEvent(event);
           return;
         }
         const open = () => {
-          this. isEdit = true;
+          this.isEdit = true;
           this.editedItem = event;
           this.selectedElement = nativeEvent.target;
           setTimeout(() => this.selectedOpen = true, 10)
@@ -456,22 +463,41 @@ module.exports = {
       },
       
       saveEvent(){
+
+        console.log(`--- save event button clicked ---`);
         this.selectedOpen = false
         if(!this.isEdit){  // newItem
+
+          console.log(`  request add new schedule. event:${this.editedItem.eid} schedule:${this.editedItem.id}`);
           apiService.addSchedule( Object.assign(this.editedItem,{color:this.color[this.currentEvent.belongs] }))
             .then(res => {
               this.editedItem = res.data;
               this.editedItem.resetContent
-              // console.log(res.data);
+
+              console.log(`  ---> received response for add new schedule `);
+              console.log(res.data);
+              console.log(` editedItem eid: ${this.editedItem.eid} id:${this.editedItem.id} `);
+              console.log(this.editedItem);
+
+              this.schedules.forEach(item =>{
+                console.log(`  *** schedule eid:${item.eid} id:${item.id}`);
+                if (item.id === -1) {
+                  item.id = res.data.id;
+                }
+              });
             }).catch(err =>{
               console.log(err);
               var index = this.schedules.indexOf(this.editedItem);
                   this.schedules.splice(index, 1);
             });
         }else{
+
+          console.log(`  request edit schedule. event:${this.editedItem.eid} schedule:${this.editedItem.id}`);
           apiService.updateSchedule( this.editedItem )
             .then(res => {
-                this.editedItem.resetContent
+
+              this.editedItem.resetContent
+              console.log(`  ---> received response for edit schedule `);
             }).catch(err =>{
               console.log(err);
               var index = this.schedules.indexOf(this.editedItem);

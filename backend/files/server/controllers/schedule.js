@@ -21,6 +21,11 @@ function getAttachmentsFileList(eid, id) {
   let base_path = `frontend/files/uploads/schedule`;
   let target_dir_path = `${base_path}/${eid}_${id}`;
   const data = [];
+
+  if (!fs.existsSync(target_dir_path)) {
+    console.log(` attachments directory is not exist. eid:${eid} id:${id}`);
+    return data;
+  }
   const files = fs.readdirSync(target_dir_path);
   files.forEach(file => {
     console.log(` * filename : ${file}`);
@@ -133,7 +138,7 @@ module.exports = {
 
   upload(req, res) {
     console.log(`___schdule upload file___`);
-    console.log(req.files);
+    // console.log(req.files);
     console.log(req.body.eid);
     console.log(req.body.id);
 
@@ -155,8 +160,10 @@ module.exports = {
         }
       });
       data = getAttachmentsFileList(eid, id);
+      return res.status(200).send({ 'attachments': data });
     }
-    return res.status(200).send({ 'attachments': data });
+    
+    return res.status(500).send({ 'message': 'directory is not exist' });
   }, 
 
   attachments(req, res) {

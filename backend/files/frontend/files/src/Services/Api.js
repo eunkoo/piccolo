@@ -5,7 +5,7 @@ module.exports=  {
   base () {
      return axios.create({
     // baseURL: `http://192.168.56.101:8001/api`,
-    // baseURL: `http://192.168.5.103:8091/api`,
+    // baseURL: `http://192.168.1.100:8001/api`,
    
     // baseURL: `http://175.123.164.211:8001/api`,
     // baseURL: `http://172.20.10.2:8091/api`,

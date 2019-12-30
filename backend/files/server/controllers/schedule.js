@@ -100,6 +100,7 @@ module.exports = {
      duration:req.body.duration,
      link:req.body.link,
      color:req.body.color,
+     detail:req.body.detail,
      createdAt: req.body.createdAt,
      updatedAt: req.body.updatedAt,
    })
@@ -128,6 +129,7 @@ module.exports = {
             duration:req.body.duration,
             link:req.body.link,
             color:req.body.color,
+            detail:req.body.detail,
           })
           .then(() => res.status(200).send(schedule))
           .catch((error) => res.status(400).send(error));

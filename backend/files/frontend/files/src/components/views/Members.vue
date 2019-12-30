@@ -111,12 +111,12 @@
         <v-data-table
           :loading="membersLoading"
           :headers="memberHeader"
+          hide-default-header
           :expanded.sync="expanded"
           :single-expand="false"
           :items-per-page="10"
           :items="members"
           class="elevation-3"
-          hide-default-header
           dense
         >
           <v-progress-linear v-slot:progress color="blue" indeterminate></v-progress-linear>
@@ -124,12 +124,13 @@
             <template v-slot:header="{ headers }">
               <thead>
                 <tr>
-                  <th> photo </th>
-                  <th> name </th>
-                  <th> phone </th>
-                  <th> belongs </th>
-                  <th> grade </th>
-                  <th> ... </th>
+                  <th> 사진 </th>
+                  <th> 이름 </th>
+                  <th> 전화번호 </th>
+                  <th> 소속 </th>
+                  <th> 상태 </th>
+                  <th> 조 </th>
+                  <th> 편집 </th>
                 </tr>
               </thead>
             </template>
@@ -153,6 +154,7 @@
                       >{{ descBelong[item.belong] }}</v-chip>
                     </td>
                     <td class="pa-0 caption"> {{ descGrade[item.grade] }} </td>
+                    <td class="pa-0 caption"> {{ item.connected }} </td>
                     <td class="pa-0 caption">            
                       <v-btn small text icon color="primary" class="ma-0" @click="editMember(item)">
                         <v-icon small > edit </v-icon> 
@@ -638,7 +640,7 @@ module.exports = {
       isEditMode: false,
       memberData: [],
       memberHeader: [
-        { text: "", value: "expand", align: "left", width: "20px" },
+        // { text: "", value: "expand", align: "left", width: "20px" },
         { text: "사진", value: "photo", sortable: false, align: "center" },
         { text: "이름", value: "name", sortable: true, align: "center", width: "100px" },
         { text: "연락처", value: "phone", sortable: false, align: "center" },

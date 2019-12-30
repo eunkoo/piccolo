@@ -275,6 +275,7 @@ module.exports = {
     // },
     chooseDate(date) {
       this.cdate = new Date(date);
+      this.edate = new Date(date);
       this.$refs.date_menu.save(date);
       this.getevents(this.cbelong);
     },
@@ -443,29 +444,23 @@ module.exports = {
     },
     onPrev() {
       console.log("onPrev " + this.formatDate(this.cdate));
+      // console.log("end day" + this.formatDate(this.edate));
       this.cdate.setDate(this.cdate.getDate() - 1);
       this.cdate = new Date(this.prevDay(this.cdate, 7));
       this.cdateFormat = this.formatDate(this.cdate);
-
-      this.edate.setDate(this.edate.getDate() -7);
-      this.edate = new Date(this.currDay(this.edate, 6));
+      this.edate.setDate(this.edate.getDate() -1);
+      this.edate = new Date(this.prevDay(this.edate, 6));
       this.edateFormat = this.formatDate(this.edate);
-
-      if(this.cdate > this.edate){
-        this.edate.setDate(this.edate.getDate() +1);
-        this.edate = new Date(this.nextDay(this.edate, 6));
-        this.edateFormat = this.formatDate(this.edate);
-      }
 
       this.loadEventData(this.cbelong, this.cdate, this.edate);
       //   this.getAttendee(this.cbelong, this.cdate);
     },
     onNext() {
       console.log("onNext " + this.formatDate(this.cdate));
+      // console.log("end day " + this.formatDate(this.edate));
       this.cdate.setDate(this.cdate.getDate() + 1);
-      this.cdate = new Date(this.currDay(this.cdate, 7));
+      this.cdate = new Date(this.nextDay(this.cdate, 7));
       this.cdateFormat = this.formatDate(this.cdate);
-
       this.edate.setDate(this.edate.getDate() + 7);
       this.edate = new Date(this.nextDay(this.edate, 6));
       this.edateFormat = this.formatDate(this.edate);

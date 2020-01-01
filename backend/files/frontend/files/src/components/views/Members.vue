@@ -41,7 +41,7 @@
           <v-btn small fab>엑셀</v-btn>
         </download-excel>
       </v-col>
-      <v-col cols="2">
+      <v-col cols="2" v-if="userGrade==0">
         <v-btn small fab class="primary" @click="createMember">
           <v-icon>person_add</v-icon>
         </v-btn>
@@ -130,7 +130,7 @@
                   <th> 소속 </th>
                   <th> 상태 </th>
                   <th> 조 </th>
-                  <th> 편집 </th>
+                  <th v-if="userGrade==0"> 편집 </th>
                 </tr>
               </thead>
             </template>
@@ -155,7 +155,7 @@
                     </td>
                     <td class="pa-0 caption"> {{ descGrade[item.grade] }} </td>
                     <td class="pa-0 caption"> {{ item.connected }} </td>
-                    <td class="pa-0 caption">            
+                    <td class="pa-0 caption" v-if="userGrade==0">            
                       <v-btn small text icon color="primary" class="ma-0" @click="editMember(item)">
                         <v-icon small > edit </v-icon> 
                       </v-btn>

@@ -1,7 +1,9 @@
 <template>
   <v-row>
     <v-col>
-      <v-sheet height="600">
+      <v-btn  class="mb-2" fab @click="showCal=!showCal"> 세부일정 </v-btn>
+      <v-sheet height="600" v-if="showCal">
+        
         <v-calendar
           locale="ko"
           ref="calendar"
@@ -19,7 +21,7 @@
           @mouseup:time="timeMouseUp($event)"
           :event-color="getEventColor"
         ></v-calendar>
-
+        
         <v-dialog
           persistent
           v-model="selectedOpen"
@@ -123,11 +125,30 @@
 
             <v-divider></v-divider>
 
-            <v-card-text></v-card-text>
+                <v-card-text class="pt-3">
+                  <h2>세부 내용</h2>
+                </v-card-text>
+
+                <v-card-text class="pt-3"> 
+                  <v-textarea v-model="editedItem.detail"/>
+                </v-card-text>
+
+                <v-card-text class="pt-3"> 
+                  <v-select 
+                      item-text="text" item-value="color"
+                      v-bind:items="colors" v-model="editedItem.color" label="타입"   >
+                      <template slot="item" slot-scope="data">
+                         <div class="text-center">
+                        <v-sheet :color='data.item.color'>{{data.item.text}}</v-sheet>
+                         </div>
+                      </template>
+                  </v-select>
+                </v-card-text>
+
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn text outlined color="secondary" @click="cancelEvent">취소</v-btn>
               <v-btn text outlined color="pramary" @click="saveEvent">저장</v-btn>
+              <v-btn text outlined color="secondary" @click="cancelEvent">취소</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -148,6 +169,15 @@ module.exports = {
   computed: {},
   data() {
     return {
+      colors:[
+        {color:'#E53935', text:'예배'},
+        {color:'#FB8C00', text:'식사'},
+        {color:'#8E24AA', text:'찬양'},
+        {color:'#43A047', text:'레크레이션'},
+        {color:'#1E88E5', text:'회의'},
+        {color:'#00BFA5', text:'기타'}
+      ],
+      showCal : true,
       mouseOnEvent: false,
       start_day: "",
       end_day: "",
@@ -252,7 +282,8 @@ module.exports = {
     },
 
     getEventColor(event) {
-      return this.color[event.belongs];
+      return event.color;
+     // return this.color[event.belongs];
       // return event.color
     },
     viewDay({ date }) {
@@ -464,7 +495,7 @@ module.exports = {
         apiService
           .addSchedule(
             Object.assign(this.editedItem, {
-              color: this.color[this.currentEvent.belongs]
+              // color: this.color[this.currentEvent.belongs]
             })
           )
           .then(res => {

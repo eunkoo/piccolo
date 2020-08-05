@@ -16,7 +16,7 @@
     "babel-polyfill": "^6.26.0",
     "chart.js": "^2.8.0",
     "es6-promise": "^4.2.8",
-    "express-fileupload": "^1.1.5",
+    "express-fileupload": "^1.1.9",
     "formidable": "^1.2.1",
     "material-design-icons-iconfont": "^5.0.1",
     "printd": "^1.4.0",
